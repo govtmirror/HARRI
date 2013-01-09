@@ -46,7 +46,8 @@ public class HarriManagerService implements Runnable {
 	private RegistryListener createRegistryListener(final UpnpService upnpService) {
 		return new DefaultRegistryListener() {
 			private boolean isHarriDevice(final RemoteDevice device) {
-				return device.getDetails().getManufacturerDetails().equals(DEVICE_MANUFACTURER) && 
+				return device.getDetails().getManufacturerDetails()!=null &&
+						device.getDetails().getManufacturerDetails().getManufacturer().equals(DEVICE_MANUFACTURER) && 
 						device.getDetails().getModelDetails().getModelName().contains(DEVICE_PREFIX);
 			}
 			
