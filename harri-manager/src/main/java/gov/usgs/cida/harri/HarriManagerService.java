@@ -11,6 +11,8 @@ import org.teleal.cling.model.types.*;
 import org.teleal.cling.registry.*;
 
 public class HarriManagerService implements Runnable {
+	public static final String DEVICE_PREFIX = "HARRI_Device";
+	public static final String DEVICE_MANUFACTURER = "CIDA";
 
 	public static void main(String[] args) throws Exception {
 		// Start a user thread that runs the UPnP stack
@@ -43,14 +45,26 @@ public class HarriManagerService implements Runnable {
 
 	private RegistryListener createRegistryListener(final UpnpService upnpService) {
 		return new DefaultRegistryListener() {
+			private boolean isHarriDevice(final RemoteDevice device) {
+				return device.getDetails().getManufacturerDetails().equals(DEVICE_MANUFACTURER) && 
+						device.getDetails().getModelDetails().getModelName().contains(DEVICE_PREFIX);
+			}
+			
 			@Override
 			public void remoteDeviceAdded(Registry registry, RemoteDevice device) {
+				if(!isHarriDevice(device)){
+					return;
+				}
+				//if not a HARRI device, do nothing
 				System.out.println("HARRI Device has been added: " + device.getDetails().getModelDetails().getModelName());
 				doExampleServiceCall(upnpService, device); //TODO delete when not needed
 			}
 
 			@Override
 			public void remoteDeviceRemoved(Registry registry, RemoteDevice device) {
+				if(!isHarriDevice(device)){
+					return;
+				}
 				System.out.println("HARRI Device " + device.getDetails().getModelDetails().getModelName() + " has been removed!");
 			}
 

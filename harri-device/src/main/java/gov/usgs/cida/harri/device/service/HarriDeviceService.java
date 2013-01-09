@@ -11,6 +11,8 @@ import org.teleal.cling.model.types.*;
 import java.io.IOException;
 
 public class HarriDeviceService implements Runnable {
+	public static final String DEVICE_PREFIX = "HARRI_Device";
+	public static final String DEVICE_MANUFACTURER = "CIDA";
 
     public static void main(String[] args) throws Exception {
         // Start a user thread that runs the UPnP stack
@@ -48,18 +50,18 @@ public class HarriDeviceService implements Runnable {
 
         DeviceIdentity identity =
                 new DeviceIdentity(
-                        UDN.uniqueSystemIdentifier("HARRI_Device_" + hostName)
+                        UDN.uniqueSystemIdentifier(DEVICE_PREFIX + "_" + hostName)
                 );
 
         DeviceType type =
-                new UDADeviceType("HARRI_Device", version);
+                new UDADeviceType(DEVICE_PREFIX, version);
 
         DeviceDetails details =
                 new DeviceDetails(
-                        "HARRI_Device",
-                        new ManufacturerDetails("CIDA"),
+                		DEVICE_PREFIX,
+                        new ManufacturerDetails(DEVICE_MANUFACTURER),
                         new ModelDetails(
-                                "HARRI_Device_" + hostName,
+                        		DEVICE_PREFIX + "_" + hostName,
                                 "This is a harry device installed on " + hostName,
                                 "v" + version
                         )
