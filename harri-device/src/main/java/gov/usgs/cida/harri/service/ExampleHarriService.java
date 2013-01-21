@@ -1,4 +1,4 @@
-package gov.usgs.cida.harri.device.service;
+package gov.usgs.cida.harri.service;
 
 import org.teleal.cling.binding.annotations.*;
 

@@ -1,4 +1,4 @@
-package gov.usgs.cida.harri.device.service;
+package gov.usgs.cida.harri.main;
 
 import org.teleal.cling.UpnpService;
 import org.teleal.cling.UpnpServiceImpl;
@@ -7,6 +7,8 @@ import org.teleal.cling.binding.annotations.*;
 import org.teleal.cling.model.*;
 import org.teleal.cling.model.meta.*;
 import org.teleal.cling.model.types.*;
+
+import gov.usgs.cida.harri.service.ExampleHarriService;
 
 import java.io.IOException;
 
@@ -35,7 +37,10 @@ public class HarriDeviceService implements Runnable {
 
             // Add the bound local device to the registry
             upnpService.getRegistry().addDevice(
-                    createDevice("cida-example-host1", 1) //TODO get this hostname string and version number from somewhere useful
+                    createDevice(
+                    	getSystemHostName(), 
+                    	getDeviceVersion()
+                    ) 
             );
 
         } catch (Exception ex) {
@@ -68,7 +73,13 @@ public class HarriDeviceService implements Runnable {
                 );
 
 
-        /* TODO Several services can be bound to the same device. At this point we might want to do an inspection
+        LocalService[] deviceServices = bindServicesToDevice();
+
+        return new LocalDevice(identity, type, details, deviceServices);
+    }
+    
+    private LocalService[] bindServicesToDevice() {
+    	/* TODO Several services can be bound to the same device. At this point we might want to do an inspection
          * of machine the device is installed on and determine what kind of device/client this will become 
          * (tomcat, django, oracle), eg:
          * return new LocalDevice(
@@ -83,7 +94,17 @@ public class HarriDeviceService implements Runnable {
         exampleHarriActionService.setManager(
                 new DefaultServiceManager<ExampleHarriService>(exampleHarriActionService, ExampleHarriService.class)
         );
-
-        return new LocalDevice(identity, type, details, exampleHarriActionService);
+        
+    	return new LocalService[] {exampleHarriActionService};
+    }
+    
+    private String getSystemHostName() {
+    	//TODO get this hostname string and version number from somewhere useful
+    	return "cida-example-host1";
+    }
+    
+    private Integer getDeviceVersion() {
+    	//TODO get this from somewhere useful
+    	return 1;
     }
 }
