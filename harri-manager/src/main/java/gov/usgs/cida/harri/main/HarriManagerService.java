@@ -1,15 +1,10 @@
 package gov.usgs.cida.harri.main;
 
 import gov.usgs.cida.harri.service.ExampleServiceCalls;
-
 import org.teleal.cling.UpnpService;
 import org.teleal.cling.UpnpServiceImpl;
-import org.teleal.cling.controlpoint.*;
-import org.teleal.cling.model.action.*;
-import org.teleal.cling.model.message.*;
 import org.teleal.cling.model.message.header.*;
 import org.teleal.cling.model.meta.*;
-import org.teleal.cling.model.types.*;
 import org.teleal.cling.registry.*;
 
 public class HarriManagerService implements Runnable {
@@ -21,12 +16,12 @@ public class HarriManagerService implements Runnable {
 		Thread clientThread = new Thread(new HarriManagerService());
 		clientThread.setDaemon(false);
 		clientThread.start();
-
 	}
 
+        @Override
 	public void run() {
 		try {
-
+                        System.out.println("HARRI Manager Service starting");
 			UpnpService upnpService = new UpnpServiceImpl();
 
 			// Add a listener for device registration events
@@ -34,10 +29,12 @@ public class HarriManagerService implements Runnable {
 					createRegistryListener(upnpService)
 					);
 
-			// Broadcast a search message for all devices
+			System.out.println("Broadcasting a search message for all known devices");
 			upnpService.getControlPoint().search(
 					new STAllHeader()
 					);
+                        
+                        System.out.println("HARRI Manager Service started successfully");
 
 		} catch (Exception ex) {
 			System.err.println("Exception occured: " + ex);
@@ -72,8 +69,26 @@ public class HarriManagerService implements Runnable {
 				}
 				
 				//TODO do something more intelligent
-				System.out.println("HARRI Device " + device.getDetails().getModelDetails().getModelName() + " has been removed!");
+				System.out.println("HARRI Device " + device.getDetails().getModelDetails().getModelName() + " has been removed");
 			}
+                        
+                    @Override
+                        public void remoteDeviceUpdated(Registry registry, RemoteDevice device) {
+                            System.out.println("HARRI Device " + device.getDetails().getModelDetails().getModelName() + " has been updated");
+                        }
+                    
+                    @Override
+                    public void beforeShutdown(Registry registry) {
+                        System.out.println("HARRI Device is shutting sown. Devices in registry: " + registry.getDevices().size());
+                    }
+
+                    @Override
+                    public void afterShutdown() {
+                        System.out.println("HARRI Registry has been shut down");
+
+                    }
+
+
 
 		};
 	}

@@ -1,5 +1,7 @@
 package gov.usgs.cida.harri.main;
 
+import gov.usgs.cida.harri.service.ExampleHarriService;
+import java.io.IOException;
 import org.teleal.cling.UpnpService;
 import org.teleal.cling.UpnpServiceImpl;
 import org.teleal.cling.binding.*;
@@ -7,10 +9,6 @@ import org.teleal.cling.binding.annotations.*;
 import org.teleal.cling.model.*;
 import org.teleal.cling.model.meta.*;
 import org.teleal.cling.model.types.*;
-
-import gov.usgs.cida.harri.service.ExampleHarriService;
-
-import java.io.IOException;
 
 public class HarriDeviceService implements Runnable {
 	public static final String DEVICE_PREFIX = "HARRI_Device";
@@ -23,6 +21,7 @@ public class HarriDeviceService implements Runnable {
         serverThread.start();
     }
 
+    @Override
     public void run() {
         try {
 
