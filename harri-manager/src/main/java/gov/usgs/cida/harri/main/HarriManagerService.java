@@ -124,6 +124,7 @@ public class HarriManagerService implements Runnable {
 				continue;
 			}
 			//TODO call all service/action combinations for every device here
+			LOG.info("Calling all services on " + d.getDetails().getModelDetails().getModelName());
 			ExampleServiceCalls.doExampleServiceCall(harriManagerUpnpService, (RemoteDevice) d); //TODO delete when not needed
 			ProcessDiscoveryServiceCalls.doServiceCalls(harriManagerUpnpService, (RemoteDevice) d);
 		}
