@@ -20,11 +20,17 @@ public class ExampleHarriService {
 	
     @UpnpStateVariable(defaultValue = "no_id_provided")
     private String harriManagerId = "no_id_provided";
+    
+    @UpnpStateVariable(defaultValue = "default response value")
+    private String exampleActionResponse = "default response value";
 	
-    @UpnpAction
-    public void doExampleAction(@UpnpInputArgument(name = "HarriManagerId")
+    @UpnpAction(out = @UpnpOutputArgument(name = "ExampleActionResponse")) //example of how to get a response, could do by convention
+    public String doExampleAction(@UpnpInputArgument(name = "HarriManagerId")
                           String harriManagerId) {
     	this.harriManagerId = harriManagerId;
         LOG.info("This example action was called by the HARRI Manager with ID: " + this.harriManagerId);
+        
+        exampleActionResponse = "I am responding to the HARRI manager on " + this.harriManagerId;
+        return exampleActionResponse;
     }
 }

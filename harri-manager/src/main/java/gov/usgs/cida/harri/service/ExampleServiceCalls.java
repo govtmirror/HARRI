@@ -1,5 +1,7 @@
 package gov.usgs.cida.harri.service;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 
 import org.slf4j.Logger;
@@ -14,7 +16,18 @@ public class ExampleServiceCalls {
 		HarriServiceExecutor exampleCall = new HarriServiceExecutor(upnpService, device, "ExampleHarriService");
 		
 		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("HarriManagerId", "EXAMPLE_HARRI_MANAGER_ID");
-		exampleCall.executeAction("DoExampleAction", params);
+		params.put("HarriManagerId", getSystemHostName());
+		exampleCall.executeAction("DoExampleAction", params, "ExampleActionResponse");
 	}
+	
+    private static String getSystemHostName() {
+    	String hostName = "NoHostNameFound";
+    	try {
+			hostName = InetAddress.getLocalHost().getHostName();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return hostName;
+    }
 }
