@@ -6,7 +6,7 @@ package gov.usgs.cida.harri.service.discovery;
  */
 public enum ProcessType {
     TOMCAT("tomcat"), 
-    DJANGO("fill_in_the_blank"), 
+    DJANGO("modwsgi"), 
     APACHE("apache");
     
     private String processName;
