@@ -1,6 +1,8 @@
 package gov.usgs.cida.harri.main;
 
 import gov.usgs.cida.harri.service.ExampleHarriService;
+import gov.usgs.cida.harri.service.discovery.ProcessDiscoveryService;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -102,7 +104,15 @@ public class HarriDeviceService implements Runnable {
                 new DefaultServiceManager<ExampleHarriService>(exampleHarriActionService, ExampleHarriService.class)
         );
         
-    	return new LocalService[] {exampleHarriActionService};
+        //bind process query
+        @SuppressWarnings("unchecked")
+		LocalService<ProcessDiscoveryService> pds =
+                new AnnotationLocalServiceBinder().read(ProcessDiscoveryService.class);
+        pds.setManager(
+                new DefaultServiceManager<ProcessDiscoveryService>(pds, ProcessDiscoveryService.class)
+        );
+        
+    	return new LocalService[] {exampleHarriActionService, pds};
     }
     
     private String getSystemHostName() {

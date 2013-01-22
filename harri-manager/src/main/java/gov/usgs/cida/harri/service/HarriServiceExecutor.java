@@ -24,7 +24,7 @@ public class HarriServiceExecutor {
 	private Service service;
 	private UpnpService upnpService;
 	
-	HarriServiceExecutor(UpnpService inUpnpService, Device device, String inServiceName) {
+	public HarriServiceExecutor(UpnpService inUpnpService, Device device, String inServiceName) {
 		upnpService = inUpnpService;
 		serviceId = new UDAServiceId(inServiceName);
 		service = device.findService(serviceId);
