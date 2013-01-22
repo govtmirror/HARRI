@@ -68,40 +68,54 @@
         </snapshotRepository>
     </distributionManagement>
 
-    <repositories>
-        <!-- repository> <id>cida-nexus</id> <name>CIDA Nexus</name> <url>http://internal.cida.usgs.gov/maven/content/groups/public/</url> 
-     			</repository -->
-        <repository>
-            <id>4thline.org-repo</id>
-            <url>http://4thline.org/m2</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
+	<repositories>
+		<repository>
+			<id>cida-nexus</id>
+			<name>CIDA Nexus</name>
+			<url>http://internal.cida.usgs.gov/maven/content/groups/public/</url>
+		</repository>
+		<repository>
+			<id>4thline.org-repo</id>
+			<url>http://4thline.org/m2</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 
     <properties>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.10</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.teleal.cling</groupId>
-            <artifactId>cling-core</artifactId>
-            <version>1.0.5</version>
-        </dependency>
-        <dependency>
-            <groupId>org.teleal</groupId>
-            <artifactId>teleal-common</artifactId>
-            <version>1.0.13</version>
-        </dependency>
-    </dependencies>
-    
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.10</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.teleal.cling</groupId>
+			<artifactId>cling-core</artifactId>
+			<version>1.0.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.teleal</groupId>
+			<artifactId>teleal-common</artifactId>
+			<version>1.0.13</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.7.2</version>
+			<scope>runtime</scope>
+		</dependency>
+	</dependencies>
+	
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -174,5 +188,5 @@
             </plugin>
         </plugins>
     </reporting>
-	
+
 </project>

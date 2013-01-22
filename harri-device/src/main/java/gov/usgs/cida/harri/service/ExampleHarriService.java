@@ -1,5 +1,7 @@
 package gov.usgs.cida.harri.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.teleal.cling.binding.annotations.*;
 
 @UpnpService(
@@ -14,6 +16,8 @@ import org.teleal.cling.binding.annotations.*;
  *
  */
 public class ExampleHarriService {
+	Logger LOG = LoggerFactory.getLogger(ExampleHarriService.class);
+	
     @UpnpStateVariable(defaultValue = "no_id_provided")
     private String harriManagerId = "no_id_provided";
 	
@@ -21,6 +25,6 @@ public class ExampleHarriService {
     public void doExampleAction(@UpnpInputArgument(name = "HarriManagerId")
                           String harriManagerId) {
     	this.harriManagerId = harriManagerId;
-        System.out.println("This example action was called by the HARRI Manager with ID: " + this.harriManagerId);
+        LOG.info("This example action was called by the HARRI Manager with ID: " + this.harriManagerId);
     }
 }

@@ -2,6 +2,11 @@ package gov.usgs.cida.harri.main;
 
 import gov.usgs.cida.harri.service.ExampleHarriService;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.teleal.cling.UpnpService;
 import org.teleal.cling.UpnpServiceImpl;
 import org.teleal.cling.binding.*;
@@ -11,7 +16,9 @@ import org.teleal.cling.model.meta.*;
 import org.teleal.cling.model.types.*;
 
 public class HarriDeviceService implements Runnable {
-	public static final String DEVICE_PREFIX = "HARRI_Device";
+	Logger LOG = LoggerFactory.getLogger(HarriDeviceService.class);
+	
+	public static final String DEVICE_TYPE = "HARRI_Device";
 	public static final String DEVICE_MANUFACTURER = "CIDA";
 
     public static void main(String[] args) throws Exception {
@@ -41,7 +48,7 @@ public class HarriDeviceService implements Runnable {
                     	getDeviceVersion()
                     ) 
             );
-
+            
         } catch (Exception ex) {
             System.err.println("Exception occured: " + ex);
             ex.printStackTrace(System.err);
@@ -54,18 +61,18 @@ public class HarriDeviceService implements Runnable {
 
         DeviceIdentity identity =
                 new DeviceIdentity(
-                        UDN.uniqueSystemIdentifier(DEVICE_PREFIX + "_" + hostName)
+                        UDN.uniqueSystemIdentifier(DEVICE_TYPE + "_" + hostName)
                 );
 
         DeviceType type =
-                new UDADeviceType(DEVICE_PREFIX, version);
+                new UDADeviceType(DEVICE_TYPE, version);
 
         DeviceDetails details =
                 new DeviceDetails(
-                		DEVICE_PREFIX,
+                		DEVICE_TYPE,
                         new ManufacturerDetails(DEVICE_MANUFACTURER),
                         new ModelDetails(
-                        		DEVICE_PREFIX + "_" + hostName,
+                        		DEVICE_TYPE + "_" + hostName,
                                 "This is a harry device installed on " + hostName,
                                 "v" + version
                         )
@@ -73,7 +80,8 @@ public class HarriDeviceService implements Runnable {
 
 
         LocalService[] deviceServices = bindServicesToDevice();
-
+        
+        LOG.info("HARRI Device created: " + DEVICE_TYPE + "_" + hostName);
         return new LocalDevice(identity, type, details, deviceServices);
     }
     
@@ -98,8 +106,14 @@ public class HarriDeviceService implements Runnable {
     }
     
     private String getSystemHostName() {
-    	//TODO get this hostname string and version number from somewhere useful
-    	return "cida-example-host1";
+    	String hostName = "NoHostNameFound";
+    	try {
+			hostName = InetAddress.getLocalHost().getHostName();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return hostName;
     }
     
     private Integer getDeviceVersion() {
