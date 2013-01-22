@@ -7,11 +7,16 @@ package gov.usgs.cida.harri.service.discovery;
 public enum ProcessType {
     TOMCAT("tomcat"), 
     DJANGO("modwsgi"), 
-    APACHE("apache");
+    APACHE("apache"),
+    JAVA("java");
     
     private String processName;
     ProcessType(String processName) {
         this.processName = processName;
+    }
+    
+    public String getName() {
+        return this.processName;
     }
     
     @Override

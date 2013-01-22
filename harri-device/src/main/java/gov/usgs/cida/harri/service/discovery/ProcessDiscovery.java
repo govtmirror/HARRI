@@ -14,12 +14,25 @@ import org.apache.commons.lang.StringUtils;
  */
 public class ProcessDiscovery {
 
-    static List<Integer> gerProcessIDList(ProcessType pType) throws IOException {
-        String pTypeName = pType.toString();
-        List<Integer> processIDList = new ArrayList<Integer>();
-        List<String> pStringList = ProcessDiscovery.getProcessList(pTypeName);
-        processIDList = getProcessIDList(pStringList);
-        return processIDList;
+    public static List<ProcessMD> getProcesses() throws IOException {
+        List<ProcessMD> pmdList = new ArrayList<ProcessMD>();
+        ProcessType[] pmdArr = new ProcessType[]{
+            ProcessType.APACHE, 
+            ProcessType.DJANGO, 
+            ProcessType.TOMCAT
+        };
+        
+        for (ProcessType ptype : pmdArr) {
+            List<Integer> pidList = getProcessIDList(ptype);
+            for (Integer pid : pidList) {
+                ProcessMD pmd = new ProcessMD(pid, ptype);
+            }
+        }
+        
+        return pmdList;
+    }
+    static List<String> getProcessList() throws IOException {
+        return getProcessList(null);
     }
 
     static List<String> getProcessList(String processName) throws IOException {
@@ -38,9 +51,10 @@ public class ProcessDiscovery {
         procList = IOUtils.readLines(pr.getInputStream());
         return procList;
     }
-
-    static List<String> getProcessList() throws IOException {
-        return ProcessDiscovery.getProcessList(null);
+    
+    
+    static List<Integer> getProcessIDList(ProcessType type) throws IOException {
+        return getProcessIDList(getProcessList(type.toString()));
     }
 
     static List<Integer> getProcessIDList(List<String> processList) {
@@ -55,8 +69,14 @@ public class ProcessDiscovery {
         }
         return processIDList;
     }
+    
+//        
+//    static List<Integer> gerProcessIDList(ProcessType pType) throws IOException {
+//        String pTypeName = pType.toString();
+//        List<Integer> processIDList;
+//        List<String> pStringList = getProcessList(pTypeName);
+//        processIDList = getProcessIDList(pStringList);
+//        return processIDList;
+//    }
 
-    static List<Integer> getProcessIDList(ProcessType type) throws IOException {
-        return getProcessIDList(getProcessList(type.toString()));
-    }
 }
