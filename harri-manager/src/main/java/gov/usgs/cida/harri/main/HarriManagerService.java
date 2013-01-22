@@ -85,11 +85,7 @@ public class HarriManagerService implements Runnable {
                     @Override
                     public void afterShutdown() {
                         System.out.println("HARRI Registry has been shut down");
-
                     }
-
-
-
 		};
 	}
 }
