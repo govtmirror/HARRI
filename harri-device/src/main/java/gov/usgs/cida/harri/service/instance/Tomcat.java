@@ -6,30 +6,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.jxpath.JXPathContext;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.AuthCache;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.protocol.ClientContext;
-import org.apache.http.impl.auth.BasicScheme;
-import org.apache.http.impl.client.BasicAuthCache;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.util.EntityUtils;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -72,7 +56,7 @@ public class Tomcat extends Instance {
 
         if (!usersXML.exists()) {
             getLOG().warn("The catalina users file (" + usersXML.getPath() + ") does not exist");
-        } else if (!catalinaHome.canRead()) {
+        } else if (!usersXML.canRead()) {
             getLOG().warn("The catalina users file (" + usersXML.getPath() + ") cannot be read");
         } else {
             try {
@@ -123,61 +107,47 @@ public class Tomcat extends Instance {
         }
     }
 
-    private Document parseXMLFile(File xml) throws ParserConfigurationException, SAXException, IOException {
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        Document doc = dBuilder.parse(xml);
-        doc.getDocumentElement().normalize();
-        return doc;
-    }
-
     @Override
     void getRemoteInfo() {
-//        DefaultHttpClient client = new DefaultHttpClient();
-//        HttpHost host = new HttpHost("localhost", this.httpPort, "http");
-//        client.getCredentialsProvider().setCredentials(
-//                new AuthScope(host),
-//                new UsernamePasswordCredentials(this.managerUsername, this.managerPassword));
-//        try {
-//            HttpURLConnection get = new HttpURLConnection(new URL("http://127.0.0.1:"+this.getHttpPort()+"/manager/status/all").toURI());
-//            
-//            AuthCache authCache = new BasicAuthCache();
-//            BasicScheme basicAuth = new BasicScheme();
-//            BasicHttpContext context = new BasicHttpContext();
-//            authCache.put(host, basicAuth);
-//            context.setAttribute(ClientContext.AUTH_CACHE, authCache);
-//            
-//            HttpResponse response = client.execute(get);
-//            HttpEntity entity = response.getEntity();
-////            InputStream content = entity.getContent();
-//            String test = EntityUtils.toString(entity);
-//            String a = "";
-//        } catch (IOException ex) {
-//            Logger.getLogger(Tomcat.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (URISyntaxException ex) {
-//            Logger.getLogger(Tomcat.class.getName()).log(Level.SEVERE, null, ex);
-//        } finally {
-//            client.getConnectionManager().shutdown();
-//        }
-        
-        
-        
-        
         try {
-            URL url = new URL ("http://127.0.0.1:"+this.getHttpPort()+"/manager/status/all");
-            String encoding = Base64.encode((this.managerUsername +":" + this.managerPassword).getBytes());
+            URL url = new URL("http://127.0.0.1:" + this.getHttpPort() + "/manager/status/all");
+            String encoding = Base64.encode((this.managerUsername + ":" + this.managerPassword).getBytes());
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setDoOutput(true);
-            connection.setRequestProperty  ("Authorization", "Basic " + encoding);
-            InputStream content = (InputStream)connection.getInputStream();
-            List<String> readLines = IOUtils.readLines(content);
-            String a = "";
-        } catch(Exception e) {
-            e.printStackTrace();
+            connection.setRequestProperty("Authorization", "Basic " + encoding);
+            List<String> managerOutput = IOUtils.readLines(connection.getInputStream());
+            StringBuilder sb = new StringBuilder("");
+            for (String outputLine : managerOutput) {
+                if (!outputLine.trim().toLowerCase().contains("<img")) {
+                    sb.append(outputLine.replace(" nowrap", "")
+                            .replace("<br>", "<br />")
+                            .replace("<hr size=\"1\" noshade=\"noshade\">", "")
+                            .replace("&copy;", ""));
+                }
+            }
+            Document doc = parseXMLInputStream(IOUtils.toInputStream(sb.toString()));
+            JXPathContext ctx = JXPathContext.newContext(doc.getDocumentElement());
+
+            Node httpPortNode = (Node) ctx.selectSingleNode("//h1[text()='JVM']");
+        } catch (Exception ex) {
+            getLOG().warn(ex.getMessage());
         }
-        
+
+    }
+
+    private Document parseXMLFile(File xml) throws ParserConfigurationException, SAXException, IOException {
+        return parseXMLInputStream(FileUtils.openInputStream(xml));
+    }
+
+    private Document parseXMLInputStream(InputStream is) throws ParserConfigurationException, SAXException, IOException {
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        dbFactory.setValidating(false); // Tomcat gives very invalid html back :(
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document doc = dBuilder.parse(is);
+        doc.getDocumentElement().normalize();
+        return doc;
     }
 
     public String getManagerUsername() {

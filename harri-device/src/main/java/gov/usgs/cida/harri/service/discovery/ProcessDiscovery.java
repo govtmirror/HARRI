@@ -65,7 +65,15 @@ public class ProcessDiscovery {
     }
 
     static List<Long> getProcessIDList(ProcessType type) throws IOException {
-        return getProcessIDList(getProcessList(type.toString()));
+        List<String> processList = getProcessList(type.toString());
+        List<String> cleanedProcessList = new ArrayList<String>();
+        for (String processLine : processList) {
+            if (processLine.contains(type.getProcesssIdentifier())) {
+                cleanedProcessList.add(processLine);
+            }
+        }
+        
+        return getProcessIDList(cleanedProcessList);
     }
 
     static List<Long> getProcessIDList(List<String> processList) {
