@@ -77,11 +77,17 @@ public class InstanceDiscoveryService {
             if (p.getType().equals(ProcessType.TOMCAT)) {
                 Tomcat tc = (Tomcat) p.createInstance();
                 tc.populate();
-                
+
                 StringBuilder sb = new StringBuilder();
-                
+
                 for (String app : tc.getAppList()) {
-                    sb.append(app).append("\n");
+                    ApplicationInfo appInfo = tc.getApplicationMap().get(app);
+                    sb.append(app)
+                            .append(" - Application is: ")
+                            .append(appInfo.getRunning() ? "UP" : "DOWN")
+                            .append(" - Application start time: ")
+                            .append(appInfo.getStartTime())
+                            .append("\n");
                 }
             }
         }
