@@ -16,7 +16,7 @@ import org.teleal.cling.binding.annotations.*;
  * @author thongsav
  */
 public class ProcessDiscoveryService {
-	Logger LOG = LoggerFactory.getLogger(ProcessDiscoveryService.class);
+    private static Logger LOG = LoggerFactory.getLogger(ProcessDiscoveryService.class);
 	
     @UpnpStateVariable(defaultValue = "no_id_provided")
     private String harriManagerId = "no_id_provided";

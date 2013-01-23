@@ -3,8 +3,12 @@ package gov.usgs.cida.harri.service.discovery;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.io.FileUtils;
+import org.slf4j.LoggerFactory;
 
 /**
  * http://www.kernel.org/doc/Documentation/filesystems/proc.txt
@@ -14,10 +18,13 @@ import org.apache.commons.io.FileUtils;
  */
 public class ProcessMD {
 
-    private Integer pid;
+    private static org.slf4j.Logger LOG = LoggerFactory.getLogger(ProcessMD.class);
+    private Long pid;
     private String name;
     private ProcessType type;
-    private long sessionId;
+    private Long sessionId;
+    private Map<String, String> startupOptions;
+    
     // Command line arguments
     private String commandLine;
     // Link to the current working directory
@@ -33,26 +40,38 @@ public class ProcessMD {
     // IO statistics
     private List<String> io;
 
-    public ProcessMD(Integer pid, ProcessType type) throws IOException {
+    public ProcessMD(Long pid, ProcessType type) throws IOException {
         this(pid, type.getName(), type);
     }
 
-    public ProcessMD(Integer pid, String name, ProcessType type) throws IOException {
+    public ProcessMD(Long pid, String name, ProcessType type) throws IOException {
         this.pid = pid;
         this.type = type;
         this.name = name;
-
+        this.startupOptions = new HashMap<String, String>();
         this.learn();
     }
 
     private void learn() throws IOException {
         File procDir = new File("/proc/" + this.pid);
+        String processDscription = ProcessDiscovery.getProcessList(String.valueOf(this.pid)).get(0);
+        
+        if (this.type.equals(ProcessType.TOMCAT)) {
+            String[] split = processDscription.split(" ");
+            for (String x : split) {
+                if (x.startsWith("-D")) {
+                   String[] kArr = x.substring(2).split("=");
+                   startupOptions.put(kArr[0], kArr[1]);
+                }
+            }
+        }
+        
         if (!procDir.exists()) {
-            throw new IOException("/proc directory does not exist - HARRI is unable to learn about this process");
+            LOG.warn("/proc directory does not exist");
         } else if (!procDir.isDirectory()) {
-            throw new IOException("/proc directory is not a directory - HARRI is unable to learn about this process");
+            LOG.warn("/proc directory is not a directory");
         } else if (!procDir.canRead()) {
-            throw new IOException("/proc directory is not readable - HARRI is unable to learn about this process");
+            LOG.warn("/proc directory is not readable");
         }
 
         List<String> readOut;
@@ -149,7 +168,7 @@ public class ProcessMD {
         return fileContents;
     }
 
-    public Integer getPid() {
+    public Long getPid() {
         return pid;
     }
 
@@ -186,14 +205,10 @@ public class ProcessMD {
     }
 
     public List<String> getStatus() {
-        return status;
+        return Collections.unmodifiableList(status);
     }
 
     public List<String> getIo() {
-        return io;
-    }
-
-    public void setIo(List<String> io) {
-        this.io = io;
+        return Collections.unmodifiableList(io);
     }
 }
