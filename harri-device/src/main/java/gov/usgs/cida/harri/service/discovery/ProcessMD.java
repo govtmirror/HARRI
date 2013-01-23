@@ -1,5 +1,7 @@
 package gov.usgs.cida.harri.service.discovery;
 
+import gov.usgs.cida.harri.service.instance.Instance;
+import gov.usgs.cida.harri.service.instance.Tomcat;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,6 +21,10 @@ import org.slf4j.LoggerFactory;
 public class ProcessMD {
 
     private static org.slf4j.Logger LOG = LoggerFactory.getLogger(ProcessMD.class);
+
+    public static org.slf4j.Logger getLOG() {
+        return LOG;
+    }
     private Long pid;
     private String name;
     private ProcessType type;
@@ -52,26 +58,35 @@ public class ProcessMD {
         this.learn();
     }
 
+    public Instance createInstance() {
+        Instance instance = null;
+        switch (this.type) {
+            case TOMCAT: 
+                instance = new Tomcat(this);
+        }
+        return instance;
+    }
+    
     private void learn() throws IOException {
-        File procDir = new File("/proc/" + this.pid);
-        String processDscription = ProcessDiscovery.getProcessList(String.valueOf(this.pid)).get(0);
+        File procDir = new File("/proc/" + this.getPid());
+        String processDescription = ProcessDiscovery.getProcessList(String.valueOf(this.getPid())).get(0);
         
-        if (this.type.equals(ProcessType.TOMCAT)) {
-            String[] split = processDscription.split(" ");
+        if (this.getType().equals(ProcessType.TOMCAT)) {
+            String[] split = processDescription.split(" ");
             for (String x : split) {
                 if (x.startsWith("-D")) {
                    String[] kArr = x.substring(2).split("=");
-                   startupOptions.put(kArr[0], kArr[1]);
+                    this.startupOptions.put(kArr[0], kArr[1]);
                 }
             }
         }
         
         if (!procDir.exists()) {
-            LOG.warn("/proc directory does not exist");
+            getLOG().warn("/proc directory does not exist");
         } else if (!procDir.isDirectory()) {
-            LOG.warn("/proc directory is not a directory");
+            getLOG().warn("/proc directory is not a directory");
         } else if (!procDir.canRead()) {
-            LOG.warn("/proc directory is not readable");
+            getLOG().warn("/proc directory is not readable");
         }
 
         List<String> readOut;
@@ -134,7 +149,7 @@ public class ProcessMD {
             readOut = readFile(statusFile);
             if (readOut.size() > 0) {
                 for (String stat : readOut) {
-                    this.status.add(stat);
+                    this.getStatus().add(stat);
                 }
 
             }
@@ -147,14 +162,13 @@ public class ProcessMD {
             readOut = readFile(ioFile);
             if (readOut.size() > 0) {
                 for (String ioline : readOut) {
-                    this.io.add(ioline);
+                    this.getIo().add(ioline);
                 }
 
             }
         } catch (Exception ex) {
             this.io = new ArrayList<String>();
         }
-
     }
 
     List<String> readFile(File file) throws IOException {
@@ -210,5 +224,9 @@ public class ProcessMD {
 
     public List<String> getIo() {
         return Collections.unmodifiableList(io);
+    }
+
+    public Map<String, String> getStartupOptions() {
+        return Collections.unmodifiableMap(startupOptions);
     }
 }

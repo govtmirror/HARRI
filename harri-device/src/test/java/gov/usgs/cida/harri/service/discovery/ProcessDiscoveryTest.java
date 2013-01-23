@@ -1,7 +1,9 @@
 package gov.usgs.cida.harri.service.discovery;
 
+import gov.usgs.cida.harri.service.instance.Instance;
 import java.io.IOException;
 import java.util.List;
+import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -56,11 +58,33 @@ public class ProcessDiscoveryTest {
         List<Long> result = ProcessDiscovery.getProcessIDList(ProcessType.TOMCAT);
         assertNotNull(result);
     }
+    
     @Test
     public void testGetProcessMDList() throws IOException {
         System.out.println("testGetProcessMDListForTomcat");
-        List<ProcessMD> result = ProcessDiscovery.getProcesses();
+        List<ProcessMD> result = ProcessDiscovery.getProcesses(ProcessType.TOMCAT);
         assertNotNull(result);
+    }
+        
+    @Test
+    public void testCreateInstance() throws IOException {
+        System.out.println("testGetProcessMDListForTomcat");
+        List<ProcessMD> result = ProcessDiscovery.getProcesses(ProcessType.TOMCAT);
+        assertNotNull(result);
+        Instance tomcat = result.get(0).createInstance();
+        assertNotNull(tomcat);
+    }
+    
+    @Test
+    public void testPopulateInstance() throws IOException {
+        System.out.println("testGetProcessMDListForTomcat");
+        List<ProcessMD> result = ProcessDiscovery.getProcesses(ProcessType.TOMCAT);
+        assertNotNull(result);
+        Instance tomcat = result.get(0).createInstance();
+        assertNotNull(tomcat);
+        tomcat.populate();
+        assertFalse(StringUtils.isBlank(tomcat.getManagerUsername()));
+        assertFalse(StringUtils.isBlank(tomcat.getManagerPassword()));
     }
     
 }

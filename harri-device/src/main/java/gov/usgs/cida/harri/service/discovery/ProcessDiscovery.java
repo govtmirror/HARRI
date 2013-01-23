@@ -3,8 +3,6 @@ package gov.usgs.cida.harri.service.discovery;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
@@ -18,12 +16,21 @@ public class ProcessDiscovery {
     private static org.slf4j.Logger LOG = LoggerFactory.getLogger(ProcessDiscovery.class);
 
     public static List<ProcessMD> getProcesses() throws IOException {
+        return getProcesses(null);
+    }
+    
+    public static List<ProcessMD> getProcesses(ProcessType pt) throws IOException {
         List<ProcessMD> pmdList = new ArrayList<ProcessMD>();
-        ProcessType[] pmdArr = new ProcessType[]{
-            ProcessType.APACHE,
-            ProcessType.DJANGO,
-            ProcessType.TOMCAT
-        };
+        ProcessType[] pmdArr;
+        if (pt == null) {
+            pmdArr = new ProcessType[]{
+                ProcessType.APACHE,
+                ProcessType.DJANGO,
+                ProcessType.TOMCAT
+            };
+        } else {
+            pmdArr = new ProcessType[]{pt};
+        }
 
         for (ProcessType ptype : pmdArr) {
             List<Long> pidList = getProcessIDList(ptype);
@@ -48,9 +55,9 @@ public class ProcessDiscovery {
         Process pr = run.exec(new String[]{"sh", "-c", command});
 
         try {
-            int status = pr.waitFor();
+            pr.waitFor();
         } catch (InterruptedException ex) {
-            Logger.getLogger(ProcessDiscovery.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.error(ex.getMessage());
         }
 
         procList = IOUtils.readLines(pr.getInputStream());
