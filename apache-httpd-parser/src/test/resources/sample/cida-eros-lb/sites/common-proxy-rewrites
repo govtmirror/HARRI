@@ -1,0 +1,3 @@
+Substitute "s|internal.cida.usgs.gov|cida-wiwsc-vip-intcida.er.usgs.gov|nq"
+ProxyPassReverseCookieDomain internal.cida.usgs.gov cida-wiwsc-vip-intcida.er.usgs.gov
+Header edit Location ://internal.cida.usgs.gov ://cida-wiwsc-vip-intcida.er.usgs.gov
