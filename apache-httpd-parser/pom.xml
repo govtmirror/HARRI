@@ -7,7 +7,6 @@
 		<version>0.1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<groupId>gov.usgs.cida</groupId>
 	<artifactId>apache-httpd-parser</artifactId>
 	<name>HARRI Apache HTTPd Parser</name>
 	<properties>

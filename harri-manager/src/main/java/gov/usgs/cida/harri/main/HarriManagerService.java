@@ -5,6 +5,7 @@ import java.util.Collection;
 import gov.usgs.cida.harri.instance.InstanceDiscoveryServiceCalls;
 import gov.usgs.cida.harri.service.discovery.ProcessDiscoveryServiceCalls;
 import gov.usgs.cida.harri.service.echo.EchoServiceCalls;
+import gov.usgs.cida.harri.service.httpd.HTTPdProxyServiceCalls;
 import gov.usgs.cida.harri.util.HarriUtils;
 
 import org.teleal.cling.UpnpService;
@@ -138,6 +139,7 @@ public class HarriManagerService implements Runnable {
 				EchoServiceCalls.echoHostname(harriManagerUpnpService, (RemoteDevice) d); //TODO delete when not needed
 				ProcessDiscoveryServiceCalls.doServiceCalls(harriManagerUpnpService, (RemoteDevice) d);
 				InstanceDiscoveryServiceCalls.doServiceCalls(harriManagerUpnpService, (RemoteDevice) d);
+                HTTPdProxyServiceCalls.listProxyMappings(harriManagerUpnpService, (RemoteDevice) d);
 			} catch (RuntimeException e) {
 				LOG.info("Runtime exception: " + e.getMessage());
 			}

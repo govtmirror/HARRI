@@ -14,12 +14,18 @@ import java.util.List;
  */
 public class ProxyMapping {
     
-        private final String fromPath;
+    private final String fromHost;
+    private final String fromPath;
     private final List<String> toURLList;
     
-    private ProxyMapping(String fromPath, List<String> toURLList) {
+    private ProxyMapping(String fromHost, String fromPath, List<String> toURLList) {
+        this.fromHost = fromHost;
         this.fromPath = fromPath;
         this.toURLList = Collections.unmodifiableList(toURLList);
+    }
+    
+    public String getFromHost() {
+        return fromHost;
     }
     
     public String getFromPath() {
@@ -32,10 +38,12 @@ public class ProxyMapping {
     
     public static class Builder {
         
+        private final String fromHost;
         private final String fromPath;
         private final List<String> toURLList;
         
-        public Builder(String fromPath) {
+        public Builder(String fromHost, String fromPath) {
+            this.fromHost = fromHost;
             this.fromPath = fromPath;
             this.toURLList = new ArrayList<String>();
         }
@@ -46,7 +54,7 @@ public class ProxyMapping {
         }
         
         public ProxyMapping build() {
-            return new ProxyMapping(fromPath, toURLList);
+            return new ProxyMapping(fromHost, fromPath, toURLList);
         }
     } 
     

@@ -10,12 +10,18 @@ package gov.usgs.cida.harri.httpd;
  */
 public class RewriteRuleToURL {
     
+    private final String fromHost;
     private final String fromPath;
     private final String toURL;
     
-    private RewriteRuleToURL(String fromPath, String toURL) {
+    private RewriteRuleToURL(String fromHost, String fromPath, String toURL) {
+        this.fromHost = fromHost;
         this.fromPath = fromPath;
         this.toURL = toURL;
+    }
+    
+    public String getFromHost() {
+        return fromHost;
     }
     
     public String getFromPath() {
@@ -28,16 +34,18 @@ public class RewriteRuleToURL {
     
     public static class Builder {
         
+        private final String fromHost;
         private final String fromPath;
         private final String toURL;
         
-        public Builder(String fromPath, String toURL) {
+        public Builder(String fromHost, String fromPath, String toURL) {
+            this.fromHost = fromHost;
             this.fromPath = fromPath;
             this.toURL = toURL;
         }
         
         public RewriteRuleToURL build() {
-            return new RewriteRuleToURL(fromPath, toURL);
+            return new RewriteRuleToURL(fromHost, fromPath, toURL);
         }
     } 
     

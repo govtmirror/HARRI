@@ -2,6 +2,7 @@ package gov.usgs.cida.harri.main;
 
 import gov.usgs.cida.harri.service.discovery.ProcessDiscoveryService;
 import gov.usgs.cida.harri.service.echo.EchoService;
+import gov.usgs.cida.harri.service.httpd.HTTPdProxyService;
 import gov.usgs.cida.harri.service.instance.InstanceDiscoveryService;
 import gov.usgs.cida.harri.util.HarriUtils;
 
@@ -120,7 +121,14 @@ public class HarriDeviceService implements Runnable {
                 new DefaultServiceManager<InstanceDiscoveryService>(ids, InstanceDiscoveryService.class)
         );
         
-    	return new LocalService[] {echoService, pds, ids};
+        @SuppressWarnings("unchecked")
+		LocalService<HTTPdProxyService> hpds =
+                new AnnotationLocalServiceBinder().read(HTTPdProxyService.class);
+        hpds.setManager(
+                new DefaultServiceManager<HTTPdProxyService>(hpds, HTTPdProxyService.class)
+        );
+        
+    	return new LocalService[] {echoService, pds, ids, hpds};
     }
     
     private Integer getDeviceVersion() {

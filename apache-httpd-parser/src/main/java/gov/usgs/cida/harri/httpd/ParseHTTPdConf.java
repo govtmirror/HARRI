@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.sound.midi.SysexMessage;
 
 /**
  *
@@ -77,7 +78,9 @@ public class ParseHTTPdConf {
             for (File child : file.listFiles()) {
                 rewriteToURLList.addAll(getRewriteRuleToURL(child));
             }
-        } else {           
+        } else {
+            String fileName = file.getName();
+            String fromHost = fileName.replace(".conf$", "");
             BufferedReader reader = null;
             try {
 
@@ -87,7 +90,7 @@ public class ParseHTTPdConf {
                 while ( (line = reader.readLine()) != null) {
                     Matcher matcher = PATTERN_rewriteRuleToBalancer.matcher(line);
                     if (matcher.matches()) {
-                        rewriteToURLList.add(new RewriteRuleToURL.Builder(matcher.group(1), matcher.group(2)).build());
+                        rewriteToURLList.add(new RewriteRuleToURL.Builder(fromHost, matcher.group(1), matcher.group(2)).build());
                     }
                 }
 
@@ -104,11 +107,11 @@ public class ParseHTTPdConf {
         List<ProxyToBalancer> proxyToBalancerList = getProxyToBalancerList(file);
         List<RewriteRuleToURL> rewriteRuleToURLList = getRewriteRuleToURL(file);
         
-        List<ProxyMapping> proxyMapping = new ArrayList<ProxyMapping>();
+        List<ProxyMapping> proxyMappingList = new ArrayList<ProxyMapping>();
         
         // 0(n^2) ouch...
         for (RewriteRuleToURL rewrite : rewriteRuleToURLList) {
-            ProxyMapping.Builder builder = new ProxyMapping.Builder(rewrite.getFromPath());
+            ProxyMapping.Builder builder = new ProxyMapping.Builder(rewrite.getFromHost(), rewrite.getFromPath());
             String mapToURL = rewrite.getToURL();
             if (mapToURL.startsWith("balancer")) {
                 ProxyToBalancer balancer = null;
@@ -130,9 +133,19 @@ public class ParseHTTPdConf {
             } else {
                 builder.addToURL(mapToURL);
             }
-            proxyMapping.add(builder.build());
+            proxyMappingList.add(builder.build());
         }
         
-        return proxyMapping;
-    } 
+        return proxyMappingList;
+    }
+    
+    public static List<ProxyMapping> getProxyMappingList() throws IOException {
+        List<ProxyMapping> proxyMappingList = new ArrayList<ProxyMapping>();
+        String directoryPath = System.getProperty("apache.httpd.conf.dir", "/etc/opt/httpd/conf");
+        File directory = new File(directoryPath);
+        if (directory.exists()) {
+            proxyMappingList.addAll(getProxyMappingList(directory));
+        }
+        return proxyMappingList;
+    }
 }

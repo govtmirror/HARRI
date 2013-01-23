@@ -19,13 +19,13 @@ import static org.junit.Assert.*;
  */
 public class ParseHTTPdConfTest {
     
-    @Test
+//    @Test
     @Ignore
     public void testGetProxy() throws IOException {
-        List<ProxyMapping> pml = ParseHTTPdConf.getProxyMappingList(new File("src/test/resources/sample/cida-eros-apaprodW"));
+        List<ProxyMapping> pml = ParseHTTPdConf.getProxyMappingList(new File("src/test/resources/sample/cida-eros-apaprod1"));
         for (ProxyMapping pm : pml) {
             for (String toURL : pm.getToURLList()) {
-                System.out.println(pm.getFromPath() + " -> " + toURL);
+                System.out.println(pm.getFromHost() + pm.getFromPath() + " -> " + toURL);
             }
         }
     }
