@@ -1,6 +1,8 @@
 package gov.usgs.cida.harri.service.discovery;
 
 import gov.usgs.cida.harri.service.instance.Instance;
+import gov.usgs.cida.harri.service.instance.Tomcat;
+
 import java.io.IOException;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
@@ -82,7 +84,7 @@ public class ProcessDiscoveryTest {
         List<ProcessMD> result = ProcessDiscovery.getProcesses(ProcessType.TOMCAT);
         assertNotNull(result);
         assertFalse(result.isEmpty());
-        Instance tomcat = result.get(0).createInstance();
+        Tomcat tomcat = (Tomcat)result.get(0).createInstance();
         assertNotNull(tomcat);
         tomcat.populate();
         assertFalse(StringUtils.isBlank(tomcat.getManagerUsername()));

@@ -21,5 +21,6 @@ public class InstanceDiscoveryServiceCalls {
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("HarriManagerId", HarriUtils.getSystemHostName());
 		pds.executeAction("GetAllTomcatInstances", params, "GetAllTomcatInstancesResponse");
+		pds.executeAction("GetAllDjangoInstances", params, "GetAllDjangoInstancesResponse");
 	}
 }

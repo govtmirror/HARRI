@@ -48,11 +48,14 @@ public class HarriServiceExecutor {
 					@Override
 					public void success(ActionInvocation invocation) {
 						assert invocation.getOutput().length == 0;
-						LOG.info("Service " + actionName + " successfully called.");
+						String deviceName = invocation.getAction().getService().getDevice().getDetails().getModelDetails().getModelName();
+						String responseMessage = "";
+						responseMessage = "Service " + actionName + " successfully called on " + deviceName + ". Response: ";
 						if(expectResponseVariable != null) {
 							//TODO how do we get this response back up to the manager (or somewhere useful)
-							LOG.info("Response from remote device: \n" + invocation.getOutput(expectResponseVariable).toString());
+							responseMessage += "\n" + invocation.getOutput(expectResponseVariable).toString();
 						}
+						LOG.info(responseMessage);
 					}
 
 					@Override

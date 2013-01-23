@@ -180,12 +180,10 @@ public class Tomcat extends Instance {
         
     }
 
-    @Override
     public String getManagerUsername() {
         return managerUsername;
     }
 
-    @Override
     public String getManagerPassword() {
         return managerPassword;
     }
