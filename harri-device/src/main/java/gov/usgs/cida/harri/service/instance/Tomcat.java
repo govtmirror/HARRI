@@ -143,7 +143,11 @@ public class Tomcat extends Instance {
                 String startTime = appInfo.substring(0, appInfo.indexOf("Startup time"));
                 String startupTime = appInfo.substring(startTime.length(), appInfo.indexOf("TLD"));
                 Boolean running = !startTime.contains("1969");
-                ApplicationInfo applicationInfo = new ApplicationInfo(appName, startTime, startupTime, running);
+                ApplicationInfo applicationInfo = new ApplicationInfo(
+                        appName.trim(), 
+                        startTime.substring(startTime.indexOf(":") + 1).trim(), 
+                        startupTime.substring(startupTime.indexOf(":") + 1).trim(), 
+                        running);
                 this.applicationMap.put(appName, applicationInfo);
             }
         } catch (Exception ex) {
