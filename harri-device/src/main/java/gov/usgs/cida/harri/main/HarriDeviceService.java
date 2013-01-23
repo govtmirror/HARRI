@@ -2,6 +2,7 @@ package gov.usgs.cida.harri.main;
 
 import gov.usgs.cida.harri.service.discovery.ProcessDiscoveryService;
 import gov.usgs.cida.harri.service.echo.EchoService;
+import gov.usgs.cida.harri.service.instance.InstanceDiscoveryService;
 import gov.usgs.cida.harri.util.HarriUtils;
 
 import java.io.IOException;
@@ -22,6 +23,7 @@ public class HarriDeviceService implements Runnable {
 	Logger LOG = LoggerFactory.getLogger(HarriDeviceService.class);
 	
     public static void main(String[] args) throws Exception {
+    	//TODO dependency check and fatal error on start up
         // Start a user thread that runs the UPnP stack
         Thread serverThread = new Thread(new HarriDeviceService());
         serverThread.setDaemon(false);
@@ -96,13 +98,13 @@ public class HarriDeviceService implements Runnable {
          */
         
         @SuppressWarnings("unchecked")
-		LocalService<EchoService> exampleHarriActionService =
+		LocalService<EchoService> echoService =
                 new AnnotationLocalServiceBinder().read(EchoService.class);
-        exampleHarriActionService.setManager(
-                new DefaultServiceManager<EchoService>(exampleHarriActionService, EchoService.class)
+        echoService.setManager(
+                new DefaultServiceManager<EchoService>(echoService, EchoService.class)
         );
         
-        //bind process query
+        //bind process services
         @SuppressWarnings("unchecked")
 		LocalService<ProcessDiscoveryService> pds =
                 new AnnotationLocalServiceBinder().read(ProcessDiscoveryService.class);
@@ -110,7 +112,15 @@ public class HarriDeviceService implements Runnable {
                 new DefaultServiceManager<ProcessDiscoveryService>(pds, ProcessDiscoveryService.class)
         );
         
-    	return new LocalService[] {exampleHarriActionService, pds};
+        //bind instances services
+        @SuppressWarnings("unchecked")
+		LocalService<InstanceDiscoveryService> ids =
+                new AnnotationLocalServiceBinder().read(InstanceDiscoveryService.class);
+        ids.setManager(
+                new DefaultServiceManager<InstanceDiscoveryService>(ids, InstanceDiscoveryService.class)
+        );
+        
+    	return new LocalService[] {echoService, pds, ids};
     }
     
     private Integer getDeviceVersion() {

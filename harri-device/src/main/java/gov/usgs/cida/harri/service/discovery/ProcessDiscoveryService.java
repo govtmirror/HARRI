@@ -38,7 +38,7 @@ public class ProcessDiscoveryService {
 		}
         
         for(ProcessMD p : ps) {
-        	getAllProcessesResponse += "\n" + p.getType() + ":" + p.getPid();
+        	getAllProcessesResponse += p.getType() + ":" + p.getPid() + "\n";
         }
         
         return getAllProcessesResponse;

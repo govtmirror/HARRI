@@ -2,6 +2,7 @@ package gov.usgs.cida.harri.main;
 
 import java.util.Collection;
 
+import gov.usgs.cida.harri.instance.InstanceDiscoveryServiceCalls;
 import gov.usgs.cida.harri.service.discovery.ProcessDiscoveryServiceCalls;
 import gov.usgs.cida.harri.service.echo.EchoServiceCalls;
 import gov.usgs.cida.harri.util.HarriUtils;
@@ -125,8 +126,13 @@ public class HarriManagerService implements Runnable {
 			}
 			//TODO call all service/action combinations for every device here
 			LOG.info("Calling all services on " + d.getDetails().getModelDetails().getModelName());
-			EchoServiceCalls.echoHostname(harriManagerUpnpService, (RemoteDevice) d); //TODO delete when not needed
-			ProcessDiscoveryServiceCalls.doServiceCalls(harriManagerUpnpService, (RemoteDevice) d);
+			try {
+				EchoServiceCalls.echoHostname(harriManagerUpnpService, (RemoteDevice) d); //TODO delete when not needed
+				ProcessDiscoveryServiceCalls.doServiceCalls(harriManagerUpnpService, (RemoteDevice) d);
+				InstanceDiscoveryServiceCalls.doServiceCalls(harriManagerUpnpService, (RemoteDevice) d);
+			} catch (RuntimeException e) {
+				LOG.info("Runtime exception: " + e.getMessage());
+			}
 		}
 	}
 }
