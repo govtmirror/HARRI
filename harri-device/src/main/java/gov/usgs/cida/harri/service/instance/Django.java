@@ -1,6 +1,7 @@
 package gov.usgs.cida.harri.service.instance;
 
 import gov.usgs.cida.harri.service.discovery.ProcessMD;
+import java.util.Map;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -43,5 +44,10 @@ public class Django extends Instance {
     @Override
     public Integer getHttpsPort() {
         return httpsPort;
+    }
+
+    @Override
+    public Map<String, ApplicationInfo> getApplicationMap() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

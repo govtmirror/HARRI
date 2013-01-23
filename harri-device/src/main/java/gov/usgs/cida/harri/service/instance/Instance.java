@@ -1,6 +1,7 @@
 package gov.usgs.cida.harri.service.instance;
 
 import gov.usgs.cida.harri.service.discovery.ProcessMD;
+import java.util.Map;
 
 /**
  *
@@ -21,4 +22,6 @@ public abstract class Instance {
     abstract public Integer getHttpPort();
 
     abstract public Integer getHttpsPort();
+    
+    abstract public Map<String, ApplicationInfo> getApplicationMap();
 }

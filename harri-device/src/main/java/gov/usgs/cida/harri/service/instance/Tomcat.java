@@ -7,7 +7,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -34,9 +37,11 @@ public class Tomcat extends Instance {
     private String managerPassword = "";
     private Integer httpPort = 0;
     private Integer httpsPort = 0;
+    private Map<String, ApplicationInfo> applicationMap;
 
     public Tomcat(ProcessMD md) {
         this.md = md;
+        this.applicationMap = new HashMap<String, ApplicationInfo>();
     }
 
     @Override
@@ -111,7 +116,7 @@ public class Tomcat extends Instance {
     void getRemoteInfo() {
         try {
             URL url = new URL("http://127.0.0.1:" + this.getHttpPort() + "/manager/status/all");
-            String encoding = Base64.encode((this.managerUsername + ":" + this.managerPassword).getBytes());
+            String encoding = Base64.encode((this.getManagerUsername() + ":" + this.getManagerPassword()).getBytes());
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
@@ -130,7 +135,17 @@ public class Tomcat extends Instance {
             Document doc = parseXMLInputStream(IOUtils.toInputStream(sb.toString()));
             JXPathContext ctx = JXPathContext.newContext(doc.getDocumentElement());
 
-            Node httpPortNode = (Node) ctx.selectSingleNode("//h1[text()='JVM']");
+            String memStats = ((Node) ctx.selectSingleNode("//h1[text()='JVM']/following-sibling::p[1]")).getTextContent();
+            List<Node> appListingNodes = (List<Node>) ctx.selectNodes("/body/a[@class='A.name']");
+            for (Node node : appListingNodes) {
+                String appName = node.getChildNodes().item(0).getTextContent().substring("localhost".length());
+                String appInfo = node.getNextSibling().getTextContent();
+                String startTime = appInfo.substring(0, appInfo.indexOf("Startup time"));
+                String startupTime = appInfo.substring(startTime.length(), appInfo.indexOf("TLD"));
+                Boolean running = !startTime.contains("1969");
+                ApplicationInfo applicationInfo = new ApplicationInfo(appName, startTime, startupTime, running);
+                this.applicationMap.put(appName, applicationInfo);
+            }
         } catch (Exception ex) {
             getLOG().warn(ex.getMessage());
         }
@@ -166,5 +181,10 @@ public class Tomcat extends Instance {
     @Override
     public Integer getHttpsPort() {
         return httpsPort;
+    }
+    
+    
+    public Map<String, ApplicationInfo> getApplicationMap() {
+        return applicationMap;
     }
 }
