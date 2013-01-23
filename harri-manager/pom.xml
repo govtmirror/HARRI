@@ -13,9 +13,21 @@
     	This is the HARRI Manager. It acts as a data aggregator and collects data from HARRI Devices. HARRI Devices register and are discovered
     	by HARRI Managers via UPnP. 
     </description>
+
+    <repositories>
+     <repository>
+       <id>cida-thirdparty</id>
+       <url>http://internal.cida.usgs.gov/maven/content/repositories/cida-thirdparty</url>
+     </repository>
+    </repositories>
     
 	<dependencies>
-	</dependencies>
+        <dependency>
+			<groupId>com.vmware</groupId>
+			<artifactId>vim25</artifactId>
+			<version>2.5-1</version>
+		</dependency>
+    </dependencies>
 	
 	<build>
         <finalName>HARRI_Manager</finalName>
