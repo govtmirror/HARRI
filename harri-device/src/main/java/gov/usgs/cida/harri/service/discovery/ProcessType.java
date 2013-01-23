@@ -6,7 +6,7 @@ package gov.usgs.cida.harri.service.discovery;
  */
 public enum ProcessType {
     TOMCAT("tomcat", "org.apache.catalina.startup.Bootstrap start"), 
-    DJANGO("modwsgi", ""), 
+    DJANGO("wsgi", "django"), 
     APACHE("apache", "");
     
     private String processName;

@@ -119,6 +119,14 @@ public class HarriManagerService implements Runnable {
 	
 	private void runHarriProcesses(final UpnpService harriManagerUpnpService) {
 		LOG.info("Refreshing data (running all known HARRI Services)");
+		
+		//VMWARE read
+		//TODO call mary's list
+		
+		//Apache URL read
+		//TODO
+		
+		//REMOTE CALLS
 		Collection<Device> allDevices = harriManagerUpnpService.getRegistry().getDevices();
 		for(Device d : allDevices) {
 			if(!HarriUtils.isHarriDevice(d)){

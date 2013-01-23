@@ -30,6 +30,9 @@ public class InstanceDiscoveryService {
     
     @UpnpStateVariable(defaultValue = "")
     private String getAllDjangoInstancesResponse = "";
+    
+    @UpnpStateVariable(defaultValue = "")
+    private String getAllDjangoAppsResponse = "";
 	
     @UpnpAction(out = @UpnpOutputArgument(name = "GetAllTomcatInstancesResponse"))
     public String getAllTomcatInstances(@UpnpInputArgument(name = "HarriManagerId")
@@ -79,12 +82,39 @@ public class InstanceDiscoveryService {
         		dj.populate();
         		getAllDjangoInstancesResponse += 
         				p.getPid() + ":" + 
-        				p.getStartupOptions().get("catalina.home")+":"+
-        				dj.getHttpPort()+":"+
+        				p.getName() +
         				"\n";
         	}
         }
         
         return getAllDjangoInstancesResponse;
+    }
+    
+    @UpnpAction(out = @UpnpOutputArgument(name = "GetAllDjangoAppsResponse"))
+    public String getAllDjangoApps(@UpnpInputArgument(name = "HarriManagerId")
+                          String harriManagerId) {
+    	this.harriManagerId = harriManagerId;
+        LOG.info("GetAllDjangoApps action called by HARRI Manager with ID: " + this.harriManagerId);
+        
+        List<ProcessMD> ps;
+        try {
+			ps = ProcessDiscovery.getProcesses();
+		} catch (IOException e) {
+			return getAllDjangoInstancesResponse;
+		}
+        
+        for(ProcessMD p : ps) {
+        	if(p.getType().equals(ProcessType.DJANGO)) {
+        		Django dj = (Django) p.createInstance();
+        		dj.populate();
+        		for(String app : dj.getAppList()) {
+        			getAllDjangoAppsResponse += 
+            				app + 
+            				"\n";
+        		}
+        	}
+        }
+        
+        return getAllDjangoAppsResponse;
     }
 }
