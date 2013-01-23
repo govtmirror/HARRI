@@ -55,14 +55,14 @@ public class HarriServiceExecutor {
 							//TODO how do we get this response back up to the manager (or somewhere useful)
 							responseMessage += "\n" + invocation.getOutput(expectResponseVariable).toString();
 						}
-						LOG.info("\nSUCCESS: " + responseMessage);
+						LOG.info(responseMessage);
 					}
 
 					@Override
 					public void failure(ActionInvocation invocation,
 							UpnpResponse operation,
 							String defaultMsg) {
-						LOG.error("\nERROR: " + defaultMsg);
+						LOG.error(defaultMsg);
 					}
 				}
 				);

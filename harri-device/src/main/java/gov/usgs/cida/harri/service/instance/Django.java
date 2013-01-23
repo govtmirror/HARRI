@@ -2,11 +2,14 @@ package gov.usgs.cida.harri.service.instance;
 
 import gov.usgs.cida.harri.service.discovery.ProcessMD;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -40,20 +43,31 @@ public class Django extends Instance {
 			}
 			webAppsDir += WEBAPPS_DIR;
 		}
-		
+
+    	LOG.info("searching in " + webAppsDir);
 		return webAppsDir;
 	}
 
     @Override
     public void populate() {
     	appList = new ArrayList<String>();
-    	
-    	Collection<File> dirs = FileUtils.listFilesAndDirs(new File(getWebAppsDirectory()), null, null); 
-    	for(File f : dirs) {
-    		if(f.isDirectory()) {
-    			appList.add(f.getName());
-    		}
-    	}
+
+        try {
+            Runtime run = Runtime.getRuntime();
+        	Process pr = run.exec(new String[]{"ls", getWebAppsDirectory()});
+            pr.waitFor();
+            
+            for(String line : IOUtils.readLines(pr.getInputStream())){
+            	String[] apps = line.split("\\s");
+            	for(int i = 0; i < apps.length; i++) {
+            		appList.add(apps[i]);
+            	}
+            }
+        } catch (InterruptedException ex) {
+            LOG.error(ex.getMessage());
+        } catch (IOException ex) {
+            LOG.error(ex.getMessage());
+        }
     }
     
     @Override

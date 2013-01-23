@@ -144,6 +144,7 @@ public class InstanceDiscoveryService {
         for (ProcessMD p : ps) {
             if (p.getType().equals(ProcessType.DJANGO)) {
                 Django dj = (Django) p.createInstance();
+
                 dj.populate();
                 for (String app : dj.getAppList()) {
                     getAllDjangoAppsResponse +=
@@ -152,7 +153,6 @@ public class InstanceDiscoveryService {
                 }
             }
         }
-
         return getAllDjangoAppsResponse;
     }
 }
