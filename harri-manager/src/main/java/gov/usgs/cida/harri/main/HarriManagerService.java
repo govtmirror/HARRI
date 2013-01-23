@@ -2,8 +2,8 @@ package gov.usgs.cida.harri.main;
 
 import java.util.Collection;
 
-import gov.usgs.cida.harri.service.ExampleServiceCalls;
 import gov.usgs.cida.harri.service.discovery.ProcessDiscoveryServiceCalls;
+import gov.usgs.cida.harri.service.echo.EchoServiceCalls;
 import gov.usgs.cida.harri.util.HarriUtils;
 
 import org.teleal.cling.UpnpService;
@@ -125,7 +125,7 @@ public class HarriManagerService implements Runnable {
 			}
 			//TODO call all service/action combinations for every device here
 			LOG.info("Calling all services on " + d.getDetails().getModelDetails().getModelName());
-			ExampleServiceCalls.doExampleServiceCall(harriManagerUpnpService, (RemoteDevice) d); //TODO delete when not needed
+			EchoServiceCalls.echoHostname(harriManagerUpnpService, (RemoteDevice) d); //TODO delete when not needed
 			ProcessDiscoveryServiceCalls.doServiceCalls(harriManagerUpnpService, (RemoteDevice) d);
 		}
 	}

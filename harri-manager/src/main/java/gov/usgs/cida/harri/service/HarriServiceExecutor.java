@@ -51,7 +51,7 @@ public class HarriServiceExecutor {
 						LOG.info("Service " + actionName + " successfully called.");
 						if(expectResponseVariable != null) {
 							//TODO how do we get this response back up to the manager (or somewhere useful)
-							LOG.info("MANAGER received following response from device service call: " + invocation.getOutput(expectResponseVariable).toString());
+							LOG.info("Response from remote device: \n" + invocation.getOutput(expectResponseVariable).toString());
 						}
 					}
 

@@ -1,7 +1,8 @@
 package gov.usgs.cida.harri.main;
 
-import gov.usgs.cida.harri.service.ExampleHarriService;
 import gov.usgs.cida.harri.service.discovery.ProcessDiscoveryService;
+import gov.usgs.cida.harri.service.echo.EchoService;
+import gov.usgs.cida.harri.util.HarriUtils;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -20,9 +21,6 @@ import org.teleal.cling.model.types.*;
 public class HarriDeviceService implements Runnable {
 	Logger LOG = LoggerFactory.getLogger(HarriDeviceService.class);
 	
-	public static final String DEVICE_TYPE = "HARRI_Device";
-	public static final String DEVICE_MANUFACTURER = "CIDA";
-
     public static void main(String[] args) throws Exception {
         // Start a user thread that runs the UPnP stack
         Thread serverThread = new Thread(new HarriDeviceService());
@@ -46,7 +44,7 @@ public class HarriDeviceService implements Runnable {
             // Add the bound local device to the registry
             upnpService.getRegistry().addDevice(
                     createDevice(
-                    	getSystemHostName(), 
+                    	HarriUtils.getSystemHostName(), 
                     	getDeviceVersion()
                     ) 
             );
@@ -63,18 +61,18 @@ public class HarriDeviceService implements Runnable {
 
         DeviceIdentity identity =
                 new DeviceIdentity(
-                        UDN.uniqueSystemIdentifier(DEVICE_TYPE + "_" + hostName)
+                        UDN.uniqueSystemIdentifier(HarriUtils.DEVICE_TYPE + "_" + hostName)
                 );
 
         DeviceType type =
-                new UDADeviceType(DEVICE_TYPE, version);
+                new UDADeviceType(HarriUtils.DEVICE_TYPE, version);
 
         DeviceDetails details =
                 new DeviceDetails(
-                		DEVICE_TYPE,
-                        new ManufacturerDetails(DEVICE_MANUFACTURER),
+                		HarriUtils.DEVICE_TYPE,
+                        new ManufacturerDetails(HarriUtils.DEVICE_MANUFACTURER),
                         new ModelDetails(
-                        		DEVICE_TYPE + "_" + hostName,
+                        		HarriUtils.DEVICE_TYPE + "_" + hostName,
                                 "This is a harry device installed on " + hostName,
                                 "v" + version
                         )
@@ -83,7 +81,7 @@ public class HarriDeviceService implements Runnable {
 
         LocalService[] deviceServices = bindServicesToDevice();
         
-        LOG.info("HARRI Device created: " + DEVICE_TYPE + "_" + hostName);
+        LOG.info("HARRI Device created: " + HarriUtils.DEVICE_TYPE + "_" + hostName);
         return new LocalDevice(identity, type, details, deviceServices);
     }
     
@@ -98,10 +96,10 @@ public class HarriDeviceService implements Runnable {
          */
         
         @SuppressWarnings("unchecked")
-		LocalService<ExampleHarriService> exampleHarriActionService =
-                new AnnotationLocalServiceBinder().read(ExampleHarriService.class);
+		LocalService<EchoService> exampleHarriActionService =
+                new AnnotationLocalServiceBinder().read(EchoService.class);
         exampleHarriActionService.setManager(
-                new DefaultServiceManager<ExampleHarriService>(exampleHarriActionService, ExampleHarriService.class)
+                new DefaultServiceManager<EchoService>(exampleHarriActionService, EchoService.class)
         );
         
         //bind process query
@@ -113,17 +111,6 @@ public class HarriDeviceService implements Runnable {
         );
         
     	return new LocalService[] {exampleHarriActionService, pds};
-    }
-    
-    private String getSystemHostName() {
-    	String hostName = "NoHostNameFound";
-    	try {
-			hostName = InetAddress.getLocalHost().getHostName();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	return hostName;
     }
     
     private Integer getDeviceVersion() {

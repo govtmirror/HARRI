@@ -28,7 +28,7 @@ public class ProcessDiscoveryService {
     public String getAllProcesses(@UpnpInputArgument(name = "HarriManagerId")
                           String harriManagerId) {
     	this.harriManagerId = harriManagerId;
-        LOG.info("Request for all processes on current machine sent from HARRI Manager with ID: " + this.harriManagerId);
+        LOG.info("GetAllProcesses action called by HARRI Manager with ID: " + this.harriManagerId);
         
         List<ProcessMD> ps;
         try {
