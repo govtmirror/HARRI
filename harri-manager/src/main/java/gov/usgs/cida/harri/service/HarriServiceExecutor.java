@@ -39,6 +39,7 @@ public class HarriServiceExecutor {
 	}
 	
 	public void executeAction(final String actionName, final Map<String,String> params, final String expectResponseVariable) {
+            LOG.debug("HarriServiceExecutor::executeAction");
 		ActionInvocation setTargetInvocation = new HarriActionInvocation(service, actionName, params);
 
 		// Executes asynchronous in the background
@@ -49,20 +50,19 @@ public class HarriServiceExecutor {
 					public void success(ActionInvocation invocation) {
 						assert invocation.getOutput().length == 0;
 						String deviceName = invocation.getAction().getService().getDevice().getDetails().getModelDetails().getModelName();
-						String responseMessage = "";
-						responseMessage = "Service " + actionName + " successfully called on " + deviceName + ". Response: ";
+						String responseMessage = "Service " + actionName + " successfully called on " + deviceName;
 						if(expectResponseVariable != null) {
 							//TODO how do we get this response back up to the manager (or somewhere useful)
 							responseMessage += "\n" + invocation.getOutput(expectResponseVariable).toString();
 						}
-						LOG.info(responseMessage);
+						LOG.info("\nSUCCESS: " + responseMessage);
 					}
 
 					@Override
 					public void failure(ActionInvocation invocation,
 							UpnpResponse operation,
 							String defaultMsg) {
-						LOG.error(defaultMsg);
+						LOG.error("\nERROR: " + defaultMsg);
 					}
 				}
 				);
