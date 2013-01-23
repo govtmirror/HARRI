@@ -51,7 +51,7 @@ public class ProcessDiscovery {
         List<String> procList;
         Runtime run = Runtime.getRuntime();
         String grep = StringUtils.isEmpty(grepCrit) ? "" : " | grep '" + grepCrit + "' | grep -v grep ";
-        String command = "ps -e " + grep;
+        String command = "ps -ax " + grep;
         Process pr = run.exec(new String[]{"sh", "-c", command});
 
         try {

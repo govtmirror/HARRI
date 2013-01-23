@@ -15,8 +15,14 @@ public abstract class Instance {
     }
     
     abstract public void populate();
+    
+    abstract void getRemoteInfo();
 
     abstract public String getManagerUsername();
 
     abstract public String getManagerPassword();
+    
+    abstract public Integer getHttpPort();
+
+    abstract public Integer getHttpsPort();
 }

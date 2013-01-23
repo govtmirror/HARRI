@@ -1,15 +1,35 @@
 package gov.usgs.cida.harri.service.instance;
 
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import gov.usgs.cida.harri.service.discovery.ProcessMD;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.jxpath.JXPathContext;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.AuthCache;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.protocol.ClientContext;
+import org.apache.http.impl.auth.BasicScheme;
+import org.apache.http.impl.client.BasicAuthCache;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -29,6 +49,7 @@ public class Tomcat extends Instance {
     private String managerUsername = "";
     private String managerPassword = "";
     private Integer httpPort = 0;
+    private Integer httpsPort = 0;
 
     public Tomcat(ProcessMD md) {
         this.md = md;
@@ -77,8 +98,15 @@ public class Tomcat extends Instance {
         } else {
             try {
                 JXPathContext ctx = JXPathContext.newContext(parseXMLFile(serverXML).getDocumentElement());
-                Node portNode = (Node) ctx.selectSingleNode("/Service[@name='Catalina']/Connector[@protocol='HTTP/1.1' and not(@SSLEnabled='true')]");
-                this.httpPort = Integer.parseInt(portNode.getAttributes().getNamedItem("port").getTextContent());
+                Node httpPortNode = (Node) ctx.selectSingleNode("/Service[@name='Catalina']/Connector[@protocol='HTTP/1.1' and not(@SSLEnabled='true')]");
+                Node httpsPortNode = (Node) ctx.selectSingleNode("/Service[@name='Catalina']/Connector[@protocol='HTTP/1.1' and @SSLEnabled='true']");
+
+                if (httpPortNode != null) {
+                    this.httpPort = Integer.parseInt(httpPortNode.getAttributes().getNamedItem("port").getTextContent());
+                }
+                if (httpsPortNode != null) {
+                    this.httpsPort = Integer.parseInt(httpsPortNode.getAttributes().getNamedItem("port").getTextContent());
+                }
             } catch (NumberFormatException ex) {
                 getLOG().warn(ex.getMessage());
             } catch (SAXException ex) {
@@ -90,9 +118,9 @@ public class Tomcat extends Instance {
             }
         }
 
-
-
-        String text = "a";
+        if (getHttpPort() != 0) {
+            getRemoteInfo();
+        }
     }
 
     private Document parseXMLFile(File xml) throws ParserConfigurationException, SAXException, IOException {
@@ -101,6 +129,55 @@ public class Tomcat extends Instance {
         Document doc = dBuilder.parse(xml);
         doc.getDocumentElement().normalize();
         return doc;
+    }
+
+    @Override
+    void getRemoteInfo() {
+//        DefaultHttpClient client = new DefaultHttpClient();
+//        HttpHost host = new HttpHost("localhost", this.httpPort, "http");
+//        client.getCredentialsProvider().setCredentials(
+//                new AuthScope(host),
+//                new UsernamePasswordCredentials(this.managerUsername, this.managerPassword));
+//        try {
+//            HttpURLConnection get = new HttpURLConnection(new URL("http://127.0.0.1:"+this.getHttpPort()+"/manager/status/all").toURI());
+//            
+//            AuthCache authCache = new BasicAuthCache();
+//            BasicScheme basicAuth = new BasicScheme();
+//            BasicHttpContext context = new BasicHttpContext();
+//            authCache.put(host, basicAuth);
+//            context.setAttribute(ClientContext.AUTH_CACHE, authCache);
+//            
+//            HttpResponse response = client.execute(get);
+//            HttpEntity entity = response.getEntity();
+////            InputStream content = entity.getContent();
+//            String test = EntityUtils.toString(entity);
+//            String a = "";
+//        } catch (IOException ex) {
+//            Logger.getLogger(Tomcat.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (URISyntaxException ex) {
+//            Logger.getLogger(Tomcat.class.getName()).log(Level.SEVERE, null, ex);
+//        } finally {
+//            client.getConnectionManager().shutdown();
+//        }
+        
+        
+        
+        
+        try {
+            URL url = new URL ("http://127.0.0.1:"+this.getHttpPort()+"/manager/status/all");
+            String encoding = Base64.encode((this.managerUsername +":" + this.managerPassword).getBytes());
+
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setDoOutput(true);
+            connection.setRequestProperty  ("Authorization", "Basic " + encoding);
+            InputStream content = (InputStream)connection.getInputStream();
+            List<String> readLines = IOUtils.readLines(content);
+            String a = "";
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        
     }
 
     @Override
@@ -113,7 +190,13 @@ public class Tomcat extends Instance {
         return managerPassword;
     }
 
+    @Override
     public Integer getHttpPort() {
         return httpPort;
+    }
+
+    @Override
+    public Integer getHttpsPort() {
+        return httpsPort;
     }
 }

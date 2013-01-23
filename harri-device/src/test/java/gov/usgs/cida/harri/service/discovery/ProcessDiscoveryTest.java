@@ -71,6 +71,7 @@ public class ProcessDiscoveryTest {
         System.out.println("testGetProcessMDListForTomcat");
         List<ProcessMD> result = ProcessDiscovery.getProcesses(ProcessType.TOMCAT);
         assertNotNull(result);
+        assertFalse(result.isEmpty());
         Instance tomcat = result.get(0).createInstance();
         assertNotNull(tomcat);
     }
@@ -80,6 +81,7 @@ public class ProcessDiscoveryTest {
         System.out.println("testGetProcessMDListForTomcat");
         List<ProcessMD> result = ProcessDiscovery.getProcesses(ProcessType.TOMCAT);
         assertNotNull(result);
+        assertFalse(result.isEmpty());
         Instance tomcat = result.get(0).createInstance();
         assertNotNull(tomcat);
         tomcat.populate();
