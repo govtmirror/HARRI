@@ -50,7 +50,7 @@ public class Tomcat extends Instance {
 
     @Override
     public void populate() {
-        String catalinaHomeLocation = this.md.getStartupOptions().get("catalina.home");
+        String catalinaHomeLocation = this.md.getStartupOptions().get("catalina.base");
         File catalinaHome = new File(catalinaHomeLocation);
         File usersXML = FileUtils.getFile(catalinaHome, "conf", "tomcat-users.xml");
         File serverXML = FileUtils.getFile(catalinaHome, "conf", "server.xml");

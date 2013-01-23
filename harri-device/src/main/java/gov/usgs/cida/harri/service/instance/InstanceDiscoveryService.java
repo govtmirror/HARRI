@@ -82,7 +82,13 @@ public class InstanceDiscoveryService {
                 StringBuilder sb = new StringBuilder();
                 
                 for (String app : tc.getAppList()) {
-                    sb.append(app).append("\n");
+                    ApplicationInfo appInfo = tc.getApplicationMap().get("/" + app);
+                    sb.append("/" + app)
+                            .append(" - Application is: ")
+                            .append(appInfo.getRunning() ? "UP" : "DOWN")
+                            .append(" - Application start time: ")
+                            .append(appInfo.getStartTime())
+                            .append("\n");
                 }
                 
                 getAllTomcatAppsResponse += sb.toString();
