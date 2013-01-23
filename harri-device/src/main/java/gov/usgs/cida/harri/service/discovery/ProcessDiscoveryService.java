@@ -26,6 +26,8 @@ public class ProcessDiscoveryService {
     @UpnpAction(out = @UpnpOutputArgument(name = "GetAllProcessesResponse"))
     public String getAllProcesses(@UpnpInputArgument(name = "HarriManagerId")
                           String harriManagerId) {
+    	getAllProcessesResponse = "";
+    	
     	this.harriManagerId = harriManagerId;
         LOG.info("GetAllProcesses action called by HARRI Manager with ID: " + this.harriManagerId);
         

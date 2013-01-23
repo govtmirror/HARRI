@@ -30,11 +30,12 @@ public class InstanceDiscoveryService {
     private String getAllDjangoAppsResponse = "";
     @UpnpStateVariable(defaultValue = "")
     private String getAllTomcatAppsResponse = "";
-
-    @UpnpAction(out =
-    @UpnpOutputArgument(name = "GetAllTomcatInstancesResponse"))
-    public String getAllTomcatInstances(@UpnpInputArgument(name = "HarriManagerId") String harriManagerId) {
-        this.harriManagerId = harriManagerId;
+	
+    @UpnpAction(out = @UpnpOutputArgument(name = "GetAllTomcatInstancesResponse"))
+    public String getAllTomcatInstances(@UpnpInputArgument(name = "HarriManagerId")
+                          String harriManagerId) {
+    	getAllTomcatInstancesResponse="";
+    	this.harriManagerId = harriManagerId;
         LOG.info("GetAllTomcatInstances action called by HARRI Manager with ID: " + this.harriManagerId);
 
         List<ProcessMD> ps;
@@ -59,10 +60,10 @@ public class InstanceDiscoveryService {
 
         return getAllTomcatInstancesResponse;
     }
-
     @UpnpAction(out =
     @UpnpOutputArgument(name = "GetAllTomcatAppsResponse"))
     public String getAllTomcatApps(@UpnpInputArgument(name = "HarriManagerId") String harriManagerId) {
+    	getAllTomcatAppsResponse = "";
         this.harriManagerId = harriManagerId;
         LOG.info("GetAllTomcatApps action called by HARRI Manager with ID: " + this.harriManagerId);
 
@@ -77,28 +78,26 @@ public class InstanceDiscoveryService {
             if (p.getType().equals(ProcessType.TOMCAT)) {
                 Tomcat tc = (Tomcat) p.createInstance();
                 tc.populate();
-
+                
                 StringBuilder sb = new StringBuilder();
-
+                
                 for (String app : tc.getAppList()) {
-                    ApplicationInfo appInfo = tc.getApplicationMap().get(app);
-                    sb.append(app)
-                            .append(" - Application is: ")
-                            .append(appInfo.getRunning() ? "UP" : "DOWN")
-                            .append(" - Application start time: ")
-                            .append(appInfo.getStartTime())
-                            .append("\n");
+                    sb.append(app).append("\n");
                 }
+                
+                getAllTomcatAppsResponse += sb.toString();
             }
         }
 
+        
         return getAllTomcatAppsResponse;
     }
-
-    @UpnpAction(out =
-    @UpnpOutputArgument(name = "GetAllDjangoInstancesResponse"))
-    public String getAllDjangoInstances(@UpnpInputArgument(name = "HarriManagerId") String harriManagerId) {
-        this.harriManagerId = harriManagerId;
+    
+    @UpnpAction(out = @UpnpOutputArgument(name = "GetAllDjangoInstancesResponse"))
+    public String getAllDjangoInstances(@UpnpInputArgument(name = "HarriManagerId")
+                          String harriManagerId) {
+    	getAllDjangoInstancesResponse = "";
+    	this.harriManagerId = harriManagerId;
         LOG.info("GetAllDjangoInstances action called by HARRI Manager with ID: " + this.harriManagerId);
 
         List<ProcessMD> ps;
@@ -121,11 +120,12 @@ public class InstanceDiscoveryService {
 
         return getAllDjangoInstancesResponse;
     }
-
-    @UpnpAction(out =
-    @UpnpOutputArgument(name = "GetAllDjangoAppsResponse"))
-    public String getAllDjangoApps(@UpnpInputArgument(name = "HarriManagerId") String harriManagerId) {
-        this.harriManagerId = harriManagerId;
+    
+    @UpnpAction(out = @UpnpOutputArgument(name = "GetAllDjangoAppsResponse"))
+    public String getAllDjangoApps(@UpnpInputArgument(name = "HarriManagerId")
+                          String harriManagerId) {
+    	getAllDjangoAppsResponse = "";
+    	this.harriManagerId = harriManagerId;
         LOG.info("GetAllDjangoApps action called by HARRI Manager with ID: " + this.harriManagerId);
 
         List<ProcessMD> ps;
