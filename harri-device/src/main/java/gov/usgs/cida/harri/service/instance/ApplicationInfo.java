@@ -1,6 +1,6 @@
 package gov.usgs.cida.harri.service.instance;
 
-class ApplicationInfo {
+public class ApplicationInfo {
     private String context;
     private String startTime;
     private String startupTime;

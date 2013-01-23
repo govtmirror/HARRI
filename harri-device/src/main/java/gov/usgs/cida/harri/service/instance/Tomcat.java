@@ -8,9 +8,12 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -37,6 +40,7 @@ public class Tomcat extends Instance {
     private String managerPassword = "";
     private Integer httpPort = 0;
     private Integer httpsPort = 0;
+    private ArrayList<String> appList;
     private Map<String, ApplicationInfo> applicationMap;
 
     public Tomcat(ProcessMD md) {
@@ -187,8 +191,21 @@ public class Tomcat extends Instance {
         return httpsPort;
     }
     
-    
+    @Override
     public Map<String, ApplicationInfo> getApplicationMap() {
-        return applicationMap;
+        return Collections.unmodifiableMap(applicationMap);
+    }
+
+    @Override
+    public List<String> getAppList() {
+        // Cheating here
+        this.appList = new ArrayList<String>();
+        Iterator<String> keyIter = getApplicationMap().keySet().iterator();
+        while (keyIter.hasNext()) {
+            String appContext = keyIter.next();
+            this.appList.add(appContext.substring(1));
+        }
+        
+        return Collections.unmodifiableList(this.appList);
     }
 }

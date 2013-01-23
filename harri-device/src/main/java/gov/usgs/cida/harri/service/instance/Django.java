@@ -1,14 +1,13 @@
 package gov.usgs.cida.harri.service.instance;
 
+import gov.usgs.cida.harri.service.discovery.ProcessMD;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import gov.usgs.cida.harri.service.discovery.ProcessMD;
 import java.util.Map;
-import org.slf4j.LoggerFactory;
 import org.apache.commons.io.FileUtils;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -57,6 +56,7 @@ public class Django extends Instance {
     	}
     }
     
+    @Override
     public List<String> getAppList() {
     	return appList;
     }
