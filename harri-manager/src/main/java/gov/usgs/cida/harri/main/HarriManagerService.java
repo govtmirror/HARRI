@@ -1,11 +1,14 @@
 package gov.usgs.cida.harri.main;
 
 import java.util.Collection;
+import java.util.List;
 
 import gov.usgs.cida.harri.instance.InstanceDiscoveryServiceCalls;
 import gov.usgs.cida.harri.service.discovery.ProcessDiscoveryServiceCalls;
 import gov.usgs.cida.harri.service.echo.EchoServiceCalls;
 import gov.usgs.cida.harri.service.httpd.HTTPdProxyServiceCalls;
+import gov.usgs.cida.harri.service.vmware.VMClient;
+import gov.usgs.cida.harri.service.vmware.VMWareService;
 import gov.usgs.cida.harri.util.HarriUtils;
 
 import org.teleal.cling.UpnpService;
@@ -22,6 +25,9 @@ public class HarriManagerService implements Runnable {
 	Logger LOG = LoggerFactory.getLogger(HarriManagerService.class);
 	
 	private UpnpService harriManagerUpnpService;
+    private static String vmwareVcoUrl;
+    private static String vmwareVcoUserName;
+    private static String vmwareVcoPassword;
 	
 	/** 
 	 * Default refresh rate in minutes.
@@ -39,6 +45,10 @@ public class HarriManagerService implements Runnable {
 				specifiedRefreshRate = Double.parseDouble(args[0]);
 			} catch (Exception e) {}
 		}
+		
+		vmwareVcoUrl = getVmwareVcoUrl();
+	    vmwareVcoUserName = getVmwareVcoUserName();
+	    vmwareVcoPassword = getVmwareVcoPassword();
 		// Start a user thread that runs the UPnP stack
 		Thread clientThread = new Thread(new HarriManagerService());
 		clientThread.setDaemon(false); //TODO provide graceful shutdown mechanism
@@ -122,10 +132,7 @@ public class HarriManagerService implements Runnable {
 		LOG.info("Refreshing data (running all known HARRI Services)");
 		
 		//VMWARE read
-		//TODO call mary's list
-		
-		//Apache URL read
-		//TODO
+		VMWareService.getVirtualMachines(vmwareVcoUrl, vmwareVcoUserName, vmwareVcoPassword);
 		
 		//REMOTE CALLS
 		Collection<Device> allDevices = harriManagerUpnpService.getRegistry().getDevices();
@@ -145,4 +152,20 @@ public class HarriManagerService implements Runnable {
 			}
 		}
 	}
+	
+	private static String getVmwareVcoUrl() {
+		//TODO pull from config/props file
+		return "https://cida-eros-vco.er.usgs.gov/sdk/vimService";
+	}
+
+	private static String getVmwareVcoUserName() {
+		//TODO pull from config/props file
+		return "harri";
+	}
+    
+	private static String getVmwareVcoPassword() {
+		//TODO pull from config/props file
+		return "XXXXXX";
+	}
+    
 }

@@ -13,6 +13,7 @@ import com.vmware.vim25.ServiceContent;
 import com.vmware.vim25.TraversalSpec;
 import com.vmware.vim25.VimPortType;
 import com.vmware.vim25.VimService;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,13 +23,18 @@ import javax.net.ssl.SSLSession;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.soap.SOAPFaultException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class VMClient {
+	Logger LOG = LoggerFactory.getLogger(VMClient.class);
 
     private static String url;
     private static String userName;
     private static String password;
 
     public VMClient(String url, String userName, String password) {
+    	
         this.url = url;
         this.userName = userName;
         this.password = password;
@@ -45,7 +51,7 @@ public class VMClient {
             } catch (SOAPFaultException sfe) {
                 printSoapFaultException(sfe);
             } catch (Exception e) {
-                System.out.println("Failed to disconnect - " + e.getMessage());
+                LOG.info("Failed to disconnect - " + e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -54,6 +60,7 @@ public class VMClient {
     private static class TrustAllTrustManager implements javax.net.ssl.TrustManager,
                                                         javax.net.ssl.X509TrustManager {
 
+      static Logger LOG = LoggerFactory.getLogger(VMClient.class);
       public java.security.cert.X509Certificate[] getAcceptedIssuers() {
          return null;
       }
@@ -162,6 +169,7 @@ public class VMClient {
     */
     private static List<ObjectContent> retrievePropertiesAllObjects(List<PropertyFilterSpec> listpfs)
       throws Exception {
+    	Logger LOG = LoggerFactory.getLogger(VMClient.class);
 
       RetrieveOptions propObjectRetrieveOpts = new RetrieveOptions();
 
@@ -193,7 +201,7 @@ public class VMClient {
       } catch (SOAPFaultException sfe) {
          printSoapFaultException(sfe);
       } catch (Exception e) {
-         System.out.println(" : Failed Getting Contents");
+         LOG.info(" : Failed Getting Contents");
          e.printStackTrace();
       }
 
@@ -290,37 +298,40 @@ public class VMClient {
             mor = oc.getObj();
 
             List<DynamicProperty> listdp = oc.getPropSet();
-            Object propVal = mor.getValue();
-            System.out.println("Object Type : " + mor.getType());
-            System.out.println("Reference Value : " + propVal);
+            LOG.info("Object Type : " + mor.getType());
+            LOG.info("Reference Value : " + mor.getValue());
+            
+            if (mor.getType().equals("VirtualMachine")) {
+                result.add(mor.getValue());
+            }
 
             if (listdp != null) {
                for (int pci = 0; pci < listdp.size(); pci++) {
                   pc = listdp.get(pci);
-                  System.out.println("   Property Name : " + pc.getName());
+                  LOG.info("   Property Name : " + pc.getName());
                   if ((pc != null)) {
                      if (!pc.getVal().getClass().isArray()) {
-                       result.add(pc.getVal().toString());
-                       System.out.println("   Property Value : " + pc.getVal());
-                       if (propVal == "VirtualMachine") {
-                           result.add(propVal.toString());
-                       }
+                       LOG.info("   Property Value : " + pc.getVal());
                      } else {
                         List<Object> ipcary = new ArrayList<Object>();
                         ipcary.add(pc.getVal());
-                        System.out.println("Val : " + pc.getVal());
+                        LOG.info("Val : " + pc.getVal());
                         for (int ii = 0; ii < ipcary.size(); ii++) {
                            Object oval = ipcary.get(ii);
                            if (oval.getClass().getName().indexOf(
                                  "ManagedObjectReference") >= 0) {
                               ManagedObjectReference imor = (ManagedObjectReference) oval;
 
-                              System.out.println("Inner Object Type : "
+                              LOG.info("Inner Object Type : "
                                     + imor.getType());
-                              System.out.println("Inner Reference Value : "
+                              LOG.info("Inner Reference Value : "
                                     + imor.getValue());
+                              
+                              if (imor.getType().equals("VirtualMachine")) {
+                                  result.add(imor.getValue());
+                              }
                            } else {
-                              System.out.println("Inner Property Value : " + oval);
+                              LOG.info("Inner Property Value : " + oval);
                            }
                         }
                      }
@@ -329,19 +340,20 @@ public class VMClient {
             }
          }
         } else {
-         System.out.println("No Managed Entities retrieved!");
+         LOG.info("No Managed Entities retrieved!");
         }
 
         return result;
     }
 
     private static void printSoapFaultException(SOAPFaultException sfe) {
-      System.out.println("SOAP Fault -");
+    	Logger LOG = LoggerFactory.getLogger(VMClient.class);
+      LOG.info("SOAP Fault -");
       if (sfe.getFault().hasDetail()) {
-         System.out.println(sfe.getFault().getDetail().getFirstChild().getLocalName());
+         LOG.info(sfe.getFault().getDetail().getFirstChild().getLocalName());
       }
       if (sfe.getFault().getFaultString() != null) {
-         System.out.println("\n Message: " + sfe.getFault().getFaultString());
+         LOG.info("\n Message: " + sfe.getFault().getFaultString());
       }
     }
 
