@@ -12,9 +12,7 @@ public class VMWareService {
 		LOG.info("Retrieving list of VMs from " + vmwareVcoUrl);
 		List<String> result = null;
 		try {
-			
-			VMClient vco = new VMClient(vmwareVcoUrl, vmwareVcoUserName, vmwareVcoPassword);
-			result = vco.getVirtualMachines();
+			result = VMClient.getVirtualMachines(vmwareVcoUrl, vmwareVcoUserName, vmwareVcoPassword);
 		} catch (Exception e1) {
 			LOG.info("Error calling VMWare VCO:" + e1.getMessage());
 		}

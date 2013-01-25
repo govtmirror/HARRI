@@ -43,8 +43,7 @@ public class VMClientTest {
     @Test
     public void testGetVirtualMachines() throws Exception {
         System.out.println("getVirtualMachines");
-        VMClient instance = new VMClient("https://cida-eros-vco.er.usgs.gov/sdk/vimService", "harri", "XXXXXX");//TODO put in real password for demo
-        List<String> result = instance.getVirtualMachines();
+        List<String> result = VMClient.getVirtualMachines("https://cida-eros-vco.er.usgs.gov/sdk/vimService", "harri", "xxxxxxxxxxx");//TODO put in real password for demo
         for (String s: result){
             System.out.println(s);
         }

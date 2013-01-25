@@ -26,21 +26,27 @@ import javax.xml.ws.soap.SOAPFaultException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+//TODO this whole thing uses static members to mimic simple client, clean up!
+//TODO uncomment LOG statements, this was done for demo readability
 public class VMClient {
-	Logger LOG = LoggerFactory.getLogger(VMClient.class);
+	static Logger LOG = LoggerFactory.getLogger(VMClient.class);
 
     private static String url;
     private static String userName;
     private static String password;
 
-    public VMClient(String url, String userName, String password) {
-    	
-        this.url = url;
-        this.userName = userName;
-        this.password = password;
+    public VMClient(String url, String userName, String password) {}
+    
+    public static List<String> getVirtualMachines(String iurl, String iuserName, String ipassword) {
+    	List<String> result = null;
+        
+    	url = iurl;
+        userName = iuserName;
+        password = ipassword;
 
         try {
             connect();
+            result = getVirtualMachines();
         } catch (SOAPFaultException sfe) {
                  printSoapFaultException(sfe);
         } catch (Exception e) {
@@ -48,6 +54,7 @@ public class VMClient {
         } finally {
             try {
                 disconnect();
+                return result;
             } catch (SOAPFaultException sfe) {
                 printSoapFaultException(sfe);
             } catch (Exception e) {
@@ -55,6 +62,7 @@ public class VMClient {
                 e.printStackTrace();
             }
         }
+        return result;
     }
 
     private static class TrustAllTrustManager implements javax.net.ssl.TrustManager,
@@ -208,7 +216,7 @@ public class VMClient {
       return listobjcontent;
     }
 
-    public List<String> getVirtualMachines() throws Exception {
+    private static List<String> getVirtualMachines() throws Exception {
         List<String> result = new ArrayList<String>();
     
         TraversalSpec resourcePoolTraversalSpec = new TraversalSpec();
@@ -298,8 +306,8 @@ public class VMClient {
             mor = oc.getObj();
 
             List<DynamicProperty> listdp = oc.getPropSet();
-            LOG.info("Object Type : " + mor.getType());
-            LOG.info("Reference Value : " + mor.getValue());
+//            LOG.info("Object Type : " + mor.getType());
+//            LOG.info("Reference Value : " + mor.getValue());
             
             if (mor.getType().equals("VirtualMachine")) {
                 result.add(mor.getValue());
@@ -308,30 +316,33 @@ public class VMClient {
             if (listdp != null) {
                for (int pci = 0; pci < listdp.size(); pci++) {
                   pc = listdp.get(pci);
-                  LOG.info("   Property Name : " + pc.getName());
+//                  LOG.info("   Property Name : " + pc.getName());
                   if ((pc != null)) {
                      if (!pc.getVal().getClass().isArray()) {
-                       LOG.info("   Property Value : " + pc.getVal());
+//                       LOG.info("   Property Value : " + pc.getVal());
+                       if(mor.getType().equals("VirtualMachine")) {
+                    	   result.add(pc.getVal().toString());
+                       }
                      } else {
                         List<Object> ipcary = new ArrayList<Object>();
                         ipcary.add(pc.getVal());
-                        LOG.info("Val : " + pc.getVal());
+//                        LOG.info("Val : " + pc.getVal());
                         for (int ii = 0; ii < ipcary.size(); ii++) {
                            Object oval = ipcary.get(ii);
                            if (oval.getClass().getName().indexOf(
                                  "ManagedObjectReference") >= 0) {
                               ManagedObjectReference imor = (ManagedObjectReference) oval;
 
-                              LOG.info("Inner Object Type : "
-                                    + imor.getType());
-                              LOG.info("Inner Reference Value : "
-                                    + imor.getValue());
+//                              LOG.info("Inner Object Type : "
+//                                    + imor.getType());
+//                              LOG.info("Inner Reference Value : "
+//                                    + imor.getValue());
                               
                               if (imor.getType().equals("VirtualMachine")) {
                                   result.add(imor.getValue());
                               }
                            } else {
-                              LOG.info("Inner Property Value : " + oval);
+//                              LOG.info("Inner Property Value : " + oval);
                            }
                         }
                      }
@@ -340,7 +351,7 @@ public class VMClient {
             }
          }
         } else {
-         LOG.info("No Managed Entities retrieved!");
+//         LOG.info("No Managed Entities retrieved!");
         }
 
         return result;
