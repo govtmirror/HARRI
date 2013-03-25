@@ -1,14 +1,13 @@
 package gov.usgs.cida.harri.main;
 
-import gov.usgs.cida.harri.service.discovery.ProcessDiscoveryService;
-import gov.usgs.cida.harri.commons.interfaces.manager.device.EchoService;
-import gov.usgs.cida.harri.service.httpd.HTTPdProxyService;
-import gov.usgs.cida.harri.service.instance.InstanceDiscoveryService;
+import gov.usgs.cida.harri.commons.interfaces.device.IHarriDeviceServiceProvider;
 import gov.usgs.cida.harri.util.HarriUtils;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ServiceLoader;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,14 +20,21 @@ import org.teleal.cling.model.meta.*;
 import org.teleal.cling.model.types.*;
 
 public class HarriDeviceService implements Runnable {
-	Logger LOG = LoggerFactory.getLogger(HarriDeviceService.class);
+	static Logger LOG = LoggerFactory.getLogger(HarriDeviceService.class);
+
+    private static List<IHarriDeviceServiceProvider> harriDeviceServiceProviders;
 	
     public static void main(String[] args) throws Exception {
+    	LOG.info("Starting HARRI device");
+    	loadHarriDeviceServiceProviders();
+    	
     	//TODO dependency check and fatal error on start up
+    	
         // Start a user thread that runs the UPnP stack
         Thread serverThread = new Thread(new HarriDeviceService());
         serverThread.setDaemon(false);
         serverThread.start();
+    	LOG.info("HARRI device started");
     }
 
     @Override
@@ -81,55 +87,39 @@ public class HarriDeviceService implements Runnable {
                         )
                 );
 
-
-        LocalService[] deviceServices = bindServicesToDevice();
+        LocalService[] deviceServices = bindServicesToDevices();
         
         LOG.info("HARRI Device created: " + HarriUtils.DEVICE_TYPE + "_" + hostName);
         return new LocalDevice(identity, type, details, deviceServices);
     }
     
-    private LocalService[] bindServicesToDevice() {
-    	/* TODO Several services can be bound to the same device. At this point we might want to do an inspection
-         * of machine the device is installed on and determine what kind of device/client this will become 
-         * (tomcat, django, oracle), eg:
-         * return new LocalDevice(
-         *         identity, type, details, icon,
-         *        new LocalService[] {tomcatServices, djangoServies, oracle}
-         * );
-         */
+    private LocalService[] bindServicesToDevices() {
+    	List<LocalService<IHarriDeviceServiceProvider>> serviceProviders = 
+    			new ArrayList<LocalService<IHarriDeviceServiceProvider>>();
+    	for(IHarriDeviceServiceProvider dsp : harriDeviceServiceProviders) {
+    		Class clazz = dsp.getClass();
+    		@SuppressWarnings("unchecked")
+    		LocalService<IHarriDeviceServiceProvider> service =
+                    new AnnotationLocalServiceBinder().read(clazz);
+			service.setManager(
+                new DefaultServiceManager<IHarriDeviceServiceProvider>(service, clazz)
+            );
+    		serviceProviders.add(service);
+    	}
         
-        @SuppressWarnings("unchecked")
-		LocalService<EchoService> echoService =
-                new AnnotationLocalServiceBinder().read(EchoService.class);
-        echoService.setManager(
-                new DefaultServiceManager<EchoService>(echoService, EchoService.class)
-        );
-        
-        //bind process services
-        @SuppressWarnings("unchecked")
-		LocalService<ProcessDiscoveryService> pds =
-                new AnnotationLocalServiceBinder().read(ProcessDiscoveryService.class);
-        pds.setManager(
-                new DefaultServiceManager<ProcessDiscoveryService>(pds, ProcessDiscoveryService.class)
-        );
-        
-        //bind instances services
-        @SuppressWarnings("unchecked")
-		LocalService<InstanceDiscoveryService> ids =
-                new AnnotationLocalServiceBinder().read(InstanceDiscoveryService.class);
-        ids.setManager(
-                new DefaultServiceManager<InstanceDiscoveryService>(ids, InstanceDiscoveryService.class)
-        );
-        
-        @SuppressWarnings("unchecked")
-		LocalService<HTTPdProxyService> hpds =
-                new AnnotationLocalServiceBinder().read(HTTPdProxyService.class);
-        hpds.setManager(
-                new DefaultServiceManager<HTTPdProxyService>(hpds, HTTPdProxyService.class)
-        );
-        
-    	return new LocalService[] {echoService, pds, ids, hpds};
+    	return serviceProviders.toArray(new LocalService[]{});
     }
+    
+	private static void loadHarriDeviceServiceProviders() {
+		LOG.debug("ServiceLoaders loading harri device service providers");
+		
+		LOG.debug("loading IHarriDeviceServiceProviders");
+		harriDeviceServiceProviders = new ArrayList<IHarriDeviceServiceProvider>();
+		ServiceLoader<IHarriDeviceServiceProvider> hdsp = ServiceLoader.load(IHarriDeviceServiceProvider.class);
+		for (Iterator<IHarriDeviceServiceProvider> hdspIter = hdsp.iterator(); hdspIter.hasNext(); ) {
+			harriDeviceServiceProviders.add(hdspIter.next());
+	    }
+	}
     
     private Integer getDeviceVersion() {
     	//TODO get this from somewhere useful
