@@ -1,42 +1,48 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <artifactId>harri</artifactId>
-        <groupId>gov.usgs.cida.harri</groupId>
-        <version>0.1-SNAPSHOT</version>
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>harri</artifactId>
+		<groupId>gov.usgs.cida.harri</groupId>
+		<version>0.1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
-    </parent>
-    <artifactId>harri-manager</artifactId>
-    <packaging>jar</packaging>
-    <name>HARRI Manager</name>
-    <description>
-    	This is the HARRI Manager. It acts as a data aggregator and collects data from HARRI Devices. HARRI Devices register and are discovered
-    	by HARRI Managers via UPnP. 
-    </description>
+	</parent>
+	<artifactId>harri-manager</artifactId>
+	<packaging>jar</packaging>
+	<name>HARRI Manager</name>
+	<description>
+		This is the HARRI Manager. It acts as a data aggregator and collects data from HARRI Devices. HARRI Devices register and are discovered
+		by HARRI Managers via UPnP. 
+	</description>
 
-    <repositories>
-     <repository>
-       <id>cida-thirdparty</id>
-       <url>http://internal.cida.usgs.gov/maven/content/repositories/cida-thirdparty</url>
-     </repository>
-    </repositories>
+	<repositories>
+		<repository>
+			<id>cida-thirdparty</id>
+			<url>http://internal.cida.usgs.gov/maven/content/repositories/cida-thirdparty</url>
+		</repository>
+	</repositories>
     
 	<dependencies>
-        <dependency>
+		<dependency>
 			<groupId>com.vmware</groupId>
 			<artifactId>vim25</artifactId>
 			<version>2.5-1</version>
 		</dependency>
-	 <dependency>
-	  <groupId>${project.groupId}</groupId>
-	  <artifactId>harri-commons</artifactId>
-	  <version>${project.version}</version>
-	  <type>jar</type>
-	 </dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>harri-echo-manager</artifactId>
+			<version>${project.version}</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>harri-commons</artifactId>
+			<version>${project.version}</version>
+			<type>jar</type>
+		</dependency>
 	</dependencies>
 	
 	<build>
-        <finalName>HARRI_Manager</finalName>
+		<finalName>HARRI_Manager</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -53,6 +59,10 @@
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<mainClass>gov.usgs.cida.harri.main.HarriManagerService</mainClass>
+								</transformer>
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+									<resource>META-INF/services</resource>
 								</transformer>
 							</transformers>
 						</configuration>

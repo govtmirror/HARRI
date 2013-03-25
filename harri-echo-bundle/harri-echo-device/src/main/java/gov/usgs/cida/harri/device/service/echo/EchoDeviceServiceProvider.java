@@ -1,11 +1,16 @@
-package gov.usgs.cida.harri.commons.interfaces.manager.device;
+package gov.usgs.cida.harri.device.service.echo;
 
+import gov.usgs.cida.harri.commons.interfaces.device.IHarriDeviceServiceProvider;
 import gov.usgs.cida.harri.util.HarriUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teleal.cling.binding.annotations.*;
 
+/**
+ *
+ * @author isuftin
+ */
 @UpnpService(
         serviceId = @UpnpServiceId("EchoService"),
         serviceType = @UpnpServiceType(value = "EchoService", version = 1)
@@ -17,8 +22,8 @@ import org.teleal.cling.binding.annotations.*;
  * @author thongsav
  *
  */
-public class EchoService {
-	Logger LOG = LoggerFactory.getLogger(EchoService.class);
+public class EchoDeviceServiceProvider implements IHarriDeviceServiceProvider{
+	Logger LOG = LoggerFactory.getLogger(EchoDeviceServiceProvider.class);
 	
     @UpnpStateVariable(defaultValue = "no_id_provided")
     private String harriManagerId = "no_id_provided";
