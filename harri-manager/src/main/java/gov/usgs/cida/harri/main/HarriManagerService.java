@@ -1,8 +1,13 @@
 package gov.usgs.cida.harri.main;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ServiceLoader;
 
+import gov.usgs.cida.harri.commons.interfaces.manager.IHarriExternalService;
+import gov.usgs.cida.harri.commons.interfaces.manager.IHarriManagerService;
 import gov.usgs.cida.harri.instance.InstanceDiscoveryServiceCalls;
 import gov.usgs.cida.harri.commons.interfaces.manager.service.ProcessDiscoveryServiceCalls;
 import gov.usgs.cida.harri.commons.interfaces.manager.service.EchoServiceCalls;
@@ -22,13 +27,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class HarriManagerService implements Runnable {
-	Logger LOG = LoggerFactory.getLogger(HarriManagerService.class);
+	static Logger LOG = LoggerFactory.getLogger(HarriManagerService.class);
 	
 	private UpnpService harriManagerUpnpService;
     private static String vmwareVcoUrl;
     private static String vmwareVcoUserName;
     private static String vmwareVcoPassword;
 	
+    private static List<IHarriManagerService> harriManagerServices;
+    private static List<IHarriExternalService> harriExternalServices;
+    
 	/** 
 	 * Default refresh rate in minutes.
 	 */
@@ -46,9 +54,13 @@ public class HarriManagerService implements Runnable {
 			} catch (Exception e) {}
 		}
 		
+		//TODO move these properties into a module
 		vmwareVcoUrl = getVmwareVcoUrl();
 	    vmwareVcoUserName = getVmwareVcoUserName();
 	    vmwareVcoPassword = getVmwareVcoPassword();
+	    
+	    loadHarriManagerServices();
+	    
 		// Start a user thread that runs the UPnP stack
 		Thread clientThread = new Thread(new HarriManagerService());
 		clientThread.setDaemon(false); //TODO provide graceful shutdown mechanism
@@ -66,11 +78,10 @@ public class HarriManagerService implements Runnable {
 					createRegistryListener(harriManagerUpnpService)
 					);
 
-			LOG.info("Broadcasting a search message for all known devices");
+			LOG.debug("Broadcasting a search message for all known devices");
 			harriManagerUpnpService.getControlPoint().search(
 			        new UDADeviceTypeHeader(new UDADeviceType(HarriUtils.DEVICE_TYPE))
 					);
-			LOG.info("HARRI Manager Service started successfully");
 			
 			//refresh (use all devices) at regular intervals
 			double refreshRate = DEFAULT_REFRESH_RATE;
@@ -79,10 +90,13 @@ public class HarriManagerService implements Runnable {
 			}
 			long longRate = (long) (refreshRate * 60000);
 			LOG.info("Refresh rate for HARRI devices is " + longRate + "ms");
+
+			LOG.info("HARRI Manager Service started successfully");
 			while(true) { //TODO provide graceful shutdown mechanism
 				runHarriProcesses(harriManagerUpnpService);
 				Thread.sleep(longRate);
 			}
+
 		} catch (Exception ex) {
 			LOG.error("Exception occured: " + ex);
 			System.exit(1);
@@ -96,7 +110,7 @@ public class HarriManagerService implements Runnable {
 				if(!HarriUtils.isHarriDevice(device)){
 					return;
 				}
-				LOG.info("HARRI Device has been added: " + device.getDetails().getModelDetails().getModelName());
+				LOG.debug("HARRI Device has been added: " + device.getDetails().getModelDetails().getModelName());
 			}
 
 			@Override
@@ -104,7 +118,7 @@ public class HarriManagerService implements Runnable {
 				if(!HarriUtils.isHarriDevice(device)){
 					return;
 				}
-				LOG.info("HARRI Device " + device.getDetails().getModelDetails().getModelName() + " has been removed");
+				LOG.debug("HARRI Device " + device.getDetails().getModelDetails().getModelName() + " has been removed");
 			}
 
 			@Override
@@ -112,7 +126,6 @@ public class HarriManagerService implements Runnable {
 				if(!HarriUtils.isHarriDevice(device)){
 					return;
 				}
-				//LOG.info("HARRI Device " + device.getDetails().getModelDetails().getModelName() + " has been updated");
 			}
 
 			@Override
@@ -127,32 +140,61 @@ public class HarriManagerService implements Runnable {
 		};
 	}
 	
+	private static void loadHarriManagerServices() {
+		LOG.debug("ServiceLoaders loading harri manager services");
+		
+		LOG.debug("loading IHarriExternalServices");
+		harriExternalServices = new ArrayList<IHarriExternalService>();
+		ServiceLoader<IHarriExternalService> externalSL = ServiceLoader.load(IHarriExternalService.class);
+		for (Iterator<IHarriExternalService> exslIter = externalSL.iterator(); exslIter.hasNext(); ) {
+			harriExternalServices.add(exslIter.next());
+	    }
+		
+		LOG.debug("loading IHarriManagerServices");
+		harriManagerServices = new ArrayList<IHarriManagerService>();
+		ServiceLoader<IHarriManagerService> managerSL = ServiceLoader.load(IHarriManagerService.class);
+		for (Iterator<IHarriManagerService> mslIter = managerSL.iterator(); mslIter.hasNext(); ) {
+			harriManagerServices.add(mslIter.next());
+	    }
+	}
 	
 	private void runHarriProcesses(final UpnpService harriManagerUpnpService) {
-		LOG.info("Refreshing data (running all known HARRI Services)");
+		LOG.debug("Refreshing data (running all known HARRI Services)");
 		
-		//VMWARE read
+		//EXTERNAL SERVICE CALLS
+		for(IHarriExternalService es : harriExternalServices) {
+			es.doServiceCalls(harriManagerUpnpService);
+		}
+		
+		//TODO rip out into IHarriExternalService
 		VMWareService.getVirtualMachines(vmwareVcoUrl, vmwareVcoUserName, vmwareVcoPassword);
 		
-		//REMOTE CALLS
+		//REMOTE HARRI DEVICE CALLS
 		Collection<Device> allDevices = harriManagerUpnpService.getRegistry().getDevices();
 		for(Device d : allDevices) {
 			if(!HarriUtils.isHarriDevice(d)){
 				continue;
 			}
 			//TODO call all service/action combinations for every device here
-			LOG.info("Calling all services on " + d.getDetails().getModelDetails().getModelName());
+			LOG.debug("Calling all services on " + d.getDetails().getModelDetails().getModelName());
 			try {
+				for(IHarriManagerService ms : harriManagerServices) {
+					ms.doServiceCalls(harriManagerUpnpService, (RemoteDevice) d);
+				}
+				
+				//TODO refactor all of this out
 				EchoServiceCalls.doServiceCalls(harriManagerUpnpService, (RemoteDevice) d); //TODO delete when not needed
 				ProcessDiscoveryServiceCalls.doServiceCalls(harriManagerUpnpService, (RemoteDevice) d);
 				InstanceDiscoveryServiceCalls.doServiceCalls(harriManagerUpnpService, (RemoteDevice) d);
                 HTTPdProxyServiceCalls.doServiceCalls(harriManagerUpnpService, (RemoteDevice) d);
 			} catch (RuntimeException e) {
-				LOG.info("Runtime exception: " + e.getMessage());
+				LOG.error("Runtime exception while calling remote device services: " + e.getMessage());
 			}
 		}
 	}
 	
+	
+	//TODO pull these last 3 getters into a different module (the VCO module)
 	private static String getVmwareVcoUrl() {
 		//TODO pull from config/props file
 		return "https://cida-eros-vco.er.usgs.gov/sdk/vimService";

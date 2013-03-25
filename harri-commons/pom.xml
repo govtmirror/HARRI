@@ -8,8 +8,6 @@
         <version>0.1-SNAPSHOT</version>
     </parent>
   
-    <groupId>gov.usgs.cida.harri</groupId>
-  
     <artifactId>harri-commons</artifactId>
     <name>HARRI Commons</name>
   
