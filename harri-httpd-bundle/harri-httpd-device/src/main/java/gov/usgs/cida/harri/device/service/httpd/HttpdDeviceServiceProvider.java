@@ -1,5 +1,6 @@
 package gov.usgs.cida.harri.device.service.httpd;
 
+import gov.usgs.cida.harri.commons.interfaces.device.IHarriDeviceServiceProvider;
 import gov.usgs.cida.harri.httpd.ParseHTTPdConf;
 import gov.usgs.cida.harri.httpd.ProxyMapping;
 import java.io.IOException;
@@ -20,7 +21,7 @@ import org.teleal.cling.binding.annotations.*;
  * @author thongsav
  *
  */
-public class HttpdDeviceServiceProvider {
+public class HttpdDeviceServiceProvider implements IHarriDeviceServiceProvider {
 	Logger LOG = LoggerFactory.getLogger(HttpdDeviceServiceProvider.class);
     
 //    @UpnpStateVariable(defaultValue = "no_id_provided")
