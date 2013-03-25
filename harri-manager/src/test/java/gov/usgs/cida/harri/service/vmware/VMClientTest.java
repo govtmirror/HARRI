@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 
 /**
  *
@@ -41,6 +42,7 @@ public class VMClientTest {
      * Test of getVirtualMachines method, of class VMClient.
      */
     @Test
+    @Ignore
     public void testGetVirtualMachines() throws Exception {
         System.out.println("getVirtualMachines");
         List<String> result = VMClient.getVirtualMachines("https://cida-eros-vco.er.usgs.gov/sdk/vimService", "harri", "xxxxxxxxxxx");//TODO put in real password for demo

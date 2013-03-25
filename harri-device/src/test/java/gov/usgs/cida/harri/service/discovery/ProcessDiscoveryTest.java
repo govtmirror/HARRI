@@ -6,11 +6,8 @@ import gov.usgs.cida.harri.service.instance.Tomcat;
 import java.io.IOException;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
-import org.junit.After;
-import org.junit.AfterClass;
 import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -56,21 +53,22 @@ public class ProcessDiscoveryTest {
     
     @Test
     public void testGetProcessIDListForTomcatUsingProcessTypeEnum() throws IOException {
-        System.out.println("testGetProcessIDListForJavaUsingProcessTypeEnum");
+        System.out.println("testGetProcessIDListForTomcatUsingProcessTypeEnum");
         List<Long> result = ProcessDiscovery.getProcessIDList(ProcessType.TOMCAT);
         assertNotNull(result);
     }
     
     @Test
     public void testGetProcessMDList() throws IOException {
-        System.out.println("testGetProcessMDListForTomcat");
+        System.out.println("testGetProcessMDList");
         List<ProcessMD> result = ProcessDiscovery.getProcesses(ProcessType.TOMCAT);
         assertNotNull(result);
     }
         
     @Test
+    @Ignore
     public void testCreateInstance() throws IOException {
-        System.out.println("testGetProcessMDListForTomcat");
+        System.out.println("testCreateInstance");
         List<ProcessMD> result = ProcessDiscovery.getProcesses(ProcessType.TOMCAT);
         assertNotNull(result);
         assertFalse(result.isEmpty());
@@ -79,8 +77,9 @@ public class ProcessDiscoveryTest {
     }
     
     @Test
+    @Ignore
     public void testPopulateInstance() throws IOException {
-        System.out.println("testGetProcessMDListForTomcat");
+        System.out.println("testPopulateInstance");
         List<ProcessMD> result = ProcessDiscovery.getProcesses(ProcessType.TOMCAT);
         assertNotNull(result);
         assertFalse(result.isEmpty());
