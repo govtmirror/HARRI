@@ -7,7 +7,6 @@
 		<artifactId>harri-httpd-bundle</artifactId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
-	<groupId>gov.usgs.cida.harri</groupId>
 	<artifactId>harri-httpd-device</artifactId>
 	<name>HARRI HTTPD Device</name>
 	<properties>
@@ -25,11 +24,11 @@
 			<artifactId>apache-httpd-parser</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-	 <dependency>
-	  <groupId>gov.usgs.cida.harri</groupId>
-	  <artifactId>harri-commons</artifactId>
-	  <version>0.1-SNAPSHOT</version>
-	  <type>jar</type>
-	 </dependency>
+		<dependency>
+			<groupId>gov.usgs.cida.harri</groupId>
+			<artifactId>harri-commons</artifactId>
+			<version>0.1-SNAPSHOT</version>
+			<type>jar</type>
+		</dependency>
 	</dependencies>
 </project>

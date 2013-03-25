@@ -19,8 +19,8 @@
 		</dependency>
 	</dependencies>
 	<modules>
+			<module>apache-httpd-parser</module>
             <module>harri-httpd-manager</module>
             <module>harri-httpd-device</module>
-			<module>apache-httpd-parser</module>
 	</modules>
 </project>

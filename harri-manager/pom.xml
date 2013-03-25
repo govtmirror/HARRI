@@ -74,9 +74,7 @@
 									<mainClass>gov.usgs.cida.harri.main.HarriManagerService</mainClass>
 								</transformer>
 								<transformer
-									implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-									<resource>META-INF/services</resource>
-								</transformer>
+									implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
 							</transformers>
 						</configuration>
 					</execution>
