@@ -47,7 +47,12 @@
 		<artifactId>apache-httpd-parser</artifactId>
 		<version>${project.version}</version>
 	</dependency>
-            
+	<dependency>
+		<groupId>${project.groupId}</groupId>
+		<artifactId>harri-commons</artifactId>
+		<version>${project.version}</version>
+		<type>jar</type>
+	</dependency>
 	</dependencies>
 
 	<build>

@@ -1,4 +1,4 @@
-package gov.usgs.cida.harri.service.echo;
+package gov.usgs.cida.harri.commons.interfaces.manager.device;
 
 import gov.usgs.cida.harri.util.HarriUtils;
 

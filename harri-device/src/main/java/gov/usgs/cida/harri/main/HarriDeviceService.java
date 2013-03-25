@@ -1,7 +1,7 @@
 package gov.usgs.cida.harri.main;
 
 import gov.usgs.cida.harri.service.discovery.ProcessDiscoveryService;
-import gov.usgs.cida.harri.service.echo.EchoService;
+import gov.usgs.cida.harri.commons.interfaces.manager.device.EchoService;
 import gov.usgs.cida.harri.service.httpd.HTTPdProxyService;
 import gov.usgs.cida.harri.service.instance.InstanceDiscoveryService;
 import gov.usgs.cida.harri.util.HarriUtils;
