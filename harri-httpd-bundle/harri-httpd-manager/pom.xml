@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>gov.usgs.cida.harri</groupId>
-        <artifactId>harri-django-bundle</artifactId>
+        <artifactId>harri-httpd-bundle</artifactId>
         <version>0.1-SNAPSHOT</version>
     </parent>
     <groupId>gov.usgs.cida.harri</groupId>
-    <artifactId>harri-django-manager</artifactId>
-    <name>HARRI Django Manager</name>
+    <artifactId>harri-httpd-manager</artifactId>
+    <name>HARRI HTTPD Manager</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

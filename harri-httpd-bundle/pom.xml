@@ -7,9 +7,9 @@
 		<version>0.1-SNAPSHOT</version>
 	</parent>
 	<groupId>gov.usgs.cida.harri</groupId>
-	<artifactId>harri-django-bundle</artifactId>
+	<artifactId>harri-httpd-bundle</artifactId>
 	<packaging>pom</packaging>
-	<name>HARRI Django Bundle</name>
+	<name>HARRI HTTPD Bundle</name>
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -19,7 +19,8 @@
 		</dependency>
 	</dependencies>
 	<modules>
-		<module>harri-django-manager</module>
-		<module>harri-django-device</module>
+            <module>harri-httpd-manager</module>
+            <module>harri-httpd-device</module>
+			<module>apache-httpd-parser</module>
 	</modules>
 </project>
