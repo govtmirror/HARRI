@@ -22,7 +22,8 @@
 		<module>harri-device</module>
 		<module>harri-manager</module>
 		<module>apache-httpd-parser</module>
-	</modules>
+    <module>harri-echo-bundle</module>
+  </modules>
 
 	<developers>
 		<developer>

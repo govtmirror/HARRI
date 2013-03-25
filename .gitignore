@@ -1,2 +1,4 @@
 /**/dependency-reduced-pom.xml
 /**/target/
+/harri-echo-bundle/harri-echo-manager/target/
+/harri-echo-bundle/harri-echo-device/target/

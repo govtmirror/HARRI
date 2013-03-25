@@ -6,13 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
 
-import gov.usgs.cida.harri.commons.interfaces.manager.IHarriExternalService;
-import gov.usgs.cida.harri.commons.interfaces.manager.IHarriManagerService;
-import gov.usgs.cida.harri.commons.interfaces.manager.service.InstanceDiscoveryServiceCalls;
-import gov.usgs.cida.harri.commons.interfaces.manager.service.ProcessDiscoveryServiceCalls;
-import gov.usgs.cida.harri.commons.interfaces.manager.service.EchoServiceCalls;
-import gov.usgs.cida.harri.commons.interfaces.manager.service.HTTPdProxyServiceCalls;
-import gov.usgs.cida.harri.service.vmware.VMClient;
+import gov.usgs.cida.harri.commons.interfaces.manager.IHarriExternalServiceProvider;
+import gov.usgs.cida.harri.commons.interfaces.manager.IHarriManagerServiceProvider;
 import gov.usgs.cida.harri.service.vmware.VMWareService;
 import gov.usgs.cida.harri.util.HarriUtils;
 
@@ -30,12 +25,12 @@ public class HarriManagerService implements Runnable {
 	static Logger LOG = LoggerFactory.getLogger(HarriManagerService.class);
 	
 	private UpnpService harriManagerUpnpService;
-    private static String vmwareVcoUrl;
-    private static String vmwareVcoUserName;
-    private static String vmwareVcoPassword;
+//    private static String vmwareVcoUrl;
+//    private static String vmwareVcoUserName;
+//    private static String vmwareVcoPassword;
 	
-    private static List<IHarriManagerService> harriManagerServices;
-    private static List<IHarriExternalService> harriExternalServices;
+    private static List<IHarriManagerServiceProvider> harriManagerServices;
+    private static List<IHarriExternalServiceProvider> harriExternalServices;
     
 	/** 
 	 * Default refresh rate in minutes.
@@ -55,9 +50,9 @@ public class HarriManagerService implements Runnable {
 		}
 		
 		//TODO move these properties into a module
-		vmwareVcoUrl = getVmwareVcoUrl();
-	    vmwareVcoUserName = getVmwareVcoUserName();
-	    vmwareVcoPassword = getVmwareVcoPassword();
+//		vmwareVcoUrl = getVmwareVcoUrl();
+//	    vmwareVcoUserName = getVmwareVcoUserName();
+//	    vmwareVcoPassword = getVmwareVcoPassword();
 	    
 	    loadHarriManagerServices();
 	    
@@ -144,16 +139,16 @@ public class HarriManagerService implements Runnable {
 		LOG.debug("ServiceLoaders loading harri manager services");
 		
 		LOG.debug("loading IHarriExternalServices");
-		harriExternalServices = new ArrayList<IHarriExternalService>();
-		ServiceLoader<IHarriExternalService> externalSL = ServiceLoader.load(IHarriExternalService.class);
-		for (Iterator<IHarriExternalService> exslIter = externalSL.iterator(); exslIter.hasNext(); ) {
+		harriExternalServices = new ArrayList<IHarriExternalServiceProvider>();
+		ServiceLoader<IHarriExternalServiceProvider> externalSL = ServiceLoader.load(IHarriExternalServiceProvider.class);
+		for (Iterator<IHarriExternalServiceProvider> exslIter = externalSL.iterator(); exslIter.hasNext(); ) {
 			harriExternalServices.add(exslIter.next());
 	    }
 		
 		LOG.debug("loading IHarriManagerServices");
-		harriManagerServices = new ArrayList<IHarriManagerService>();
-		ServiceLoader<IHarriManagerService> managerSL = ServiceLoader.load(IHarriManagerService.class);
-		for (Iterator<IHarriManagerService> mslIter = managerSL.iterator(); mslIter.hasNext(); ) {
+		harriManagerServices = new ArrayList<IHarriManagerServiceProvider>();
+		ServiceLoader<IHarriManagerServiceProvider> managerSL = ServiceLoader.load(IHarriManagerServiceProvider.class);
+		for (Iterator<IHarriManagerServiceProvider> mslIter = managerSL.iterator(); mslIter.hasNext(); ) {
 			harriManagerServices.add(mslIter.next());
 	    }
 	}
@@ -162,12 +157,12 @@ public class HarriManagerService implements Runnable {
 		LOG.debug("Refreshing data (running all known HARRI Services)");
 		
 		//EXTERNAL SERVICE CALLS
-		for(IHarriExternalService es : harriExternalServices) {
+		for(IHarriExternalServiceProvider es : harriExternalServices) {
 			es.doServiceCalls(harriManagerUpnpService);
 		}
 		
-		//TODO rip out into IHarriExternalService
-		VMWareService.getVirtualMachines(vmwareVcoUrl, vmwareVcoUserName, vmwareVcoPassword);
+		//TODO rip out into IHarriExternalServiceProvider
+//		VMWareService.getVirtualMachines(vmwareVcoUrl, vmwareVcoUserName, vmwareVcoPassword);
 		
 		//REMOTE HARRI DEVICE CALLS
 		Collection<Device> allDevices = harriManagerUpnpService.getRegistry().getDevices();
@@ -178,15 +173,15 @@ public class HarriManagerService implements Runnable {
 			//TODO call all service/action combinations for every device here
 			LOG.debug("Calling all services on " + d.getDetails().getModelDetails().getModelName());
 			try {
-				for(IHarriManagerService ms : harriManagerServices) {
+				for(IHarriManagerServiceProvider ms : harriManagerServices) {
 					ms.doServiceCalls(harriManagerUpnpService, (RemoteDevice) d);
 				}
 				
 				//TODO refactor all of this out
-				EchoServiceCalls.doServiceCalls(harriManagerUpnpService, (RemoteDevice) d); //TODO delete when not needed
-				ProcessDiscoveryServiceCalls.doServiceCalls(harriManagerUpnpService, (RemoteDevice) d);
-				InstanceDiscoveryServiceCalls.doServiceCalls(harriManagerUpnpService, (RemoteDevice) d);
-                HTTPdProxyServiceCalls.doServiceCalls(harriManagerUpnpService, (RemoteDevice) d);
+//				EchoServiceCalls.doServiceCalls(harriManagerUpnpService, (RemoteDevice) d); //TODO delete when not needed
+//				ProcessDiscoveryServiceCalls.doServiceCalls(harriManagerUpnpService, (RemoteDevice) d);
+//				InstanceDiscoveryServiceCalls.doServiceCalls(harriManagerUpnpService, (RemoteDevice) d);
+//                HTTPdProxyServiceCalls.doServiceCalls(harriManagerUpnpService, (RemoteDevice) d);
 			} catch (RuntimeException e) {
 				LOG.error("Runtime exception while calling remote device services: " + e.getMessage());
 			}
@@ -195,19 +190,19 @@ public class HarriManagerService implements Runnable {
 	
 	
 	//TODO pull these last 3 getters into a different module (the VCO module)
-	private static String getVmwareVcoUrl() {
-		//TODO pull from config/props file
-		return "https://cida-eros-vco.er.usgs.gov/sdk/vimService";
-	}
-
-	private static String getVmwareVcoUserName() {
-		//TODO pull from config/props file
-		return "harri";
-	}
-    
-	private static String getVmwareVcoPassword() {
-		//TODO pull from config/props file
-		return "XXXXXX";
-	}
+//	private static String getVmwareVcoUrl() {
+//		//TODO pull from config/props file
+//		return "https://cida-eros-vco.er.usgs.gov/sdk/vimService";
+//	}
+//
+//	private static String getVmwareVcoUserName() {
+//		//TODO pull from config/props file
+//		return "harri";
+//	}
+//    
+//	private static String getVmwareVcoPassword() {
+//		//TODO pull from config/props file
+//		return "XXXXXX";
+//	}
     
 }
