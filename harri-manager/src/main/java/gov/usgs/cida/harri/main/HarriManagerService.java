@@ -8,7 +8,7 @@ import java.util.ServiceLoader;
 
 import gov.usgs.cida.harri.commons.interfaces.manager.IHarriExternalService;
 import gov.usgs.cida.harri.commons.interfaces.manager.IHarriManagerService;
-import gov.usgs.cida.harri.instance.InstanceDiscoveryServiceCalls;
+import gov.usgs.cida.harri.commons.interfaces.manager.service.InstanceDiscoveryServiceCalls;
 import gov.usgs.cida.harri.commons.interfaces.manager.service.ProcessDiscoveryServiceCalls;
 import gov.usgs.cida.harri.commons.interfaces.manager.service.EchoServiceCalls;
 import gov.usgs.cida.harri.commons.interfaces.manager.service.HTTPdProxyServiceCalls;
