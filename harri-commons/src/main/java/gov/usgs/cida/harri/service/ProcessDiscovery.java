@@ -1,5 +1,7 @@
-package gov.usgs.cida.harri.service.discovery;
+package gov.usgs.cida.harri.service;
 
+import gov.usgs.cida.harri.commons.datamodel.ProcessType;
+import gov.usgs.cida.harri.commons.datamodel.ProcessMD;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,11 +45,11 @@ public class ProcessDiscovery {
         return pmdList;
     }
 
-    static List<String> getProcessList() throws IOException {
+    public static List<String> getProcessList() throws IOException {
         return getProcessList(null);
     }
 
-    static List<String> getProcessList(String grepCrit) throws IOException {
+    public static List<String> getProcessList(String grepCrit) throws IOException {
         List<String> procList;
         Runtime run = Runtime.getRuntime();
         String grep = StringUtils.isEmpty(grepCrit) ? "" : " | grep '" + grepCrit + "' | grep -v grep ";
@@ -64,7 +66,7 @@ public class ProcessDiscovery {
         return procList;
     }
 
-    static List<Long> getProcessIDList(ProcessType type) throws IOException {
+    public static List<Long> getProcessIDList(ProcessType type) throws IOException {
         List<String> processList = getProcessList(type.toString());
         List<String> cleanedProcessList = new ArrayList<String>();
         for (String processLine : processList) {
@@ -76,7 +78,7 @@ public class ProcessDiscovery {
         return getProcessIDList(cleanedProcessList);
     }
 
-    static List<Long> getProcessIDList(List<String> processList) {
+    public static List<Long> getProcessIDList(List<String> processList) {
         List<Long> processIDList = new ArrayList<Long>();
         for (String process : processList) {
             try {

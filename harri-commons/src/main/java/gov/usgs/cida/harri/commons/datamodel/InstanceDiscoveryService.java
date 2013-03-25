@@ -1,8 +1,6 @@
-package gov.usgs.cida.harri.service.instance;
+package gov.usgs.cida.harri.commons.datamodel;
 
-import gov.usgs.cida.harri.service.discovery.ProcessDiscovery;
-import gov.usgs.cida.harri.service.discovery.ProcessMD;
-import gov.usgs.cida.harri.service.discovery.ProcessType;
+import gov.usgs.cida.harri.service.ProcessDiscovery;
 import java.io.IOException;
 import java.util.List;
 import org.slf4j.Logger;

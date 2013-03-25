@@ -1,4 +1,4 @@
-package gov.usgs.cida.harri.service.httpd;
+package gov.usgs.cida.harri.commons.interfaces.manager.service;
 
 import gov.usgs.cida.harri.httpd.ParseHTTPdConf;
 import gov.usgs.cida.harri.httpd.ProxyMapping;

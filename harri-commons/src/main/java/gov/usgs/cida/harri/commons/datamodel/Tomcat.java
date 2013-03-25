@@ -1,7 +1,6 @@
-package gov.usgs.cida.harri.service.instance;
+package gov.usgs.cida.harri.commons.datamodel;
 
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
-import gov.usgs.cida.harri.service.discovery.ProcessMD;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,7 +12,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;

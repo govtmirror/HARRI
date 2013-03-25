@@ -2,7 +2,6 @@ package gov.usgs.cida.harri.main;
 
 import gov.usgs.cida.harri.commons.interfaces.device.IHarriDeviceServiceProvider;
 import gov.usgs.cida.harri.util.HarriUtils;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;

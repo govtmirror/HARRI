@@ -1,4 +1,4 @@
-package gov.usgs.cida.harri.service.instance;
+package gov.usgs.cida.harri.commons.datamodel;
 
 public class ApplicationInfo {
     private String context;

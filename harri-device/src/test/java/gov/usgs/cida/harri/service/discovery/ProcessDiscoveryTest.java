@@ -1,7 +1,10 @@
 package gov.usgs.cida.harri.service.discovery;
 
-import gov.usgs.cida.harri.service.instance.Instance;
-import gov.usgs.cida.harri.service.instance.Tomcat;
+import gov.usgs.cida.harri.commons.datamodel.ProcessType;
+import gov.usgs.cida.harri.commons.datamodel.ProcessMD;
+import gov.usgs.cida.harri.commons.datamodel.Instance;
+import gov.usgs.cida.harri.commons.datamodel.Tomcat;
+import gov.usgs.cida.harri.service.ProcessDiscovery;
 
 import java.io.IOException;
 import java.util.List;

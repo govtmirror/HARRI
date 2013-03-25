@@ -1,8 +1,6 @@
-package gov.usgs.cida.harri.service.discovery;
+package gov.usgs.cida.harri.commons.datamodel;
 
-import gov.usgs.cida.harri.service.instance.Django;
-import gov.usgs.cida.harri.service.instance.Instance;
-import gov.usgs.cida.harri.service.instance.Tomcat;
+import gov.usgs.cida.harri.service.ProcessDiscovery;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;

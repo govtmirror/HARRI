@@ -1,5 +1,7 @@
 package gov.usgs.cida.harri.service.discovery;
 
+import gov.usgs.cida.harri.service.ProcessDiscovery;
+import gov.usgs.cida.harri.commons.datamodel.ProcessMD;
 import java.io.IOException;
 import java.util.List;
 import org.slf4j.Logger;

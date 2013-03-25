@@ -1,6 +1,5 @@
-package gov.usgs.cida.harri.service.instance;
+package gov.usgs.cida.harri.commons.datamodel;
 
-import gov.usgs.cida.harri.service.discovery.ProcessMD;
 import java.util.List;
 import java.util.Map;
 
