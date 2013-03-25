@@ -23,9 +23,22 @@
     
 	<dependencies>
 		<dependency>
-			<groupId>com.vmware</groupId>
-			<artifactId>vim25</artifactId>
-			<version>2.5-1</version>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>harri-vmware-manager</artifactId>
+			<version>${project.version}</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>harri-httpd-manager</artifactId>
+			<version>${project.version}</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>harri-tomcat-manager</artifactId>
+			<version>${project.version}</version>
+			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>

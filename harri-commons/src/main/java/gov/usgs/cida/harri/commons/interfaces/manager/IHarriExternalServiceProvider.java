@@ -4,5 +4,4 @@ import org.teleal.cling.UpnpService;
 
 public interface IHarriExternalServiceProvider {
 	public void doServiceCalls(UpnpService harriManagerUpnpService);
-
 }

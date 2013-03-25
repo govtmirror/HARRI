@@ -24,9 +24,6 @@ public class HarriManagerService implements Runnable {
 	static Logger LOG = LoggerFactory.getLogger(HarriManagerService.class);
 	
 	private UpnpService harriManagerUpnpService;
-//    private static String vmwareVcoUrl;
-//    private static String vmwareVcoUserName;
-//    private static String vmwareVcoPassword;
 	
     private static List<IHarriManagerServiceProvider> harriManagerServices;
     private static List<IHarriExternalServiceProvider> harriExternalServices;
@@ -48,11 +45,6 @@ public class HarriManagerService implements Runnable {
 			} catch (Exception e) {}
 		}
 		
-		//TODO move these properties into a module
-//		vmwareVcoUrl = getVmwareVcoUrl();
-//	    vmwareVcoUserName = getVmwareVcoUserName();
-//	    vmwareVcoPassword = getVmwareVcoPassword();
-	    
 	    loadHarriManagerServices();
 	    
 		// Start a user thread that runs the UPnP stack
@@ -186,22 +178,4 @@ public class HarriManagerService implements Runnable {
 			}
 		}
 	}
-	
-	
-	//TODO pull these last 3 getters into a different module (the VCO module)
-//	private static String getVmwareVcoUrl() {
-//		//TODO pull from config/props file
-//		return "https://cida-eros-vco.er.usgs.gov/sdk/vimService";
-//	}
-//
-//	private static String getVmwareVcoUserName() {
-//		//TODO pull from config/props file
-//		return "harri";
-//	}
-//    
-//	private static String getVmwareVcoPassword() {
-//		//TODO pull from config/props file
-//		return "XXXXXX";
-//	}
-    
 }
