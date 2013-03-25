@@ -1,4 +1,4 @@
-package gov.usgs.cida.harri.service.discovery;
+package gov.usgs.cida.harri.service;
 
 import gov.usgs.cida.harri.service.ProcessDiscovery;
 import gov.usgs.cida.harri.commons.datamodel.ProcessMD;
