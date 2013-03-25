@@ -2,3 +2,7 @@
 /**/target/
 /harri-echo-bundle/harri-echo-manager/target/
 /harri-echo-bundle/harri-echo-device/target/
+/harri-tomcat-bundle/harri-echo-device/target/
+/harri-tomcat-bundle/harri-echo-manager/target/
+/harri-tomcat-bundle/harri-tomcat-device/target/
+/harri-tomcat-bundle/harri-tomcat-manager/target/

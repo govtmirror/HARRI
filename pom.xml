@@ -22,8 +22,9 @@
 		<module>harri-device</module>
 		<module>harri-manager</module>
 		<module>apache-httpd-parser</module>
-    <module>harri-echo-bundle</module>
-  </modules>
+		<module>harri-echo-bundle</module>
+		<module>harri-tomcat-bundle</module>
+	</modules>
 
 	<developers>
 		<developer>
