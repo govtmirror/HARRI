@@ -8,7 +8,6 @@ import java.util.ServiceLoader;
 
 import gov.usgs.cida.harri.commons.interfaces.manager.IHarriExternalServiceProvider;
 import gov.usgs.cida.harri.commons.interfaces.manager.IHarriManagerServiceProvider;
-import gov.usgs.cida.harri.service.vmware.VMWareService;
 import gov.usgs.cida.harri.util.HarriUtils;
 
 import org.teleal.cling.UpnpService;
