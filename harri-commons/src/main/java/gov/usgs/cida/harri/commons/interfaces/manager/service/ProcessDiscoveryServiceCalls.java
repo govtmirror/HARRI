@@ -1,10 +1,8 @@
-package gov.usgs.cida.harri.service.discovery;
+package gov.usgs.cida.harri.commons.interfaces.manager.service;
 
 import gov.usgs.cida.harri.service.HarriServiceExecutor;
 import gov.usgs.cida.harri.util.HarriUtils;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.HashMap;
 
 import org.slf4j.Logger;

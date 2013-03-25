@@ -27,7 +27,13 @@
 			<artifactId>vim25</artifactId>
 			<version>2.5-1</version>
 		</dependency>
-    </dependencies>
+	 <dependency>
+	  <groupId>${project.groupId}</groupId>
+	  <artifactId>harri-commons</artifactId>
+	  <version>${project.version}</version>
+	  <type>jar</type>
+	 </dependency>
+	</dependencies>
 	
 	<build>
         <finalName>HARRI_Manager</finalName>

@@ -4,9 +4,9 @@ import java.util.Collection;
 import java.util.List;
 
 import gov.usgs.cida.harri.instance.InstanceDiscoveryServiceCalls;
-import gov.usgs.cida.harri.service.discovery.ProcessDiscoveryServiceCalls;
-import gov.usgs.cida.harri.service.echo.EchoServiceCalls;
-import gov.usgs.cida.harri.service.httpd.HTTPdProxyServiceCalls;
+import gov.usgs.cida.harri.commons.interfaces.manager.service.ProcessDiscoveryServiceCalls;
+import gov.usgs.cida.harri.commons.interfaces.manager.service.EchoServiceCalls;
+import gov.usgs.cida.harri.commons.interfaces.manager.service.HTTPdProxyServiceCalls;
 import gov.usgs.cida.harri.service.vmware.VMClient;
 import gov.usgs.cida.harri.service.vmware.VMWareService;
 import gov.usgs.cida.harri.util.HarriUtils;
@@ -143,10 +143,10 @@ public class HarriManagerService implements Runnable {
 			//TODO call all service/action combinations for every device here
 			LOG.info("Calling all services on " + d.getDetails().getModelDetails().getModelName());
 			try {
-				EchoServiceCalls.echoHostname(harriManagerUpnpService, (RemoteDevice) d); //TODO delete when not needed
+				EchoServiceCalls.doServiceCalls(harriManagerUpnpService, (RemoteDevice) d); //TODO delete when not needed
 				ProcessDiscoveryServiceCalls.doServiceCalls(harriManagerUpnpService, (RemoteDevice) d);
 				InstanceDiscoveryServiceCalls.doServiceCalls(harriManagerUpnpService, (RemoteDevice) d);
-                HTTPdProxyServiceCalls.listProxyMappings(harriManagerUpnpService, (RemoteDevice) d);
+                HTTPdProxyServiceCalls.doServiceCalls(harriManagerUpnpService, (RemoteDevice) d);
 			} catch (RuntimeException e) {
 				LOG.info("Runtime exception: " + e.getMessage());
 			}

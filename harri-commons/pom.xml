@@ -11,7 +11,6 @@
     <groupId>gov.usgs.cida.harri</groupId>
   
     <artifactId>harri-commons</artifactId>
-    <version>0.1-SNAPSHOT</version>
     <name>HARRI Commons</name>
   
     <url>http://maven.apache.org</url>
@@ -34,6 +33,12 @@
             <artifactId>junit</artifactId>
             <version>3.8.1</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>harri-manager</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
         </dependency>
     </dependencies>
 </project>
