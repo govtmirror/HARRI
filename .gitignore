@@ -6,3 +6,7 @@
 /harri-tomcat-bundle/harri-echo-manager/target/
 /harri-tomcat-bundle/harri-tomcat-device/target/
 /harri-tomcat-bundle/harri-tomcat-manager/target/
+/harri-httpd-bundle/apache-httpd-parser/target/
+/harri-httpd-bundle/harri-httpd-device/target/
+/harri-httpd-bundle/harri-httpd-manager/target/
+/harri-vmware-bundle/harri-vmware-manager/target/
