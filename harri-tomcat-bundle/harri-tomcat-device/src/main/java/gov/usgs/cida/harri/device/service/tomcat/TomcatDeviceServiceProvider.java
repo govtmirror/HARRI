@@ -21,11 +21,9 @@ import org.teleal.cling.binding.annotations.*;
 		@UpnpServiceId("TomcatDiscoveryService"),
 		serviceType =
 		@UpnpServiceType(value = "TomcatDiscoveryService", version = 1))
-
 public class TomcatDeviceServiceProvider implements IHarriDeviceServiceProvider {
 
 	private static Logger LOG = LoggerFactory.getLogger(TomcatDeviceServiceProvider.class);
-	
 	@UpnpStateVariable(defaultValue = "no_id_provided")
 	private String harriManagerId = "no_id_provided";
 	@UpnpStateVariable(defaultValue = "")
@@ -86,7 +84,8 @@ public class TomcatDeviceServiceProvider implements IHarriDeviceServiceProvider 
 
 				for (String app : tc.getAppList()) {
 					ApplicationInfo appInfo = tc.getApplicationMap().get("/" + app);
-					sb.append("/" + app)
+					sb.append("/")
+							.append(app)
 							.append(" - Application is: ")
 							.append(appInfo.getRunning() ? "UP" : "DOWN")
 							.append(" - Application start time: ")

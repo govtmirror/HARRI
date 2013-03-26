@@ -10,13 +10,14 @@ import org.slf4j.LoggerFactory;
 import org.teleal.cling.UpnpService;
 import org.teleal.cling.model.meta.RemoteDevice;
 
-public class TomcatManagerServiceProvider  implements IHarriManagerServiceProvider {
+public class TomcatManagerServiceProvider implements IHarriManagerServiceProvider {
+
 	private static Logger LOG = LoggerFactory.getLogger(TomcatManagerServiceProvider.class);
 
 	@Override
-	public void doServiceCalls(final UpnpService upnpService, final RemoteDevice device, IHarriDAO dao){
+	public void doServiceCalls(final UpnpService upnpService, final RemoteDevice device, IHarriDAO dao) {
 		HarriServiceExecutor pds = new HarriServiceExecutor(upnpService, device, "TomcatDiscoveryService");
-		
+
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("HarriManagerId", HarriUtils.getSystemHostName());
 		pds.executeAction("GetAllTomcatInstances", params, "GetAllTomcatInstancesResponse");
