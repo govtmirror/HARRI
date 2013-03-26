@@ -4,6 +4,8 @@
  */
 package gov.usgs.cida.harri.httpd;
 
+import gov.usgs.cida.harri.util.HarriUtils;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -11,9 +13,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.sound.midi.SysexMessage;
 
 /**
  *
@@ -141,7 +143,8 @@ public class ParseHTTPdConf {
     
     public static List<ProxyMapping> getProxyMappingList() throws IOException {
         List<ProxyMapping> proxyMappingList = new ArrayList<ProxyMapping>();
-        String directoryPath = System.getProperty("apache.httpd.conf.dir", "/etc/opt/httpd/conf");
+        Properties harriConfigProps = HarriUtils.getHarriConfigs();
+        String directoryPath = harriConfigProps.getProperty("apache.httpd.conf.dir", "/etc/opt/httpd/conf");
         File directory = new File(directoryPath);
         if (directory.exists()) {
             proxyMappingList.addAll(getProxyMappingList(directory));

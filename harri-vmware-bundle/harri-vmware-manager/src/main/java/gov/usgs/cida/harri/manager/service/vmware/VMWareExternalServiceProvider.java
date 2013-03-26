@@ -1,26 +1,32 @@
 package gov.usgs.cida.harri.manager.service.vmware;
 
 import gov.usgs.cida.harri.commons.interfaces.manager.IHarriExternalServiceProvider;
+import gov.usgs.cida.harri.util.HarriUtils;
 
 import java.util.List;
+import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teleal.cling.UpnpService;
 
-public class VMWareManagerServiceProvider implements IHarriExternalServiceProvider {
-	static Logger LOG = LoggerFactory.getLogger(VMWareManagerServiceProvider.class);
+public class VMWareExternalServiceProvider implements IHarriExternalServiceProvider {
+	static Logger LOG = LoggerFactory.getLogger(VMWareExternalServiceProvider.class);
 
 	private static String vmwareVcoUrl;
 	private static String vmwareVcoUserName;
 	private static String vmwareVcoPassword;
 	
-	public VMWareManagerServiceProvider() {
+	private static Properties harriConfigProps;
+	
+	public VMWareExternalServiceProvider() {
 		LOG.debug("Constructor called for VMWareManagerServiceProvider");
-		//TODO move these properties into a module
-		vmwareVcoUrl = getVmwareVcoUrl();
-	    vmwareVcoUserName = getVmwareVcoUserName();
-	    vmwareVcoPassword = getVmwareVcoPassword();
+
+		harriConfigProps = HarriUtils.getHarriConfigs();
+		
+		vmwareVcoUrl = harriConfigProps.getProperty("vcoUrl", "https://a-vco-server.er.usgs.gov");
+	    vmwareVcoUserName = harriConfigProps.getProperty("vcoUsername", "harri");
+	    vmwareVcoPassword = harriConfigProps.getProperty("vcoPassword", "password");
 	}
 
 	public static void getVirtualMachines(final String vmwareVcoUrl, final String vmwareVcoUserName, final String vmwareVcoPassword) {
@@ -40,20 +46,5 @@ public class VMWareManagerServiceProvider implements IHarriExternalServiceProvid
 
 	public void doServiceCalls(UpnpService harriManagerUpnpService) {
 		getVirtualMachines(vmwareVcoUrl, vmwareVcoUserName, vmwareVcoPassword);
-	}
-	
-	private static String getVmwareVcoUrl() {
-		//TODO pull from config/props file
-		return "https://cida-eros-vco.er.usgs.gov/sdk/vimService";
-	}
-
-	private static String getVmwareVcoUserName() {
-		//TODO pull from config/props file
-		return "harri";
-	}
-    
-	private static String getVmwareVcoPassword() {
-		//TODO pull from config/props file
-		return "XXXXXX";
 	}
 }

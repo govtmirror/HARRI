@@ -1,1 +1,1 @@
-gov.usgs.cida.harri.manager.service.vmware.VMWareManagerServiceProvider
+gov.usgs.cida.harri.manager.service.vmware.VMWareExternalServiceProvider

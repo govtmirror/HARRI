@@ -50,7 +50,7 @@ public class VMClient {
         } catch (SOAPFaultException sfe) {
                  printSoapFaultException(sfe);
         } catch (Exception e) {
-            e.printStackTrace();
+        	LOG.warn("unable to get host names from VCO server: " + e.getMessage());
         } finally {
             try {
                 disconnect();
@@ -59,7 +59,6 @@ public class VMClient {
                 printSoapFaultException(sfe);
             } catch (Exception e) {
                 LOG.info("Failed to disconnect - " + e.getMessage());
-                e.printStackTrace();
             }
         }
         return result;
@@ -209,8 +208,7 @@ public class VMClient {
       } catch (SOAPFaultException sfe) {
          printSoapFaultException(sfe);
       } catch (Exception e) {
-         LOG.info(" : Failed Getting Contents");
-         e.printStackTrace();
+         LOG.info("Failed Getting Contents: " + e.getMessage());
       }
 
       return listobjcontent;
