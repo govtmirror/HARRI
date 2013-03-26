@@ -1,1 +1,1 @@
-gov.usgs.cida.harri.manager.service.echo.EchoManagerServiceProvider
+gov.usgs.cida.harri.manager.service.tomcat.TomcatManagerServiceProvider
