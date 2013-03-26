@@ -26,4 +26,11 @@ public abstract class Instance {
     abstract public Map<String, ApplicationInfo> getApplicationMap();
 
     abstract public List<String> getAppList();
+	
+	abstract public String toJSON();
+	
+	public static Instance fromJSON(String json) {
+		throw new RuntimeException("This function must be overriden by child class");
+	}
+	
 }
