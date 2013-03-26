@@ -18,9 +18,9 @@ import org.teleal.cling.binding.annotations.*;
  */
 @UpnpService(
 		serviceId =
-		@UpnpServiceId("EchoService"),
+		@UpnpServiceId("TomcatDiscoveryService"),
 		serviceType =
-		@UpnpServiceType(value = "EchoService", version = 1))
+		@UpnpServiceType(value = "TomcatDiscoveryService", version = 1))
 
 public class TomcatDeviceServiceProvider implements IHarriDeviceServiceProvider {
 

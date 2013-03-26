@@ -14,7 +14,7 @@ public class TomcatManagerServiceProvider  implements IHarriManagerServiceProvid
 
 	@Override
 	public void doServiceCalls(final UpnpService upnpService, final RemoteDevice device){
-		HarriServiceExecutor pds = new HarriServiceExecutor(upnpService, device, "InstanceDiscoveryService");
+		HarriServiceExecutor pds = new HarriServiceExecutor(upnpService, device, "TomcatDiscoveryService");
 		
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("HarriManagerId", HarriUtils.getSystemHostName());

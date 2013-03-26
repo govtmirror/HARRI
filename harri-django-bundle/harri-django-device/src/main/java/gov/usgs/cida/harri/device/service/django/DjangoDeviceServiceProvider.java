@@ -17,9 +17,9 @@ import org.teleal.cling.binding.annotations.*;
  */
 @UpnpService(
 		serviceId =
-		@UpnpServiceId("EchoService"),
+		@UpnpServiceId("DjangoDiscoveryService"),
 		serviceType =
-		@UpnpServiceType(value = "EchoService", version = 1))
+		@UpnpServiceType(value = "DjangoDiscoveryService", version = 1))
 
 public class DjangoDeviceServiceProvider implements IHarriDeviceServiceProvider {
 

@@ -36,6 +36,12 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
+			<artifactId>harri-django-manager</artifactId>
+			<version>${project.version}</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>harri-tomcat-manager</artifactId>
 			<version>${project.version}</version>
 			<type>jar</type>
