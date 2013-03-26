@@ -29,22 +29,11 @@ public class HarriManagerService implements Runnable {
     private static List<IHarriExternalServiceProvider> harriExternalServices;
     
 	/** 
-	 * Default refresh rate in minutes.
+	 * Default refresh rate in milliseconds.
 	 */
-	private static final double DEFAULT_REFRESH_RATE = .5;
-	
-	/** 
-	 * user specified refresh rate in minutes.
-	 */
-	private static double specifiedRefreshRate;
+	private static final double DEFAULT_REFRESH_RATE = 30000;
 
 	public static void main(String[] args) throws Exception {
-		if(args.length>0) {
-			try {
-				specifiedRefreshRate = Double.parseDouble(args[0]);
-			} catch (Exception e) {}
-		}
-		
 	    loadHarriManagerServices();
 	    
 		// Start a user thread that runs the UPnP stack
@@ -71,16 +60,18 @@ public class HarriManagerService implements Runnable {
 			
 			//refresh (use all devices) at regular intervals
 			double refreshRate = DEFAULT_REFRESH_RATE;
-			if(specifiedRefreshRate > 0) {
-				refreshRate = specifiedRefreshRate;
+			try {
+				refreshRate = Double.parseDouble(HarriUtils.getHarriConfigs().getProperty("refresh.rate.ms"));
+			} catch (Exception e) {
+				LOG.warn("Failed to parse or find value in refresh.rate.ms property of configs");
 			}
-			long longRate = (long) (refreshRate * 60000);
-			LOG.info("Refresh rate for HARRI devices is " + longRate + "ms");
+			
+			LOG.info("Refresh rate for HARRI devices is " + refreshRate + "ms");
 
 			LOG.info("HARRI Manager Service started successfully");
 			while(true) { //TODO provide graceful shutdown mechanism
 				runHarriProcesses(harriManagerUpnpService);
-				Thread.sleep(longRate);
+				Thread.sleep((long)refreshRate);
 			}
 
 		} catch (Exception ex) {
@@ -149,11 +140,14 @@ public class HarriManagerService implements Runnable {
 		
 		//EXTERNAL SERVICE CALLS
 		for(IHarriExternalServiceProvider es : harriExternalServices) {
-			es.doServiceCalls(harriManagerUpnpService);
+			String name = "unknown";
+			try {
+				name = es.getClass().getName();
+				es.doServiceCalls(harriManagerUpnpService);
+			} catch (Exception  e) {
+				LOG.error("Runtime exception while calling external service (" + name + "): " + e.getMessage());
+			}
 		}
-		
-		//TODO rip out into IHarriExternalServiceProvider
-//		VMWareService.getVirtualMachines(vmwareVcoUrl, vmwareVcoUserName, vmwareVcoPassword);
 		
 		//REMOTE HARRI DEVICE CALLS
 		Collection<Device> allDevices = harriManagerUpnpService.getRegistry().getDevices();
@@ -161,20 +155,15 @@ public class HarriManagerService implements Runnable {
 			if(!HarriUtils.isHarriDevice(d)){
 				continue;
 			}
-			//TODO call all service/action combinations for every device here
 			LOG.debug("Calling all services on " + d.getDetails().getModelDetails().getModelName());
-			try {
-				for(IHarriManagerServiceProvider ms : harriManagerServices) {
+			for(IHarriManagerServiceProvider ms : harriManagerServices) {
+				String name = "unknown";
+				try {
+					name = ms.getClass().getName();
 					ms.doServiceCalls(harriManagerUpnpService, (RemoteDevice) d);
+				} catch (RuntimeException e) {
+					LOG.error("Runtime exception while calling remote device services (" + name + "): " + e.getMessage());
 				}
-				
-				//TODO refactor all of this out
-//				EchoServiceCalls.doServiceCalls(harriManagerUpnpService, (RemoteDevice) d); //TODO delete when not needed
-//				ProcessDiscoveryServiceCalls.doServiceCalls(harriManagerUpnpService, (RemoteDevice) d);
-//				InstanceDiscoveryServiceCalls.doServiceCalls(harriManagerUpnpService, (RemoteDevice) d);
-//                HTTPdProxyServiceCalls.doServiceCalls(harriManagerUpnpService, (RemoteDevice) d);
-			} catch (RuntimeException e) {
-				LOG.error("Runtime exception while calling remote device services: " + e.getMessage());
 			}
 		}
 	}
