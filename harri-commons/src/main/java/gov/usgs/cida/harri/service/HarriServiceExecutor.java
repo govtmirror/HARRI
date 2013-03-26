@@ -18,7 +18,6 @@ import org.teleal.cling.model.types.UDAServiceId;
 public class HarriServiceExecutor {
 	Logger LOG = LoggerFactory.getLogger(HarriServiceExecutor.class);
 
-	private Device harriDevice;
 	private ServiceId serviceId;
 	private Service service;
 	private UpnpService upnpService;
@@ -30,7 +29,7 @@ public class HarriServiceExecutor {
 		if (serviceId != null &&
 			service == null
 				) {
-			String errMsg = "HARRI serive named " + inServiceName + 
+			String errMsg = "HARRI service named " + inServiceName + 
 					" not found on HARRI device " + device.getDetails().getModelDetails().getModelName();
 			LOG.error(errMsg);
 			throw new RuntimeException(errMsg);

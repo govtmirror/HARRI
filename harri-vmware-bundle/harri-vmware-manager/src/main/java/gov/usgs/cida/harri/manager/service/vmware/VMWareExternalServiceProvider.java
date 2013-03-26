@@ -26,7 +26,7 @@ public class VMWareExternalServiceProvider implements IHarriExternalServiceProvi
 		
 		vmwareVcoUrl = harriConfigProps.getProperty("vcoUrl", "https://a-vco-server.er.usgs.gov");
 	    vmwareVcoUserName = harriConfigProps.getProperty("vcoUsername", "harri");
-	    vmwareVcoPassword = harriConfigProps.getProperty("vcoPassword", "password");
+	    vmwareVcoPassword = harriConfigProps.getProperty("vcoPassword", "setValidPassword");
 	}
 
 	public static void getVirtualMachines(final String vmwareVcoUrl, final String vmwareVcoUserName, final String vmwareVcoPassword) {

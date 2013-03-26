@@ -35,7 +35,7 @@ public class EchoDeviceServiceProvider implements IHarriDeviceServiceProvider{
     public String echoHostname(@UpnpInputArgument(name = "HarriManagerId")
                           String harriManagerId) {
     	this.harriManagerId = harriManagerId;
-        LOG.info("EchoHostname action was called by HARRI Manager with ID: " + this.harriManagerId);
+        LOG.debug("EchoHostname action was called by HARRI Manager with ID: " + this.harriManagerId);
         
         echoHostnameResponse = HarriUtils.getSystemHostName();
         return echoHostnameResponse;

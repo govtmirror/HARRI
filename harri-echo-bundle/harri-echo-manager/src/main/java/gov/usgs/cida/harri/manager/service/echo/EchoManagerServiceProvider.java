@@ -20,6 +20,4 @@ public class EchoManagerServiceProvider implements IHarriManagerServiceProvider 
 		params.put("HarriManagerId", HarriUtils.getSystemHostName());
 		exampleCall.executeAction("EchoHostname", params, "EchoHostnameResponse");
 	}
-	
-
 }
