@@ -21,82 +21,10 @@ public class InstanceDiscoveryService {
     @UpnpStateVariable(defaultValue = "no_id_provided")
     private String harriManagerId = "no_id_provided";
     @UpnpStateVariable(defaultValue = "")
-    private String getAllTomcatInstancesResponse = "";
-    @UpnpStateVariable(defaultValue = "")
     private String getAllDjangoInstancesResponse = "";
     @UpnpStateVariable(defaultValue = "")
     private String getAllDjangoAppsResponse = "";
-    @UpnpStateVariable(defaultValue = "")
-    private String getAllTomcatAppsResponse = "";
 	
-    @UpnpAction(out = @UpnpOutputArgument(name = "GetAllTomcatInstancesResponse"))
-    public String getAllTomcatInstances(@UpnpInputArgument(name = "HarriManagerId")
-                          String harriManagerId) {
-    	getAllTomcatInstancesResponse="";
-    	this.harriManagerId = harriManagerId;
-        LOG.info("GetAllTomcatInstances action called by HARRI Manager with ID: " + this.harriManagerId);
-
-        List<ProcessMD> ps;
-        try {
-            ps = ProcessDiscovery.getProcesses();
-        } catch (IOException e) {
-            return getAllTomcatInstancesResponse;
-        }
-
-        for (ProcessMD p : ps) {
-            if (p.getType().equals(ProcessType.TOMCAT)) {
-                Tomcat tc = (Tomcat) p.createInstance();
-                tc.populate();
-                getAllTomcatInstancesResponse +=
-                        p.getPid() + ":"
-                        + p.getStartupOptions().get("catalina.home") + ":"
-                        + tc.getHttpPort() + ":"
-                        + tc.getManagerUsername()
-                        + "\n";
-            }
-        }
-
-        return getAllTomcatInstancesResponse;
-    }
-    @UpnpAction(out =
-    @UpnpOutputArgument(name = "GetAllTomcatAppsResponse"))
-    public String getAllTomcatApps(@UpnpInputArgument(name = "HarriManagerId") String harriManagerId) {
-    	getAllTomcatAppsResponse = "";
-        this.harriManagerId = harriManagerId;
-        LOG.info("GetAllTomcatApps action called by HARRI Manager with ID: " + this.harriManagerId);
-
-        List<ProcessMD> ps;
-        try {
-            ps = ProcessDiscovery.getProcesses();
-        } catch (IOException e) {
-            return getAllTomcatInstancesResponse;
-        }
-
-        for (ProcessMD p : ps) {
-            if (p.getType().equals(ProcessType.TOMCAT)) {
-                Tomcat tc = (Tomcat) p.createInstance();
-                tc.populate();
-                
-                StringBuilder sb = new StringBuilder();
-                
-                for (String app : tc.getAppList()) {
-                    ApplicationInfo appInfo = tc.getApplicationMap().get("/" + app);
-                    sb.append("/" + app)
-                            .append(" - Application is: ")
-                            .append(appInfo.getRunning() ? "UP" : "DOWN")
-                            .append(" - Application start time: ")
-                            .append(appInfo.getStartTime())
-                            .append("\n");
-                }
-                
-                getAllTomcatAppsResponse += sb.toString();
-            }
-        }
-
-        
-        return getAllTomcatAppsResponse;
-    }
-    
     @UpnpAction(out = @UpnpOutputArgument(name = "GetAllDjangoInstancesResponse"))
     public String getAllDjangoInstances(@UpnpInputArgument(name = "HarriManagerId")
                           String harriManagerId) {
