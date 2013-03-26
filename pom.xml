@@ -24,10 +24,10 @@
 		<module>harri-tomcat-bundle</module>
 		<module>harri-django-bundle</module>
 		<module>harri-httpd-bundle</module>
-    	<module>harri-echo-bundle</module>
-    	<module>harri-vmware-bundle</module>
-    <module>CouchDBDao</module>
-  </modules>
+		<module>harri-echo-bundle</module>
+		<module>harri-vmware-bundle</module>
+		<module>harri-couch-dao</module>
+	</modules>
 
 	<developers>
 		<developer>
