@@ -30,7 +30,7 @@ public class VMWareExternalServiceProvider implements IHarriExternalServiceProvi
 	    vmwareVcoPassword = harriConfigProps.getProperty("vco.password", "setValidPassword");
 	}
 
-	public static void getVirtualMachines(final String vmwareVcoUrl, final String vmwareVcoUserName, final String vmwareVcoPassword) {
+	public static List<String> getVirtualMachines(final String vmwareVcoUrl, final String vmwareVcoUserName, final String vmwareVcoPassword) {
 		LOG.debug("Retrieving list of VMs from " + vmwareVcoUrl);
 		List<String> result = null;
 		try {
@@ -38,15 +38,12 @@ public class VMWareExternalServiceProvider implements IHarriExternalServiceProvi
 		} catch (Exception e1) {
 			LOG.error("Error calling VMWare VCO:" + e1.getMessage());
 		}
-		if(result != null) {
-			for (String s: result){
-				LOG.debug(s);
-			}
-		}
+		return result;
 	}
 
 	@Override
-	public void doServiceCalls(UpnpService harriManagerUpnpService, IHarriDAO dao) {
-		getVirtualMachines(vmwareVcoUrl, vmwareVcoUserName, vmwareVcoPassword);
+	public void doServiceCalls(String managerId, IHarriDAO dao) {
+		List<String> results = getVirtualMachines(vmwareVcoUrl, vmwareVcoUserName, vmwareVcoPassword);
+		dao.writeList(managerId, results);
 	}
 }

@@ -149,7 +149,7 @@ public class HarriManagerService implements Runnable {
 			String name = "unknown";
 			try {
 				name = es.getClass().getName();
-				es.doServiceCalls(harriManagerUpnpService, daoFactory.getDAO());
+				es.doServiceCalls(HarriUtils.getSystemHostName(), daoFactory.getDAO());
 			} catch (Exception  e) {
 				LOG.error("Runtime exception while calling external service (" + name + "): " + e.getMessage());
 			}
