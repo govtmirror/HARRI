@@ -9,7 +9,7 @@
 	<groupId>gov.usgs.cida.harri</groupId>
 	<artifactId>harri-tomcat-bundle</artifactId>
 	<packaging>pom</packaging>
-	<name>harri-tomcat-bundle</name>
+	<name>HARRI Tomcat bundle</name>
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>

@@ -9,7 +9,7 @@
 	<groupId>gov.usgs.cida.harri</groupId>
 	<artifactId>harri-vmware-bundle</artifactId>
 	<packaging>pom</packaging>
-	<name>harri-vmware-bundle</name>
+	<name>HARRI VMWare Bundle</name>
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
