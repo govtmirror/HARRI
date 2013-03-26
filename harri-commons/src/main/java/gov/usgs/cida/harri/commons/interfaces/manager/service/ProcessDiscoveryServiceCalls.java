@@ -1,5 +1,6 @@
 package gov.usgs.cida.harri.commons.interfaces.manager.service;
 
+import gov.usgs.cida.harri.commons.interfaces.dao.IHarriDAO;
 import gov.usgs.cida.harri.commons.interfaces.manager.IHarriManagerServiceProvider;
 import gov.usgs.cida.harri.service.HarriServiceExecutor;
 import gov.usgs.cida.harri.util.HarriUtils;
@@ -15,7 +16,7 @@ public class ProcessDiscoveryServiceCalls  implements IHarriManagerServiceProvid
 	static Logger LOG = LoggerFactory.getLogger(ProcessDiscoveryServiceCalls.class);
 
 	@Override
-	public void doServiceCalls(final UpnpService upnpService, final RemoteDevice device){
+	public void doServiceCalls(final UpnpService upnpService, final RemoteDevice device, IHarriDAO dao){
 		HarriServiceExecutor pds = new HarriServiceExecutor(upnpService, device, "ProcessDiscoveryService");
 		
 		HashMap<String, String> params = new HashMap<String, String>();

@@ -26,6 +26,7 @@
 		<module>harri-httpd-bundle</module>
     	<module>harri-echo-bundle</module>
     	<module>harri-vmware-bundle</module>
+    <module>CouchDBDao</module>
   </modules>
 
 	<developers>

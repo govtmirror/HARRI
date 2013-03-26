@@ -1,5 +1,6 @@
 package gov.usgs.cida.harri.main;
 
+import gov.usgs.cida.harri.commons.interfaces.dao.IHarriDAOFactory;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -21,9 +22,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class HarriManagerService implements Runnable {
-	static Logger LOG = LoggerFactory.getLogger(HarriManagerService.class);
+	private static Logger LOG = LoggerFactory.getLogger(HarriManagerService.class);
 	
 	private UpnpService harriManagerUpnpService;
+	private static IHarriDAOFactory daoFactory;
 	
     private static List<IHarriManagerServiceProvider> harriManagerServices;
     private static List<IHarriExternalServiceProvider> harriExternalServices;
@@ -133,6 +135,10 @@ public class HarriManagerService implements Runnable {
 		for (Iterator<IHarriManagerServiceProvider> mslIter = managerSL.iterator(); mslIter.hasNext(); ) {
 			harriManagerServices.add(mslIter.next());
 	    }
+		
+		LOG.debug("loading IHarriDAO");
+		ServiceLoader<IHarriDAOFactory> daoFactorySL = ServiceLoader.load(IHarriDAOFactory.class);
+		daoFactory = daoFactorySL.iterator().next();
 	}
 	
 	private void runHarriProcesses(final UpnpService harriManagerUpnpService) {
@@ -143,7 +149,7 @@ public class HarriManagerService implements Runnable {
 			String name = "unknown";
 			try {
 				name = es.getClass().getName();
-				es.doServiceCalls(harriManagerUpnpService);
+				es.doServiceCalls(harriManagerUpnpService, daoFactory.getDAO());
 			} catch (Exception  e) {
 				LOG.error("Runtime exception while calling external service (" + name + "): " + e.getMessage());
 			}
@@ -160,7 +166,7 @@ public class HarriManagerService implements Runnable {
 				String name = "unknown";
 				try {
 					name = ms.getClass().getName();
-					ms.doServiceCalls(harriManagerUpnpService, (RemoteDevice) d);
+					ms.doServiceCalls(harriManagerUpnpService, (RemoteDevice) d, daoFactory.getDAO());
 				} catch (RuntimeException e) {
 					LOG.error("Runtime exception while calling remote device services (" + name + "): " + e.getMessage());
 				}

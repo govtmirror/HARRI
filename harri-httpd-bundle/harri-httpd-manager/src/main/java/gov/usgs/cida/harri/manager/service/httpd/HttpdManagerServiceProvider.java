@@ -1,5 +1,6 @@
 package gov.usgs.cida.harri.manager.service.httpd;
 
+import gov.usgs.cida.harri.commons.interfaces.dao.IHarriDAO;
 import gov.usgs.cida.harri.commons.interfaces.manager.IHarriManagerServiceProvider;
 import gov.usgs.cida.harri.service.HarriServiceExecutor;
 import java.util.HashMap;
@@ -12,7 +13,7 @@ public class HttpdManagerServiceProvider  implements IHarriManagerServiceProvide
 	static private Logger LOG = LoggerFactory.getLogger(HttpdManagerServiceProvider.class);
 
 	@Override
-	public void doServiceCalls(final UpnpService upnpService, final RemoteDevice device){
+	public void doServiceCalls(final UpnpService upnpService, final RemoteDevice device, IHarriDAO dao){
 		HarriServiceExecutor exampleCall = new HarriServiceExecutor(upnpService, device, "HTTPdProxyService");
 		
 		HashMap<String, String> params = new HashMap<String, String>();

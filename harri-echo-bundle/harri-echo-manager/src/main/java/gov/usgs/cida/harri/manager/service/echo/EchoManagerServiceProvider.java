@@ -1,5 +1,6 @@
 package gov.usgs.cida.harri.manager.service.echo;
 
+import gov.usgs.cida.harri.commons.interfaces.dao.IHarriDAO;
 import gov.usgs.cida.harri.commons.interfaces.manager.IHarriManagerServiceProvider;
 import gov.usgs.cida.harri.service.HarriServiceExecutor;
 import gov.usgs.cida.harri.util.HarriUtils;
@@ -13,7 +14,7 @@ public class EchoManagerServiceProvider implements IHarriManagerServiceProvider 
 	private static Logger LOG = LoggerFactory.getLogger(EchoManagerServiceProvider.class);
 
 	@Override
-	public void doServiceCalls(final UpnpService upnpService, final RemoteDevice device){
+	public void doServiceCalls(final UpnpService upnpService, final RemoteDevice device, IHarriDAO dao){
 		HarriServiceExecutor exampleCall = new HarriServiceExecutor(upnpService, device, "EchoService");
 		
 		HashMap<String, String> params = new HashMap<String, String>();

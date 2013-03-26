@@ -1,5 +1,6 @@
 package gov.usgs.cida.harri.manager.service.vmware;
 
+import gov.usgs.cida.harri.commons.interfaces.dao.IHarriDAO;
 import gov.usgs.cida.harri.commons.interfaces.manager.IHarriExternalServiceProvider;
 import gov.usgs.cida.harri.util.HarriUtils;
 
@@ -11,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.teleal.cling.UpnpService;
 
 public class VMWareExternalServiceProvider implements IHarriExternalServiceProvider {
-	static Logger LOG = LoggerFactory.getLogger(VMWareExternalServiceProvider.class);
+	private static Logger LOG = LoggerFactory.getLogger(VMWareExternalServiceProvider.class);
 
 	private static String vmwareVcoUrl;
 	private static String vmwareVcoUserName;
@@ -44,7 +45,8 @@ public class VMWareExternalServiceProvider implements IHarriExternalServiceProvi
 		}
 	}
 
-	public void doServiceCalls(UpnpService harriManagerUpnpService) {
+	@Override
+	public void doServiceCalls(UpnpService harriManagerUpnpService, IHarriDAO dao) {
 		getVirtualMachines(vmwareVcoUrl, vmwareVcoUserName, vmwareVcoPassword);
 	}
 }
