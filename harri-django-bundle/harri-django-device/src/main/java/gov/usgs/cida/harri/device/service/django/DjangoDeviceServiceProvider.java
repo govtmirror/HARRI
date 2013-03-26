@@ -1,5 +1,9 @@
-package gov.usgs.cida.harri.commons.datamodel;
+package gov.usgs.cida.harri.device.service.django;
 
+import gov.usgs.cida.harri.commons.datamodel.Django;
+import gov.usgs.cida.harri.commons.datamodel.ProcessMD;
+import gov.usgs.cida.harri.commons.datamodel.ProcessType;
+import gov.usgs.cida.harri.commons.interfaces.device.IHarriDeviceServiceProvider;
 import gov.usgs.cida.harri.service.ProcessDiscovery;
 import java.io.IOException;
 import java.util.List;
@@ -7,17 +11,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teleal.cling.binding.annotations.*;
 
-@UpnpService(
-        serviceId =
-@UpnpServiceId("InstanceDiscoveryService"),
-serviceType =
-@UpnpServiceType(value = "InstanceDiscoveryService", version = 1))
 /**
- * @author thongsav
+ *
+ * @author isuftin
  */
-public class InstanceDiscoveryService {
+@UpnpService(
+		serviceId =
+		@UpnpServiceId("EchoService"),
+		serviceType =
+		@UpnpServiceType(value = "EchoService", version = 1))
 
-    private static Logger LOG = LoggerFactory.getLogger(InstanceDiscoveryService.class);
+public class DjangoDeviceServiceProvider implements IHarriDeviceServiceProvider {
+
+	private static Logger LOG = LoggerFactory.getLogger(DjangoDeviceServiceProvider.class);
+	
     @UpnpStateVariable(defaultValue = "no_id_provided")
     private String harriManagerId = "no_id_provided";
     @UpnpStateVariable(defaultValue = "")
@@ -33,7 +40,7 @@ public class InstanceDiscoveryService {
         LOG.info("GetAllDjangoInstances action called by HARRI Manager with ID: " + this.harriManagerId);
 
         List<ProcessMD> ps;
-        try {
+        try { 
             ps = ProcessDiscovery.getProcesses();
         } catch (IOException e) {
             return getAllDjangoInstancesResponse;

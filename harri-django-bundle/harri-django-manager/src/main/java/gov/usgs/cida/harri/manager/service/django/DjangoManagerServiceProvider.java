@@ -1,4 +1,4 @@
-package gov.usgs.cida.harri.commons.interfaces.manager.service;
+package gov.usgs.cida.harri.manager.service.django;
 
 import gov.usgs.cida.harri.commons.interfaces.manager.IHarriManagerServiceProvider;
 import gov.usgs.cida.harri.service.HarriServiceExecutor;
@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.teleal.cling.UpnpService;
 import org.teleal.cling.model.meta.RemoteDevice;
 
-public class InstanceDiscoveryServiceCalls  implements IHarriManagerServiceProvider {
-	static Logger LOG = LoggerFactory.getLogger(InstanceDiscoveryServiceCalls.class);
+public class DjangoManagerServiceProvider  implements IHarriManagerServiceProvider {
+	static Logger LOG = LoggerFactory.getLogger(DjangoManagerServiceProvider.class);
 
 	@Override
 	public void doServiceCalls(final UpnpService upnpService, final RemoteDevice device){

@@ -10,3 +10,8 @@
 /harri-httpd-bundle/harri-httpd-device/target/
 /harri-httpd-bundle/harri-httpd-manager/target/
 /harri-vmware-bundle/harri-vmware-manager/target/
+/harri-django-bundle/harri-tomcat-device/target/
+/harri-django-bundle/harri-tomcat-manager/target/
+/harri-django-bundle/harri-django.device/target/
+/harri-django-bundle/harri-django-manager/target/
+/harri-django-bundle/harri-django-device/target/
