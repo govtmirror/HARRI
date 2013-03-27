@@ -1,5 +1,6 @@
 package gov.usgs.cida.harri.main;
 
+import gov.usgs.cida.harri.commons.cling.ApacheUpnpServiceConfiguration;
 import gov.usgs.cida.harri.commons.interfaces.dao.IHarriDAOFactory;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,7 +49,7 @@ public class HarriManagerService implements Runnable {
 	public void run() {
 		try {
 			LOG.info("HARRI Manager Service starting");
-			harriManagerUpnpService = new UpnpServiceImpl();
+			harriManagerUpnpService = new UpnpServiceImpl(new ApacheUpnpServiceConfiguration());
 
 			// Add a listener for device registration events
 			harriManagerUpnpService.getRegistry().addListener(

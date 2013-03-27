@@ -1,5 +1,6 @@
 package gov.usgs.cida.harri.main;
 
+import gov.usgs.cida.harri.commons.cling.ApacheUpnpServiceConfiguration;
 import gov.usgs.cida.harri.commons.interfaces.device.IHarriDeviceServiceProvider;
 import gov.usgs.cida.harri.util.HarriUtils;
 import java.io.IOException;
@@ -40,7 +41,7 @@ public class HarriDeviceService implements Runnable {
     public void run() {
         try {
 
-            final UpnpService upnpService = new UpnpServiceImpl();
+            final UpnpService upnpService = new UpnpServiceImpl(new ApacheUpnpServiceConfiguration());
 
             Runtime.getRuntime().addShutdownHook(new Thread() {
                 @Override

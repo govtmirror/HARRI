@@ -37,6 +37,18 @@
 			<type>jar</type>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+			<version>4.3-beta1</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.directory.studio</groupId>
+			<artifactId>org.apache.httpcomponents.httpclient</artifactId>
+			<version>4.1.2</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
 			<version>1.2</version>

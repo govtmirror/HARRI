@@ -6,7 +6,7 @@ import org.junit.Test;
 public class HarriCouchDBDaoTest {
 	
 	@Test
-	@Ignore
+//	@Ignore
 	public void doPutTest() {
 		HarriCouchDBDao dao = new HarriCouchDBDao();
 		dao.persistVmList("teeest", null);
