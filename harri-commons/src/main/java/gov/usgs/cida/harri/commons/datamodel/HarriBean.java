@@ -28,4 +28,8 @@ public class HarriBean implements Serializable {
 	public HarriBean deserialize(String input) {
 		return new Gson().fromJson(input, this.getClass());
 	}
+	
+	public String getType() {
+		return this.getClass().getName();
+	}
 }

@@ -1,5 +1,6 @@
 package gov.usgs.cida.harri.manager.service.echo;
 
+import gov.usgs.cida.harri.commons.datamodel.Echo;
 import gov.usgs.cida.harri.commons.interfaces.dao.IHarriDAO;
 import gov.usgs.cida.harri.commons.interfaces.manager.IHarriManagerServiceProvider;
 import gov.usgs.cida.harri.service.HarriServiceExecutor;
@@ -18,7 +19,7 @@ public class EchoManagerServiceProvider implements IHarriManagerServiceProvider 
 	private static Logger LOG = LoggerFactory.getLogger(EchoManagerServiceProvider.class);
 
 	@Override
-	public void doServiceCalls(final UpnpService upnpService, final RemoteDevice device, IHarriDAO dao) {
+	public void doServiceCalls(final UpnpService upnpService, final RemoteDevice device, final IHarriDAO dao) {
 		String serviceName = "EchoService";
 		HarriServiceExecutor pds = new HarriServiceExecutor(upnpService, device, serviceName);
 
@@ -32,7 +33,18 @@ public class EchoManagerServiceProvider implements IHarriManagerServiceProvider 
 				String deviceName = invocation.getAction().getService().getDevice().getDetails().getModelDetails().getModelName();
 				String responseMessage = "Service \"EchoHostname\" successfully called on " + deviceName;
 				responseMessage += "\n" + invocation.getOutput("EchoHostnameResponse").toString();
-				LOG.info(responseMessage);
+				LOG.debug(responseMessage);
+				
+				Echo echo = new Echo();
+				echo.setIdentifier(deviceName);
+				echo.setManagerId(HarriUtils.getSystemHostName());
+				echo.setHost(deviceName);
+				
+				if(dao.read(echo) == null) {
+					dao.create(echo);
+				} else {
+					dao.update(echo);
+				}
 			}
 
 			@Override

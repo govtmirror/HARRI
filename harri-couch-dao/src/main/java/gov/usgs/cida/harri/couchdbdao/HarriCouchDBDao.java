@@ -83,6 +83,6 @@ public class HarriCouchDBDao implements IHarriDAO {
 	}
 	
 	private String constructCouchIdentifier(HarriBean o) {
-		return "/" + BASE_DB_NAMES[0] + "/" + o.getIdentifier(); //TODO expand if more than 1 DB supported
+		return "/" + BASE_DB_NAMES[0] + "/" + o.getType() + "-" + o.getIdentifier(); //TODO expand if more than 1 DB supported
 	}
 }
