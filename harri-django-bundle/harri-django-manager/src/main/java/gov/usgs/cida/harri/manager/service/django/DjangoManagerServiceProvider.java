@@ -5,7 +5,6 @@ import gov.usgs.cida.harri.commons.interfaces.manager.IHarriManagerServiceProvid
 import gov.usgs.cida.harri.service.HarriServiceExecutor;
 import gov.usgs.cida.harri.util.HarriUtils;
 import java.util.HashMap;
-import org.apache.commons.lang.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teleal.cling.UpnpService;
@@ -29,7 +28,6 @@ public class DjangoManagerServiceProvider implements IHarriManagerServiceProvide
 		upnpService.getControlPoint().execute(new ActionCallback(pds.prepareActionInvocation("GetAllDjangoInstances", params)) {
 			@Override
 			public void success(ActionInvocation invocation) {
-				assert invocation.getOutput().length == 0;
 				String deviceName = invocation.getAction().getService().getDevice().getDetails().getModelDetails().getModelName();
 				String responseMessage = "Service \"GetAllDjangoInstances\" successfully called on " + deviceName;
 				responseMessage += "\n" + invocation.getOutput("GetAllDjangoInstancesResponse").toString();
@@ -45,7 +43,6 @@ public class DjangoManagerServiceProvider implements IHarriManagerServiceProvide
 		upnpService.getControlPoint().execute(new ActionCallback(pds.prepareActionInvocation("GetAllDjangoApps", params)) {
 			@Override
 			public void success(ActionInvocation invocation) {
-				assert invocation.getOutput().length == 0;
 				String deviceName = invocation.getAction().getService().getDevice().getDetails().getModelDetails().getModelName();
 				String responseMessage = "Service \"GetAllDjangoApps\" successfully called on " + deviceName;
 				responseMessage += "\n" + invocation.getOutput("GetAllDjangoAppsResponse").toString();

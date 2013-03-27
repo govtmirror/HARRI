@@ -29,7 +29,6 @@ public class TomcatManagerServiceProvider implements IHarriManagerServiceProvide
 		upnpService.getControlPoint().execute(new ActionCallback(pds.prepareActionInvocation("GetAllTomcatInstances", params)) {
 			@Override
 			public void success(ActionInvocation invocation) {
-				assert invocation.getOutput().length == 0;
 				String deviceName = invocation.getAction().getService().getDevice().getDetails().getModelDetails().getModelName();
 				String responseMessage = "Service \"GetAllTomcatInstances\" successfully called on " + deviceName;
 				responseMessage += "\n" + invocation.getOutput("GetAllTomcatInstancesResponse").toString();
@@ -45,7 +44,6 @@ public class TomcatManagerServiceProvider implements IHarriManagerServiceProvide
 		upnpService.getControlPoint().execute(new ActionCallback(pds.prepareActionInvocation("GetAllTomcatApps", params)) {
 			@Override
 			public void success(ActionInvocation invocation) {
-				assert invocation.getOutput().length == 0;
 				String deviceName = invocation.getAction().getService().getDevice().getDetails().getModelDetails().getModelName();
 				String responseMessage = "Service \"GetAllTomcatApps\" successfully called on " + deviceName;
 				responseMessage += "\n" + invocation.getOutput("GetAllTomcatAppsResponse").toString();

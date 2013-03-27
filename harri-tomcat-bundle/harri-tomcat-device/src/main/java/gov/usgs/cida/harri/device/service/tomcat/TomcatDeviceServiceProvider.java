@@ -97,7 +97,6 @@ public class TomcatDeviceServiceProvider implements IHarriDeviceServiceProvider 
 			}
 		}
 
-
 		return getAllTomcatAppsResponse;
 	}
 }

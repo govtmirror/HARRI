@@ -42,7 +42,8 @@ public class HarriCouchDBDao implements IHarriDAO {
 	 * This function will post or put a json string to couch db, the json will
 	 * have two properties: data and timestamp
 	 *
-	 * @param identifier for the couchdao, identifier will be a relative uri
+	 * @param managerId 
+	 * @param data 
 	 */
 	public void persistList(String managerId, List<String> data) {
 		CouchRequestUtil.checkAndCreateDB(this.url, "/vco", authSessionId);
