@@ -38,7 +38,7 @@ public class EchoManagerServiceProvider implements IHarriManagerServiceProvider 
 				Echo echo = new Echo();
 				echo.setIdentifier(deviceName);
 				echo.setManagerId(HarriUtils.getSystemHostName());
-				echo.setHost(deviceName);
+				echo.setHost(invocation.getOutput("EchoHostnameResponse").toString());
 				
 				if(dao.read(echo) == null) {
 					dao.create(echo);

@@ -30,6 +30,6 @@ public class HarriBean implements Serializable {
 	}
 	
 	public String getType() {
-		return this.getClass().getName();
+		return this.getClass().getSimpleName();
 	}
 }
