@@ -44,6 +44,7 @@ public class VMWareExternalServiceProvider implements IHarriExternalServiceProvi
 	@Override
 	public void doServiceCalls(String managerId, IHarriDAO dao) {
 		List<String> results = getVirtualMachines(vmwareVcoUrl, vmwareVcoUserName, vmwareVcoPassword);
-		dao.writeList(managerId, results);
+		
+		dao.persistVmList(managerId, results);
 	}
 }

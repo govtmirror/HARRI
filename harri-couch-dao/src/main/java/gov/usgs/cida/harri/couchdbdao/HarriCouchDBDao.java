@@ -11,6 +11,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -29,19 +30,21 @@ public class HarriCouchDBDao implements IHarriDAO {
 	private String username = "";
 	private String password = "";
 	private String url = "";
-	
+
+	private String authSessionId;
+
 	public HarriCouchDBDao() {
 		LOG.debug("HarriCouchDBDao constructor");
 		Properties harriConfigs = HarriUtils.getHarriConfigs();
 		username = harriConfigs.getProperty("couchdb.user", "harri");
 		password = harriConfigs.getProperty("couchdb.password", "set.password.here");
 		url = harriConfigs.getProperty("couchdb.url", "https://localhost:6984");
-		
+
 		if(!isAvailable()) {
 			throw new RuntimeException("Couch DB instance is not responding");
 		}
 	}
-	
+
 	@Override
 	public boolean isAvailable() {
 		RestTemplate rt = new RestTemplate();
@@ -53,45 +56,111 @@ public class HarriCouchDBDao implements IHarriDAO {
 	}
 
 	/**
-	 * This function will post or put a json string to couch db, the json will have two
-	 * properties: data and timestamp
-	 * 
-	 * @param identifier for the couchdao, identifier will be a relative uri
 	 */
 	@Override
-	public void writeList(String identifier, List<String> data) {
+	public void persistVmList(String managerId, List<String> data) {
 		RestTemplate rest = new RestTemplate();
+
+		checkAndCreateDB("/vco");
 		
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-	   map.add("data", new Gson().toJson(data));
-	   checkAndCreateDB("/vco");
-	   checkAndCreateDB("/vco/hosts");
-//		rest.put(this.url + "/test/hosts", map, String.class);
+		String json = new Gson().toJson(data);
+		json = "{" +
+				" \"manager\" : \"" + managerId + "\", " +
+				" \"data\" : " + (data==null ? "[]" : json) +
+				"}";
+		doJsonPut(json, "/vco/hosts");
 	}
-	
-	private void checkAndCreateDB(String uri) {
+
+	public void checkAndCreateDB(String uri) {
+		RestTemplate rest = new RestTemplate();
 		try {
 			rest.getForObject(this.url + uri, String.class);
 		} catch (HttpClientErrorException e) {
 			if(e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
-				rest.put(this.url + uri, "test");
+				doJsonPut("", uri);
 			}
 		}
 	}
-	
-	private void doPut() {
+
+	public void doJsonPut(String json, String uri) {
 		RestTemplate restTemplate = new RestTemplate();
-		
+
+		json = updateCheckForUpdate(json, uri);
+
 		// Create the request body as a MultiValueMap
 		MultiValueMap<String, String> body = new LinkedMultiValueMap<String, String>();     
 
 		HttpHeaders requestHeaders = new HttpHeaders();
-		
-		body.add("field", "stuff");
+		requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+		requestHeaders.add("Cookie", doLogin());
 
 		// Note the body object as first parameter!
-		HttpEntity<?> httpEntity = new HttpEntity<Object>(body, requestHeaders);
+		HttpEntity<String> entity = new HttpEntity<String>(json, requestHeaders);
+		ResponseEntity<String> model = restTemplate.exchange(this.url + uri, HttpMethod.PUT, entity, String.class);
+	}
 
-		ResponseEntity<String> model = restTemplate.exchange("/api/url", HttpMethod.PUT, httpEntity, String.class);
+	public String updateCheckForUpdate(String json, String uri) {
+		try {
+		RestTemplate rest = new RestTemplate();
+		String s = rest.getForObject(this.url + uri, String.class);
+		CouchDocumentId id = (new Gson()).fromJson(s, CouchDocumentId.class);
+
+		return "{" + "\"_id\" : \"" + id.get_id() + 
+				"\", \"_rev\" : \"" + id.get_rev() + "\", " + 
+				json.substring(json.indexOf("{")+1);
+		} catch (HttpClientErrorException e) {
+			if(e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
+				return json;
+			}
+		}
+		return json;
+	}
+
+	public String doLogin() {
+		if(authSessionId != null) {
+			return authSessionId;
+		}
+
+		RestTemplate restTemplate = new RestTemplate();
+
+		// Create the request body as a MultiValueMap
+		MultiValueMap<String, String> body = new LinkedMultiValueMap<String, String>();     
+
+		HttpHeaders requestHeaders = new HttpHeaders();
+
+		body.add("name", this.username);
+		body.add("password", this.password);
+
+		// Note the body object as first parameter!
+		HttpEntity<Object> entity = new HttpEntity<Object>(body, requestHeaders);
+
+		ResponseEntity<String> model = restTemplate.exchange(this.url + "/_session", HttpMethod.POST, entity, String.class);
+
+		String rawCookie = model.getHeaders().get("Set-Cookie").get(0);
+		rawCookie = rawCookie.replace("[", "").replace("]", ""); 
+		for(String s : rawCookie.split(";")) {
+			if(s.startsWith("AuthSession=")) {
+				authSessionId = s;
+			}
+		}
+
+		return authSessionId;
+	}
+
+	private class CouchDocumentId {
+		private String _id;
+		private String _rev;
+		public String get_rev() {
+			return _rev;
+		}
+		public void set_rev(String _rev) {
+			this._rev = _rev;
+		}
+		public String get_id() {
+			return _id;
+		}
+		public void set_id(String _id) {
+			this._id = _id;
+		}
 	}
 }

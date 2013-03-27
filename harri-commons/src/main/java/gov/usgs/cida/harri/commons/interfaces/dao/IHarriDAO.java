@@ -9,5 +9,5 @@ import java.util.List;
 public interface IHarriDAO {
 	
 	public boolean isAvailable();
-	public void writeList(String identifier, List<String> data);
+	public void persistVmList(String managerId, List<String> data);
 }
