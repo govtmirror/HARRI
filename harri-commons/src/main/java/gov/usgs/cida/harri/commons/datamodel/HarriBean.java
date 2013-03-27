@@ -12,6 +12,7 @@ public class HarriBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private String identifier;
+	private String managerId;
 	
 	private final String type;
 	
@@ -37,5 +38,13 @@ public class HarriBean implements Serializable {
 	
 	public String getType() {
 		return type;
+	}
+
+	public String getManagerId() {
+		return managerId;
+	}
+
+	public void setManagerId(String managerId) {
+		this.managerId = managerId;
 	}
 }

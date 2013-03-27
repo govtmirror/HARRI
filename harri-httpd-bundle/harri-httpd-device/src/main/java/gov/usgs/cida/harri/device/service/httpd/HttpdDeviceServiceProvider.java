@@ -1,14 +1,20 @@
 package gov.usgs.cida.harri.device.service.httpd;
 
+import gov.usgs.cida.harri.commons.datamodel.ApacheConfiguration;
+import gov.usgs.cida.harri.commons.datamodel.ProxyMapping;
 import gov.usgs.cida.harri.commons.interfaces.device.IHarriDeviceServiceProvider;
 import gov.usgs.cida.harri.httpd.ParseHTTPdConf;
-import gov.usgs.cida.harri.httpd.ProxyMapping;
+import gov.usgs.cida.harri.util.HarriUtils;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teleal.cling.binding.annotations.*;
+
+import com.google.gson.Gson;
 
 @UpnpService(
         serviceId = @UpnpServiceId("HTTPdProxyService"),
@@ -28,25 +34,25 @@ public class HttpdDeviceServiceProvider implements IHarriDeviceServiceProvider {
 //    private String harriManagerId = "no_id_provided";
     
     @UpnpStateVariable(defaultValue = "default response value")
-    private String listProxyMappingsResponse = "default response value";
+    private String getProxyMappingResponse = null;
     
-    @UpnpAction(out = @UpnpOutputArgument(name = "ListProxyMappingsResponse")) //example of how to get a response, could do by convention
-    public String listProxyMappings() {
+    @UpnpAction(out = @UpnpOutputArgument(name = "GetProxyMappingResponse")) //example of how to get a response, could do by convention
+    public String getProxyMapping() {
     	StringBuilder sb = new StringBuilder();
-                
-//        sb.append(harriManagerId).append('\n');
-        try {
+    	ApacheConfiguration ac = new ApacheConfiguration();
+    	ac.setIdentifier(HarriUtils.getSystemHostName());
+
+    	try {
             List<ProxyMapping> proxyMappingList = ParseHTTPdConf.getProxyMappingList();
-            for (ProxyMapping proxyMapping : proxyMappingList) {
-                for (String toURL : proxyMapping.getToURLList()) {
-                    sb.append(proxyMapping.getFromHost()).append(proxyMapping.getFromPath()).append(" -> ").append(toURL).append('\n');
-                }
-                
-            }
+            ac.setProxyMappings(proxyMappingList);
         } catch (IOException e) {
-            
         }
-        listProxyMappingsResponse = sb.length() > 0 ? sb.toString() : "[No Mappings Found]";
-        return listProxyMappingsResponse;
+            
+        if(ac.getProxyMappings() == null || ac.getProxyMappings().isEmpty()) {
+        	return null;
+        }
+        
+        getProxyMappingResponse = new Gson().toJson(ac);
+        return getProxyMappingResponse;
     }
 }

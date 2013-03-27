@@ -8,16 +8,9 @@ package gov.usgs.cida.harri.commons.datamodel;
 public class Echo extends HarriBean {
 	private static final long serialVersionUID = 1L;
 	
-	private String managerId;
 	private String host;
 	private String deviceName;
 	
-	public String getManagerId() {
-		return managerId;
-	}
-	public void setManagerId(String managerId) {
-		this.managerId = managerId;
-	}
 	public String getHost() {
 		return host;
 	}

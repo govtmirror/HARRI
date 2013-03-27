@@ -4,6 +4,8 @@
  */
 package gov.usgs.cida.harri.httpd;
 
+import gov.usgs.cida.harri.commons.datamodel.ProxyMapping;
+import gov.usgs.cida.harri.commons.datamodel.ProxyMapping.Builder;
 import gov.usgs.cida.harri.util.HarriUtils;
 
 import java.io.BufferedReader;
@@ -113,7 +115,7 @@ public class ParseHTTPdConf {
         
         // 0(n^2) ouch...
         for (RewriteRuleToURL rewrite : rewriteRuleToURLList) {
-            ProxyMapping.Builder builder = new ProxyMapping.Builder(rewrite.getFromHost(), rewrite.getFromPath());
+            Builder builder = new Builder(rewrite.getFromHost(), rewrite.getFromPath());
             String mapToURL = rewrite.getToURL();
             if (mapToURL.startsWith("balancer")) {
                 ProxyToBalancer balancer = null;

@@ -52,7 +52,7 @@ public class VMWareExternalServiceProvider implements IHarriExternalServiceProvi
 		//create HarriBean
 		Vco vmBean = new Vco();
 		vmBean.setIdentifier(VMS_ID);
-		vmBean.setReportingManager(managerId);
+		vmBean.setManagerId(managerId);
 		vmBean.setTimestamp(DateFormat.getDateInstance().format(new Date()));
 		vmBean.setVmHosts(results);
 		

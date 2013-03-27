@@ -4,7 +4,6 @@ import java.util.List;
 
 public class TomcatHost extends HarriBean {
 	private List<Tomcat> tomcatInstances;
-	private String managerId;
 
 	public List<Tomcat> getTomcatInstances() {
 		return tomcatInstances;
@@ -16,13 +15,5 @@ public class TomcatHost extends HarriBean {
 	
 	public void addTomcatInstance(Tomcat tomcatInstance) {
 		this.tomcatInstances.add(tomcatInstance);
-	}
-
-	public String getManagerId() {
-		return managerId;
-	}
-
-	public void setManagerId(String managerId) {
-		this.managerId = managerId;
 	}
 }

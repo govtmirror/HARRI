@@ -25,7 +25,7 @@ public class HarriCouchDBDaoTest {
 			vco = new Vco();
 			vco.setIdentifier(id);
 		}
-		vco.setReportingManager("harriManager");
+		vco.setManagerId("harriManager");
 		vco.setVmHosts(new ArrayList<String>());
 		vco.setTimestamp("timestamp 1");
 		dao.create(vco);

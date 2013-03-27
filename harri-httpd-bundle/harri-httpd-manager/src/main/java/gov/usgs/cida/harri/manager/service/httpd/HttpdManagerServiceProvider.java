@@ -1,5 +1,7 @@
 package gov.usgs.cida.harri.manager.service.httpd;
 
+import gov.usgs.cida.harri.commons.datamodel.ApacheConfiguration;
+import gov.usgs.cida.harri.commons.datamodel.ProxyMapping;
 import gov.usgs.cida.harri.commons.interfaces.dao.IHarriDAO;
 import gov.usgs.cida.harri.commons.interfaces.manager.IHarriManagerServiceProvider;
 import gov.usgs.cida.harri.service.HarriServiceExecutor;
@@ -12,24 +14,37 @@ import org.teleal.cling.model.action.ActionInvocation;
 import org.teleal.cling.model.message.UpnpResponse;
 import org.teleal.cling.model.meta.RemoteDevice;
 
+import com.google.gson.Gson;
+
 public class HttpdManagerServiceProvider implements IHarriManagerServiceProvider {
 
 	static private Logger LOG = LoggerFactory.getLogger(HttpdManagerServiceProvider.class);
 
 	@Override
-	public void doServiceCalls(final UpnpService upnpService, final RemoteDevice device, IHarriDAO dao) {
+	public void doServiceCalls(final UpnpService upnpService, final RemoteDevice device, final IHarriDAO dao) {
 		String serviceName = "HTTPdProxyService";
 		HarriServiceExecutor pds = new HarriServiceExecutor(upnpService, device, serviceName);
 		HashMap<String, String> params = new HashMap<String, String>();
 		
-		upnpService.getControlPoint().execute(new ActionCallback(pds.prepareActionInvocation("ListProxyMappings", params)) {
+		upnpService.getControlPoint().execute(new ActionCallback(pds.prepareActionInvocation("GetProxyMapping", params)) {
 			@Override
 			public void success(ActionInvocation invocation) {
 				assert invocation.getOutput().length == 0;
 				String deviceName = invocation.getAction().getService().getDevice().getDetails().getModelDetails().getModelName();
-				String responseMessage = "Service \"ListProxyMappings\" successfully called on " + deviceName;
-				responseMessage += "\n" + invocation.getOutput("ListProxyMappingsResponse").toString();
+				String responseMessage = "Service \"GetProxyMapping\" successfully called on " + deviceName;
 				LOG.info(responseMessage);
+				
+				ApacheConfiguration ac = new Gson().fromJson(invocation.getOutput("GetProxyMappingResponse").toString(), ApacheConfiguration.class);
+				
+				if(ac == null) {
+					return;
+				}
+				
+				if(dao.read(ac) == null) {
+					dao.create(ac);
+				} else {
+					dao.update(ac);
+				}
 			}
 
 			@Override

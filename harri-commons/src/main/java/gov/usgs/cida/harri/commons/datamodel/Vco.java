@@ -11,7 +11,6 @@ public class Vco extends HarriBean {
 	private static final long serialVersionUID = 1L;
 
 	private List<String> vmHosts;
-	private String reportingManager;
 	private String timestamp;
 
 	public List<String> getVmHosts() {
@@ -20,14 +19,6 @@ public class Vco extends HarriBean {
 
 	public void setVmHosts(List<String> vmHosts) {
 		this.vmHosts = vmHosts;
-	}
-
-	public String getReportingManager() {
-		return reportingManager;
-	}
-
-	public void setReportingManager(String reportingManager) {
-		this.reportingManager = reportingManager;
 	}
 
 	public String getTimestamp() {
