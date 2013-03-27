@@ -8,4 +8,6 @@ import java.util.List;
  */
 public interface IHarriDAO {
 	public void persistVmList(String managerId, List<String> data);
+	
+	public void updateObject(Object o);
 }

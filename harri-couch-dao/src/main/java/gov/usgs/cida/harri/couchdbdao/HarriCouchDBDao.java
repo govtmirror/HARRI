@@ -20,7 +20,7 @@ public class HarriCouchDBDao implements IHarriDAO {
 	private String username = "";
 	private String password = "";
 	private String url = "";
-
+	
 	private String authSessionId = null;
 
 	public HarriCouchDBDao() {
@@ -29,6 +29,8 @@ public class HarriCouchDBDao implements IHarriDAO {
 		username = harriConfigs.getProperty("couchdb.user", "harri");
 		password = harriConfigs.getProperty("couchdb.password", "set.password.here");
 		url = harriConfigs.getProperty("couchdb.url", "https://localhost:6984");
+		
+		setAuthCookie();
 
 		if(!CouchRequestUtil.isServerAvailable(this.url)) {
 			throw new RuntimeException("Couch DB instance is not responding");
@@ -42,9 +44,7 @@ public class HarriCouchDBDao implements IHarriDAO {
 	 * @param identifier for the couchdao, identifier will be a relative uri
 	 */
 	@Override
-	public void persistVmList(String managerId, List<String> data) {
-		setAuthCookie();
-		
+	public void persistList(String identifier, List<String> data, ) {
 		CouchRequestUtil.checkAndCreateDB(this.url, "/vco", authSessionId);
 		
 		String json = new Gson().toJson(data);

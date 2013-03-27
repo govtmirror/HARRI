@@ -37,7 +37,9 @@ public class CouchRequestUtil {
 	public static String doJsonPut(String json, String couchUrl, String uri, String authCookie) {
 		RestTemplate restTemplate = new RestTemplate();
 
-		json = updateJsonWithRevisionInfo(json, couchUrl, uri);
+		String newJson = json;
+		
+		newJson = updateJsonWithRevisionInfo(newJson, couchUrl, uri);
 
 		HttpHeaders requestHeaders = new HttpHeaders();
 		requestHeaders.setContentType(MediaType.APPLICATION_JSON);
@@ -46,28 +48,30 @@ public class CouchRequestUtil {
 		}
 
 		// Note the body object as first parameter!
-		HttpEntity<String> entity = new HttpEntity<String>(json, requestHeaders);
+		HttpEntity<String> entity = new HttpEntity<String>(newJson, requestHeaders);
 		ResponseEntity<String> model = restTemplate.exchange(couchUrl + uri, HttpMethod.PUT, entity, String.class);
 	
 		return model.getBody();
 	}
 
 	public static String updateJsonWithRevisionInfo(String json, String couchUrl, String uri) {
+		String newJson = json;
 		try {
 			RestTemplate rest = new RestTemplate();
 			String s = rest.getForObject(couchUrl + uri, String.class);
 			CouchDocumentId id = (new Gson()).fromJson(s, CouchDocumentId.class);
 	
-			return "{" + "\"_id\" : \"" + id.get_id() + 
+			return "{" + 
+					"\"_id\" : \"" + id.get_id() + 
 					"\", \"_rev\" : \"" + id.get_rev() + "\", " + 
-					" \"lastHarriUpdate\" : \"" + "timestampHere" + "\", " +
-					json.substring(json.indexOf("{")+1);
+					" \"lastHarriUpdate\" : \"" + "timestampHere" + "\", " + //TODO get actual timestamp
+					newJson.substring(newJson.indexOf("{")+1);
 		} catch (HttpClientErrorException e) {
 			if(e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
-				return json;
+				return newJson;
 			}
 		}
-		return json;
+		return newJson;
 	}
 
 	public static String doLogin(String username, String password, String couchUrl) {

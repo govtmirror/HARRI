@@ -135,7 +135,7 @@ public class HarriManagerService implements Runnable {
 			harriManagerServices.add(mslIter.next());
 	    }
 		
-		LOG.debug("loading IHarriDAO");
+		LOG.debug("loading IHarriDAOFactory");
 		ServiceLoader<IHarriDAOFactory> daoFactorySL = ServiceLoader.load(IHarriDAOFactory.class);
 		daoFactory = daoFactorySL.iterator().next();
 	}
