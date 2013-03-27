@@ -240,8 +240,7 @@ public class Tomcat extends Instance {
 	}
 
 	public static Tomcat fromJSON(String json) {
-		Gson gson = new Gson();
-		Tomcat tomcat = gson.fromJson(json, Tomcat.class);
+		Tomcat tomcat = new Gson().fromJson(json, Tomcat.class);
 		return tomcat;
 	}
 

@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
  */
 public class DjangoTest {
 	
-	String resultString = "{\"httpPort\":8080,\"httpsPort\":8443,\"appList\":[\"test\"]}";
+	private String resultString = "{\"httpPort\":8080,\"httpsPort\":8443,\"appList\":[\"test\"]}";
 	
 	public DjangoTest() {
 	}

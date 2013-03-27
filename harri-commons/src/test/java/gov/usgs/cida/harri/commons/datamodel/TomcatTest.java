@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package gov.usgs.cida.harri.commons.datamodel;
 
 import java.util.ArrayList;
@@ -17,7 +13,7 @@ import org.junit.Test;
  * @author isuftin
  */
 public class TomcatTest {
-	String resultString = "{\"managerUsername\":\"test-user\",\"managerPassword\":\"xxxxxxxxx\",\"httpPort\":8080,\"httpsPort\":8443,\"appList\":[\"test\"],\"applicationMap\":{\"testApp\":{\"context\":\"test\",\"startTime\":\"1\",\"startupTime\":\"2\",\"running\":true}}}";
+	private String resultString = "{\"managerUsername\":\"test-user\",\"managerPassword\":\"xxxxxxxxx\",\"httpPort\":8080,\"httpsPort\":8443,\"appList\":[\"test\"],\"applicationMap\":{\"testApp\":{\"context\":\"test\",\"startTime\":\"1\",\"startupTime\":\"2\",\"running\":true}}}";
 	public TomcatTest() {
 	}
 

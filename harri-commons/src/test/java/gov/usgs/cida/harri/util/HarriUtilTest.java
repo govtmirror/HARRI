@@ -27,6 +27,6 @@ public class HarriUtilTest {
         
         assertEquals(config.getProperty("couchdb.user"), "harri");
         assertEquals(config.getProperty("couchdb.password"), "password");
-        assertEquals(config.getProperty("couchdb.url"), "http:/localhost:5984");
+        assertEquals(config.getProperty("couchdb.url"), "http://localhost:5984");
     }
 }

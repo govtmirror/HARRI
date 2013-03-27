@@ -25,8 +25,8 @@ import com.google.gson.Gson;
  * @author isuftin
  */
 public class HarriCouchDBDao implements IHarriDAO {
-	private static Logger LOG = LoggerFactory.getLogger(HarriCouchDBDao.class);
 
+	private static Logger LOG = LoggerFactory.getLogger(HarriCouchDBDao.class);
 	private String username = "";
 	private String password = "";
 	private String url = "";
@@ -49,13 +49,17 @@ public class HarriCouchDBDao implements IHarriDAO {
 	public boolean isAvailable() {
 		RestTemplate rt = new RestTemplate();
 		String response = rt.getForObject(this.url, String.class);
-		if(response != null && !"".equals(response)) {
+		if (response != null && !"".equals(response)) {
 			return true;
 		}
 		return false;
 	}
 
 	/**
+	 * This function will post or put a json string to couch db, the json will
+	 * have two properties: data and timestamp
+	 *
+	 * @param identifier for the couchdao, identifier will be a relative uri
 	 */
 	@Override
 	public void persistVmList(String managerId, List<String> data) {
