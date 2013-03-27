@@ -39,6 +39,11 @@ public class TomcatManagerServiceProvider implements IHarriManagerServiceProvide
 				String jsonResponse = invocation.getOutput("GetTomcatHostResponse").toString();
 				
 				TomcatHost tcHost = new Gson().fromJson(jsonResponse, TomcatHost.class);
+				
+				if(tcHost == null) {
+					return;
+				}
+				
 				if(dao.read(tcHost) == null) {
 					dao.create(tcHost);
 				} else {

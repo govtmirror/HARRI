@@ -36,7 +36,8 @@ public class Tomcat extends Instance {
 		return LOG;
 	}
 	private String managerUsername = "";
-	private String managerPassword = "";
+	private transient String managerPassword = "";
+	
 	private Integer httpPort = 0;
 	private Integer httpsPort = 0;
 
