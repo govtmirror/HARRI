@@ -12,7 +12,13 @@ public class HarriBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private String identifier;
-
+	
+	private final String type;
+	
+	public HarriBean() {
+		this.type = this.getClass().getSimpleName();
+	}
+	
 	public String getIdentifier() {
 		return identifier;
 	}
@@ -30,6 +36,6 @@ public class HarriBean implements Serializable {
 	}
 	
 	public String getType() {
-		return this.getClass().getSimpleName();
+		return type;
 	}
 }
