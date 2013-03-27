@@ -4,12 +4,10 @@ import gov.usgs.cida.harri.commons.datamodel.HarriBean;
 import gov.usgs.cida.harri.commons.interfaces.dao.IHarriDAO;
 import gov.usgs.cida.harri.util.HarriUtils;
 
-import java.util.List;
 import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gson.Gson;
 
 /**
  *
@@ -17,7 +15,11 @@ import com.google.gson.Gson;
  */
 public class HarriCouchDBDao implements IHarriDAO {
 
+	public static final String[] BASE_DB_NAMES = new String[] { "harri" };
+
 	private static Logger LOG = LoggerFactory.getLogger(HarriCouchDBDao.class);
+	
+	
 	private String username = "";
 	private String password = "";
 	private String url = "";
@@ -31,30 +33,11 @@ public class HarriCouchDBDao implements IHarriDAO {
 		password = harriConfigs.getProperty("couchdb.password", "set.password.here");
 		url = harriConfigs.getProperty("couchdb.url", "https://localhost:6984");
 		
-		setAuthCookie();
+		initialize();
 
 		if(!CouchRequestUtil.isServerAvailable(this.url)) {
 			throw new RuntimeException("Couch DB instance is not responding");
 		}
-	}
-
-	/**
-	 * This function will post or put a json string to couch db, the json will
-	 * have two properties: data and timestamp
-	 *
-	 * @param managerId 
-	 * @param data 
-	 */
-	public void persistList(String managerId, List<String> data) {
-		CouchRequestUtil.checkAndCreateDB(this.url, "/vco", authSessionId);
-		
-		String json = new Gson().toJson(data);
-		json = "{" +
-				" \"manager\" : \"" + managerId + "\", " +
-				" \"data\" : " + (data==null ? "[]" : json) +
-				"}";
-		
-		CouchRequestUtil.doJsonPut(json, this.url, "/vco/hosts", authSessionId);
 	}
 	
 	private void setAuthCookie() {
@@ -64,28 +47,42 @@ public class HarriCouchDBDao implements IHarriDAO {
 		
 		authSessionId = CouchRequestUtil.doLogin(this.username, this.password, this.url);
 	}
+	
+	@Override
+	public void initialize() {
+		setAuthCookie();
+		for (int i = 0; i < BASE_DB_NAMES.length; i++) {
+			CouchRequestUtil.checkAndCreateDB(this.url, BASE_DB_NAMES[i], this.authSessionId);
+		}
+	}
 
 	@Override
 	public HarriBean create(HarriBean o) {
-		// TODO Auto-generated method stub
-		return null;
+		CouchRequestUtil.doCreate(o.serialize(), this.url, constructCouchIdentifier(o), authSessionId);
+		return this.read(o);
 	}
 
 	@Override
 	public HarriBean read(HarriBean o) {
-		// TODO Auto-generated method stub
-		return null;
+		String json = CouchRequestUtil.readJsonDocument(this.url, constructCouchIdentifier(o), authSessionId);
+		if(json==null) {
+			return null;
+		}
+		return o.deserialize(json);
 	}
 
 	@Override
 	public HarriBean update(HarriBean o) {
-		// TODO Auto-generated method stub
-		return null;
+		CouchRequestUtil.doUpdate(o.serialize(), this.url, constructCouchIdentifier(o), authSessionId);
+		return this.read(o);
 	}
 
 	@Override
-	public boolean delete(HarriBean o) {
-		// TODO Auto-generated method stub
-		return false;
+	public void delete(HarriBean o) {
+		o.deserialize(CouchRequestUtil.doCouchDelete(this.url, constructCouchIdentifier(o), authSessionId));;
+	}
+	
+	private String constructCouchIdentifier(HarriBean o) {
+		return "/" + BASE_DB_NAMES[0] + "/" + o.getIdentifier(); //TODO expand if more than 1 DB supported
 	}
 }

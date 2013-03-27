@@ -2,14 +2,16 @@ package gov.usgs.cida.harri.commons.datamodel;
 
 import java.io.Serializable;
 
+import com.google.gson.Gson;
+
 /**
  *
  * @author isuftin
  */
-public abstract class HarriBean implements Serializable {
+public class HarriBean implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	private String identifier;
-	abstract String serialize();
-	abstract HarriBean deserialize(String input);
 
 	public String getIdentifier() {
 		return identifier;
@@ -17,5 +19,13 @@ public abstract class HarriBean implements Serializable {
 
 	public void setIdentifier(String identifier) {
 		this.identifier = identifier;
+	}
+	
+	public String serialize() {
+		return new Gson().toJson(this);
+	}
+
+	public HarriBean deserialize(String input) {
+		return new Gson().fromJson(input, this.getClass());
 	}
 }

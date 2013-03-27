@@ -1,6 +1,5 @@
 package gov.usgs.cida.harri.manager.service.vmware;
 
-import gov.usgs.cida.harri.commons.datamodel.HarriBean;
 import gov.usgs.cida.harri.commons.datamodel.Vco;
 import gov.usgs.cida.harri.commons.interfaces.dao.IHarriDAO;
 import gov.usgs.cida.harri.commons.interfaces.manager.IHarriExternalServiceProvider;
@@ -10,7 +9,6 @@ import java.util.Date;
 
 import java.util.List;
 import java.util.Properties;
-import org.apache.commons.lang.time.DateUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +16,9 @@ import org.slf4j.LoggerFactory;
 public class VMWareExternalServiceProvider implements IHarriExternalServiceProvider {
 
 	private static Logger LOG = LoggerFactory.getLogger(VMWareExternalServiceProvider.class);
+	
+	public static final String VMS_ID = "hosts";
+	
 	private static String vmwareVcoUrl;
 	private static String vmwareVcoUserName;
 	private static String vmwareVcoPassword;
@@ -50,7 +51,7 @@ public class VMWareExternalServiceProvider implements IHarriExternalServiceProvi
 
 		//create HarriBean
 		Vco vmBean = new Vco();
-		vmBean.setIdentifier("host");
+		vmBean.setIdentifier(VMS_ID);
 		vmBean.setReportingManager(managerId);
 		vmBean.setTimestamp(DateFormat.getDateInstance().format(new Date()));
 		vmBean.setVmHosts(results);

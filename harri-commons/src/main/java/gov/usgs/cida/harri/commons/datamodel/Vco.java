@@ -37,16 +37,4 @@ public class Vco extends HarriBean {
 	public void setTimestamp(String timestamp) {
 		this.timestamp = timestamp;
 	}
-	
-	
-
-	@Override
-	String serialize() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-	}
-
-	@Override
-	HarriBean deserialize(String input) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-	}
 }
