@@ -1,5 +1,6 @@
 package gov.usgs.cida.harri.couchdbdao;
 
+import gov.usgs.cida.harri.commons.datamodel.HarriBean;
 import gov.usgs.cida.harri.commons.interfaces.dao.IHarriDAO;
 import gov.usgs.cida.harri.util.HarriUtils;
 
@@ -43,8 +44,7 @@ public class HarriCouchDBDao implements IHarriDAO {
 	 *
 	 * @param identifier for the couchdao, identifier will be a relative uri
 	 */
-	@Override
-	public void persistList(String identifier, List<String> data, ) {
+	public void persistList(String managerId, List<String> data) {
 		CouchRequestUtil.checkAndCreateDB(this.url, "/vco", authSessionId);
 		
 		String json = new Gson().toJson(data);
@@ -62,5 +62,29 @@ public class HarriCouchDBDao implements IHarriDAO {
 		}
 		
 		authSessionId = CouchRequestUtil.doLogin(this.username, this.password, this.url);
+	}
+
+	@Override
+	public HarriBean create(HarriBean o) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public HarriBean read(HarriBean o) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public HarriBean update(HarriBean o) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean delete(HarriBean o) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

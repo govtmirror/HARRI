@@ -1,5 +1,6 @@
 package gov.usgs.cida.harri.manager.service.vmware;
 
+import gov.usgs.cida.harri.commons.datamodel.HarriBean;
 import gov.usgs.cida.harri.commons.interfaces.dao.IHarriDAO;
 import gov.usgs.cida.harri.commons.interfaces.manager.IHarriExternalServiceProvider;
 import gov.usgs.cida.harri.util.HarriUtils;
@@ -43,6 +44,12 @@ public class VMWareExternalServiceProvider implements IHarriExternalServiceProvi
 	public void doServiceCalls(String managerId, IHarriDAO dao) {
 		List<String> results = getVirtualMachines(vmwareVcoUrl, vmwareVcoUserName, vmwareVcoPassword);
 
-		dao.persistVmList(managerId, results);
+		//create HarriBean
+		HarriBean vmList = null;
+		if(dao.read(vmList) == null) {
+			dao.create(vmList);
+		} else {
+			dao.update(vmList);
+		}
 	}
 }
