@@ -9,6 +9,7 @@ public interface IHarriManagerServiceProvider {
 	 *
 	 * @param harriManagerUpnpService
 	 * @param d
+	 * @param dao  
 	 */
 	public void doServiceCalls(UpnpService harriManagerUpnpService, RemoteDevice d, IHarriDAO dao);
 }

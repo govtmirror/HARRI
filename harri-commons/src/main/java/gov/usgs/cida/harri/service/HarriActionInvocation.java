@@ -14,7 +14,7 @@ import org.teleal.cling.model.types.InvalidValueException;
  */
 public class HarriActionInvocation extends ActionInvocation {
 
-	Logger LOG = LoggerFactory.getLogger(HarriActionInvocation.class);
+	private static Logger LOG = LoggerFactory.getLogger(HarriActionInvocation.class);
 
 	HarriActionInvocation(Service service, String actionName, Map<String, String> params) {
 		super(service.getAction(actionName));

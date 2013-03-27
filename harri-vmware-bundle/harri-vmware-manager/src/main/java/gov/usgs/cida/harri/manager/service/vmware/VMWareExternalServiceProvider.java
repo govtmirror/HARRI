@@ -9,25 +9,23 @@ import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teleal.cling.UpnpService;
 
 public class VMWareExternalServiceProvider implements IHarriExternalServiceProvider {
-	private static Logger LOG = LoggerFactory.getLogger(VMWareExternalServiceProvider.class);
 
+	private static Logger LOG = LoggerFactory.getLogger(VMWareExternalServiceProvider.class);
 	private static String vmwareVcoUrl;
 	private static String vmwareVcoUserName;
 	private static String vmwareVcoPassword;
-	
 	private static Properties harriConfigProps;
-	
+
 	public VMWareExternalServiceProvider() {
 		LOG.debug("Constructor called for VMWareManagerServiceProvider");
 
 		harriConfigProps = HarriUtils.getHarriConfigs();
-		
+
 		vmwareVcoUrl = harriConfigProps.getProperty("vco.url", "https://a-vco-server.er.usgs.gov");
-	    vmwareVcoUserName = harriConfigProps.getProperty("vco.user", "harri");
-	    vmwareVcoPassword = harriConfigProps.getProperty("vco.password", "setValidPassword");
+		vmwareVcoUserName = harriConfigProps.getProperty("vco.user", "harri");
+		vmwareVcoPassword = harriConfigProps.getProperty("vco.password", "setValidPassword");
 	}
 
 	public static List<String> getVirtualMachines(final String vmwareVcoUrl, final String vmwareVcoUserName, final String vmwareVcoPassword) {
@@ -44,7 +42,7 @@ public class VMWareExternalServiceProvider implements IHarriExternalServiceProvi
 	@Override
 	public void doServiceCalls(String managerId, IHarriDAO dao) {
 		List<String> results = getVirtualMachines(vmwareVcoUrl, vmwareVcoUserName, vmwareVcoPassword);
-		
+
 		dao.persistVmList(managerId, results);
 	}
 }

@@ -52,13 +52,11 @@ public class HarriManagerService implements Runnable {
 
 			// Add a listener for device registration events
 			harriManagerUpnpService.getRegistry().addListener(
-					createRegistryListener(harriManagerUpnpService)
-					);
+					createRegistryListener(harriManagerUpnpService));
 
 			LOG.debug("Broadcasting a search message for all known devices");
 			harriManagerUpnpService.getControlPoint().search(
-			        new UDADeviceTypeHeader(new UDADeviceType(HarriUtils.DEVICE_TYPE))
-					);
+			        new UDADeviceTypeHeader(new UDADeviceType(HarriUtils.DEVICE_TYPE)));
 			
 			//refresh (use all devices) at regular intervals
 			double refreshRate = DEFAULT_REFRESH_RATE;

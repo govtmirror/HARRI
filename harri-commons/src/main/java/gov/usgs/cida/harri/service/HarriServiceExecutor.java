@@ -7,17 +7,14 @@ import org.slf4j.LoggerFactory;
 import org.teleal.cling.UpnpService;
 import org.teleal.cling.controlpoint.ActionCallback;
 import org.teleal.cling.model.action.ActionInvocation;
-import org.teleal.cling.model.message.UpnpResponse;
-import org.teleal.cling.model.meta.Action;
 import org.teleal.cling.model.meta.Device;
 import org.teleal.cling.model.meta.Service;
-import org.teleal.cling.model.types.InvalidValueException;
 import org.teleal.cling.model.types.ServiceId;
 import org.teleal.cling.model.types.UDAServiceId;
 
 public class HarriServiceExecutor {
 
-	Logger LOG = LoggerFactory.getLogger(HarriServiceExecutor.class);
+	private static Logger LOG = LoggerFactory.getLogger(HarriServiceExecutor.class);
 	private ServiceId serviceId;
 	private Service service;
 	private UpnpService upnpService;
@@ -35,31 +32,7 @@ public class HarriServiceExecutor {
 		}
 	}
 
-	public void executeAction(final String actionName, final Map<String, String> params, final String expectResponseVariable) {
-		LOG.debug("HarriServiceExecutor::executeAction");
-		ActionInvocation setTargetInvocation = new HarriActionInvocation(service, actionName, params);
-
-		// Executes asynchronous in the background
-		upnpService.getControlPoint().execute(
-				new ActionCallback(setTargetInvocation) {
-			@Override
-			public void success(ActionInvocation invocation) {
-				assert invocation.getOutput().length == 0;
-				String deviceName = invocation.getAction().getService().getDevice().getDetails().getModelDetails().getModelName();
-				String responseMessage = "Service " + actionName + " successfully called on " + deviceName;
-				if (expectResponseVariable != null) {
-					//TODO how do we get this response back up to the manager (or somewhere useful)
-					responseMessage += "\n" + invocation.getOutput(expectResponseVariable).toString();
-				}
-				LOG.info(responseMessage);
-			}
-
-			@Override
-			public void failure(ActionInvocation invocation,
-					UpnpResponse operation,
-					String defaultMsg) {
-				LOG.error(defaultMsg);
-			}
-		});
+	public ActionInvocation prepareActionInvocation(final String actionName, final Map<String, String> params) {
+		return new HarriActionInvocation(this.service, actionName, params);
 	}
 }
