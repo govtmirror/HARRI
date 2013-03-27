@@ -39,19 +39,20 @@ public class Tomcat extends Instance {
 	private String managerPassword = "";
 	private Integer httpPort = 0;
 	private Integer httpsPort = 0;
+
 	private List<String> appList;
 	private Map<String, ApplicationInfo> applicationMap;
 
 	public Tomcat() {}
 	
 	public Tomcat(ProcessMD md) {
-		this.md = md;
+		this.processMetaData = md;
 		this.applicationMap = new HashMap<String, ApplicationInfo>();
 	}
 
 	@Override
 	public void populate() {
-		String catalinaHomeLocation = this.md.getStartupOptions().get("catalina.base");
+		String catalinaHomeLocation = this.processMetaData.getStartupOptions().get("catalina.base");
 		File catalinaHome = new File(catalinaHomeLocation);
 		File usersXML = FileUtils.getFile(catalinaHome, "conf", "tomcat-users.xml");
 		File serverXML = FileUtils.getFile(catalinaHome, "conf", "server.xml");

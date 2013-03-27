@@ -36,7 +36,8 @@ public class EchoManagerServiceProvider implements IHarriManagerServiceProvider 
 				LOG.debug(responseMessage);
 				
 				Echo echo = new Echo();
-				echo.setIdentifier(deviceName);
+				echo.setIdentifier(invocation.getOutput("EchoHostnameResponse").toString());
+				echo.setDeviceName(deviceName);
 				echo.setManagerId(HarriUtils.getSystemHostName());
 				echo.setHost(invocation.getOutput("EchoHostnameResponse").toString());
 				

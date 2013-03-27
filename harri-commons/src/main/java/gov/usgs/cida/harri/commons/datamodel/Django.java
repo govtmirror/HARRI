@@ -29,7 +29,7 @@ public class Django extends Instance {
 	public Django() {}
 	
 	public Django(ProcessMD md) {
-		this.md = md;
+		this.processMetaData = md;
 	}
 
 	private String getWebAppsDirectory() {

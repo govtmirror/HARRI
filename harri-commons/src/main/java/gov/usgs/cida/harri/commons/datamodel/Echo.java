@@ -10,6 +10,7 @@ public class Echo extends HarriBean {
 	
 	private String managerId;
 	private String host;
+	private String deviceName;
 	
 	public String getManagerId() {
 		return managerId;
@@ -22,5 +23,11 @@ public class Echo extends HarriBean {
 	}
 	public void setHost(String host) {
 		this.host = host;
+	}
+	public String getDeviceName() {
+		return deviceName;
+	}
+	public void setDeviceName(String deviceName) {
+		this.deviceName = deviceName;
 	}
 }

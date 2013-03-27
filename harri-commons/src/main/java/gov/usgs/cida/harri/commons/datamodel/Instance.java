@@ -9,10 +9,10 @@ import java.util.Map;
  */
 public abstract class Instance {
 
-    ProcessMD md;
+    ProcessMD processMetaData;
 
     public ProcessMD getMD() {
-        return this.md;
+        return this.processMetaData;
     }
 
     abstract public void populate();

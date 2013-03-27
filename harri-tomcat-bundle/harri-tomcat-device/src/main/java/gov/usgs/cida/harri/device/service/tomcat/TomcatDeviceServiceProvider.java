@@ -4,13 +4,19 @@ import gov.usgs.cida.harri.commons.datamodel.ApplicationInfo;
 import gov.usgs.cida.harri.commons.datamodel.ProcessMD;
 import gov.usgs.cida.harri.commons.datamodel.ProcessType;
 import gov.usgs.cida.harri.commons.datamodel.Tomcat;
+import gov.usgs.cida.harri.commons.datamodel.TomcatHost;
 import gov.usgs.cida.harri.commons.interfaces.device.IHarriDeviceServiceProvider;
 import gov.usgs.cida.harri.service.ProcessDiscovery;
+import gov.usgs.cida.harri.util.HarriUtils;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teleal.cling.binding.annotations.*;
+
+import com.google.gson.Gson;
 
 /**
  *
@@ -24,79 +30,44 @@ import org.teleal.cling.binding.annotations.*;
 public class TomcatDeviceServiceProvider implements IHarriDeviceServiceProvider {
 
 	private static Logger LOG = LoggerFactory.getLogger(TomcatDeviceServiceProvider.class);
+	
 	@UpnpStateVariable(defaultValue = "no_id_provided")
 	private String harriManagerId = "no_id_provided";
+	
 	@UpnpStateVariable(defaultValue = "")
-	private String getAllTomcatInstancesResponse = "";
-	@UpnpStateVariable(defaultValue = "")
-	private String getAllTomcatAppsResponse = "";
+	private String getTomcatHostResponse = "";
 
 	@UpnpAction(out =
-			@UpnpOutputArgument(name = "GetAllTomcatInstancesResponse"))
-	public String getAllTomcatInstances(@UpnpInputArgument(name = "HarriManagerId") String harriManagerId) {
-		getAllTomcatInstancesResponse = "";
+			@UpnpOutputArgument(name = "GetTomcatHostResponse"))
+	public String getTomcatHost(@UpnpInputArgument(name = "HarriManagerId") String harriManagerId) {
+		LOG.debug("GetTomcatHost action called by HARRI Manager with ID: " + this.harriManagerId);
+		
+		TomcatHost tomcatHost = new TomcatHost();
+		
+		getTomcatHostResponse = "";
+		
 		this.harriManagerId = harriManagerId;
-		LOG.info("GetAllTomcatInstances action called by HARRI Manager with ID: " + this.harriManagerId);
+		tomcatHost.setManagerId(this.harriManagerId);
+		tomcatHost.setIdentifier(HarriUtils.getSystemHostName());
 
 		List<ProcessMD> ps;
 		try {
 			ps = ProcessDiscovery.getProcesses();
 		} catch (IOException e) {
-			return getAllTomcatInstancesResponse;
+			return null;
 		}
 
+		tomcatHost.setTomcatInstances(new ArrayList<Tomcat>());
 		for (ProcessMD p : ps) {
 			if (p.getType().equals(ProcessType.TOMCAT)) {
 				Tomcat tc = (Tomcat) p.createInstance();
 				tc.populate();
-				getAllTomcatInstancesResponse +=
-						p.getPid() + ":"
-						+ p.getStartupOptions().get("catalina.home") + ":"
-						+ tc.getHttpPort() + ":"
-						+ tc.getManagerUsername()
-						+ "\n";
+				tomcatHost.addTomcatInstance(tc);
 			}
 		}
 
-		return getAllTomcatInstancesResponse;
+		getTomcatHostResponse = new Gson().toJson(tomcatHost);
+		return getTomcatHostResponse;
 	}
 
-	@UpnpAction(out =
-			@UpnpOutputArgument(name = "GetAllTomcatAppsResponse"))
-	public String getAllTomcatApps(@UpnpInputArgument(name = "HarriManagerId") String harriManagerId) {
-		getAllTomcatAppsResponse = "";
-		this.harriManagerId = harriManagerId;
-		LOG.info("GetAllTomcatApps action called by HARRI Manager with ID: " + this.harriManagerId);
-
-		List<ProcessMD> ps;
-		try {
-			ps = ProcessDiscovery.getProcesses();
-		} catch (IOException e) {
-			return getAllTomcatInstancesResponse;
-		}
-
-		for (ProcessMD p : ps) {
-			if (p.getType().equals(ProcessType.TOMCAT)) {
-				Tomcat tc = (Tomcat) p.createInstance();
-				tc.populate();
-
-				StringBuilder sb = new StringBuilder();
-
-				for (String app : tc.getAppList()) {
-					ApplicationInfo appInfo = tc.getApplicationMap().get("/" + app);
-					sb.append("/")
-							.append(app)
-							.append(" - Application is: ")
-							.append(appInfo.getRunning() ? "UP" : "DOWN")
-							.append(" - Application start time: ")
-							.append(appInfo.getStartTime())
-							.append("\n");
-				}
-
-				getAllTomcatAppsResponse += sb.toString();
-			}
-		}
-
-		return getAllTomcatAppsResponse;
-	}
 }
