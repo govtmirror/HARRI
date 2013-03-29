@@ -14,6 +14,8 @@ import com.vmware.vim25.TraversalSpec;
 import com.vmware.vim25.VimPortType;
 import com.vmware.vim25.VimService;
 
+import gov.usgs.cida.harri.commons.datamodel.VirtualMachine;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,8 +39,8 @@ public class VMClient {
 
     public VMClient(String url, String userName, String password) {}
     
-    public static List<String> getVirtualMachines(String iurl, String iuserName, String ipassword) {
-    	List<String> result = null;
+    public static List<VirtualMachine> getVirtualMachines(String iurl, String iuserName, String ipassword) {
+    	List<VirtualMachine> result = null;
         
     	url = iurl;
         userName = iuserName;
@@ -214,8 +216,8 @@ public class VMClient {
       return listobjcontent;
     }
 
-    private static List<String> getVirtualMachines() throws Exception {
-        List<String> result = new ArrayList<String>();
+    private static List<VirtualMachine> getVirtualMachines() throws Exception {
+        List<VirtualMachine> result = new ArrayList<VirtualMachine>();
     
         TraversalSpec resourcePoolTraversalSpec = new TraversalSpec();
         resourcePoolTraversalSpec.setName("resourcePoolTraversalSpec");
@@ -300,6 +302,7 @@ public class VMClient {
          ManagedObjectReference mor = null;
          DynamicProperty pc = null;
          for (int oci = 0; oci < listobjcont.size(); oci++) {
+        	 VirtualMachine vm = new VirtualMachine();
             oc = listobjcont.get(oci);
             mor = oc.getObj();
 
@@ -308,7 +311,7 @@ public class VMClient {
 //            LOG.info("Reference Value : " + mor.getValue());
             
             if (mor.getType().equals("VirtualMachine")) {
-                result.add(mor.getValue());
+            	vm.setVmName(mor.getValue());
             }
 
             if (listdp != null) {
@@ -319,7 +322,7 @@ public class VMClient {
                      if (!pc.getVal().getClass().isArray()) {
 //                       LOG.info("   Property Value : " + pc.getVal());
                        if(mor.getType().equals("VirtualMachine")) {
-                    	   result.add(pc.getVal().toString());
+                    	   vm.setHostName(pc.getVal().toString());
                        }
                      } else {
                         List<Object> ipcary = new ArrayList<Object>();
@@ -337,7 +340,7 @@ public class VMClient {
 //                                    + imor.getValue());
                               
                               if (imor.getType().equals("VirtualMachine")) {
-                                  result.add(imor.getValue());
+                            	  vm.setHostName(imor.getValue());
                               }
                            } else {
 //                              LOG.info("Inner Property Value : " + oval);
@@ -347,6 +350,8 @@ public class VMClient {
                   }
                }
             }
+            
+            if(vm.getHostName() != null) result.add(vm);
          }
         } else {
 //         LOG.info("No Managed Entities retrieved!");

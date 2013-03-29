@@ -1,6 +1,7 @@
 package gov.usgs.cida.harri.manager.service.vmware;
 
 import gov.usgs.cida.harri.commons.datamodel.Vco;
+import gov.usgs.cida.harri.commons.datamodel.VirtualMachine;
 import gov.usgs.cida.harri.commons.interfaces.dao.IHarriDAO;
 import gov.usgs.cida.harri.commons.interfaces.manager.IHarriExternalServiceProvider;
 import gov.usgs.cida.harri.util.HarriUtils;
@@ -34,9 +35,9 @@ public class VMWareExternalServiceProvider implements IHarriExternalServiceProvi
 		vmwareVcoPassword = harriConfigProps.getProperty("vco.password", "setValidPassword");
 	}
 
-	public static List<String> getVirtualMachines(final String vmwareVcoUrl, final String vmwareVcoUserName, final String vmwareVcoPassword) {
+	public static List<VirtualMachine> getVirtualMachines(final String vmwareVcoUrl, final String vmwareVcoUserName, final String vmwareVcoPassword) {
 		LOG.debug("Retrieving list of VMs from " + vmwareVcoUrl);
-		List<String> result = null;
+		List<VirtualMachine> result = null;
 		try {
 			result = VMClient.getVirtualMachines(vmwareVcoUrl, vmwareVcoUserName, vmwareVcoPassword);
 		} catch (Exception e1) {
@@ -47,7 +48,7 @@ public class VMWareExternalServiceProvider implements IHarriExternalServiceProvi
 
 	@Override
 	public void doServiceCalls(String managerId, IHarriDAO dao) {
-		List<String> results = getVirtualMachines(vmwareVcoUrl, vmwareVcoUserName, vmwareVcoPassword);
+		List<VirtualMachine> results = getVirtualMachines(vmwareVcoUrl, vmwareVcoUserName, vmwareVcoPassword);
 
 		//create HarriBean
 		Vco vmBean = new Vco();

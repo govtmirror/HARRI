@@ -4,6 +4,8 @@
  */
 package gov.usgs.cida.harri.manager.service.vmware;
 
+import gov.usgs.cida.harri.commons.datamodel.VirtualMachine;
+
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -45,9 +47,10 @@ public class VMClientTest {
     @Ignore
     public void testGetVirtualMachines() throws Exception {
         System.out.println("getVirtualMachines");
-        List<String> result = VMClient.getVirtualMachines("https://cida-eros-vco.er.usgs.gov/sdk/vimService", "harri", "xxxxxxxxxxx");//TODO put in real password for demo
-        for (String s: result){
-            System.out.println(s);
+        List<VirtualMachine> result = VMClient.getVirtualMachines("https://cida-eros-vco.er.usgs.gov/sdk/vimService", "harri", "xxxxxx");//TODO put in real password for demo
+        for (VirtualMachine vm: result){
+            System.out.println(vm.getVmName());
+            System.out.println(vm.getHostName());
         }
     }
 }

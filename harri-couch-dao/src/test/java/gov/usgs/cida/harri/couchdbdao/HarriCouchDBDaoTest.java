@@ -3,6 +3,7 @@ package gov.usgs.cida.harri.couchdbdao;
 import java.util.ArrayList;
 
 import gov.usgs.cida.harri.commons.datamodel.Vco;
+import gov.usgs.cida.harri.commons.datamodel.VirtualMachine;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -26,7 +27,7 @@ public class HarriCouchDBDaoTest {
 			vco.setIdentifier(id);
 		}
 		vco.setManagerId("harriManager");
-		vco.setVmHosts(new ArrayList<String>());
+		vco.setVmHosts(new ArrayList<VirtualMachine>());
 		vco.setTimestamp("timestamp 1");
 		dao.create(vco);
 		vco.setTimestamp("timestamp 2");

@@ -10,14 +10,14 @@ import java.util.List;
 public class Vco extends HarriBean {
 	private static final long serialVersionUID = 1L;
 
-	private List<String> vmHosts;
+	private List<VirtualMachine> vmHosts;
 	private String timestamp;
 
-	public List<String> getVmHosts() {
+	public List<VirtualMachine> getVmHosts() {
 		return Collections.unmodifiableList(vmHosts);
 	}
 
-	public void setVmHosts(List<String> vmHosts) {
+	public void setVmHosts(List<VirtualMachine> vmHosts) {
 		this.vmHosts = vmHosts;
 	}
 
