@@ -13,7 +13,7 @@ import org.junit.Test;
  * @author isuftin
  */
 public class TomcatTest {
-	private String resultString = "{\"managerUsername\":\"test-user\",\"managerPassword\":\"xxxxxxxxx\",\"httpPort\":8080,\"httpsPort\":8443,\"appList\":[\"test\"],\"applicationMap\":{\"testApp\":{\"context\":\"test\",\"startTime\":\"1\",\"startupTime\":\"2\",\"running\":true}}}";
+	private String resultString = "{\"managerUsername\":\"test-user\",\"httpPort\":8080,\"httpsPort\":8443,\"appList\":[\"test\"],\"applicationMap\":{\"testApp\":{\"context\":\"test\",\"startTime\":\"1\",\"startupTime\":\"2\",\"running\":true}}}";
 	public TomcatTest() {
 	}
 
@@ -35,7 +35,7 @@ public class TomcatTest {
 		
 		String result = input.toJSON();
 		assertNotNull(result);
-		assertEquals(result, resultString);
+		assertEquals(resultString, result);
 	}
 
 	@Test
