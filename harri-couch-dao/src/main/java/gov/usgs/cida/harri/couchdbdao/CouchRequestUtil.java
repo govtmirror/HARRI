@@ -109,7 +109,7 @@ public class CouchRequestUtil {
 	}
 
 	public static String doLogin(String username, String password, String couchUrl) {
-		LOG.info("Logging into CouchDB instance: " + username + "@" + couchUrl);
+		LOG.debug("Logging into CouchDB instance: " + username + "@" + couchUrl);
 		RestTemplate restTemplate = new RestTemplate();
 
 		// Create the request body as a MultiValueMap
@@ -135,7 +135,7 @@ public class CouchRequestUtil {
 			}
 		}
 
-		LOG.info("Logged in, and session cookie stored.");
+		LOG.debug("Logged in, and session cookie stored.");
 		return cookie;
 	}
 }
