@@ -52,7 +52,11 @@ public class HarriCouchDBDao implements IHarriDAO {
 	public void initialize() {
 		setAuthCookie();
 		for (int i = 0; i < BASE_DB_NAMES.length; i++) {
-			CouchRequestUtil.checkAndCreateDB(this.url, BASE_DB_NAMES[i], this.authSessionId);
+			try {
+				CouchRequestUtil.checkAndCreateDB(this.url, BASE_DB_NAMES[i], this.authSessionId);
+			} catch (Exception e) {
+				LOG.error("Could not create CouchDB Database \"" + BASE_DB_NAMES[i] + "\": " + e.getMessage());
+			}
 		}
 	}
 

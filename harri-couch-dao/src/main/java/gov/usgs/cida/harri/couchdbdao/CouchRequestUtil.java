@@ -11,9 +11,13 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.gson.Gson;
 
 public class CouchRequestUtil {
+	private static Logger LOG = LoggerFactory.getLogger(CouchRequestUtil.class);
 	
 	public static boolean isServerAvailable(String couchUrl) {
 		RestTemplate rt = new RestTemplate();
@@ -105,6 +109,7 @@ public class CouchRequestUtil {
 	}
 
 	public static String doLogin(String username, String password, String couchUrl) {
+		LOG.info("Logging into CouchDB instance: " + username + "@" + couchUrl);
 		RestTemplate restTemplate = new RestTemplate();
 
 		// Create the request body as a MultiValueMap
@@ -130,6 +135,7 @@ public class CouchRequestUtil {
 			}
 		}
 
+		LOG.info("Logged in, and session cookie stored.");
 		return cookie;
 	}
 }
