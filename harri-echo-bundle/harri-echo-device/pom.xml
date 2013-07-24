@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>gov.usgs.cida.harri</groupId>
 	<artifactId>harri-echo-device</artifactId>
-	<name>harri-echo-device</name>
+	<name>HARRI Echo Device</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>

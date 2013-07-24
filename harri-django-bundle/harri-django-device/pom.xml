@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>gov.usgs.cida.harri</groupId>
 	<artifactId>harri-django-device</artifactId>
-	<name>harri-django-device</name>
+	<name>HARRI DJANGO Device</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>

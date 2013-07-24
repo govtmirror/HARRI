@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>gov.usgs.cida.harri</groupId>
 	<artifactId>harri-django-manager</artifactId>
-	<name>harri-django-manager</name>
+	<name>HARRI DJANGO Manager</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>

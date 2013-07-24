@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>gov.usgs.cida.harri</groupId>
 	<artifactId>harri-vmware-manager</artifactId>
-	<name>harri-vmware-manager</name>
+	<name>HARRI VMWare Manager</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>

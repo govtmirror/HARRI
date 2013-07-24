@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>gov.usgs.cida.harri</groupId>
 	<artifactId>harri-tomcat-manager</artifactId>
-	<name>harri-tomcat-manager</name>
+	<name>HARRI Tomcat Manager</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
