@@ -7,7 +7,6 @@ package gov.usgs.cida.harri.httpd;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import sun.security.provider.certpath.CollectionCertStore;
 
 /**
  *

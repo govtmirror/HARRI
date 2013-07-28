@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package gov.usgs.cida.harri.manager.service.vmware;
 
 import gov.usgs.cida.harri.commons.datamodel.VirtualMachine;
@@ -12,7 +8,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import org.junit.Ignore;
 
 /**
@@ -42,7 +37,8 @@ public class VMClientTest {
 
     /**
      * Test of getVirtualMachines method, of class VMClient.
-     */
+	 * @throws Exception 
+	 */
     @Test
     @Ignore
     public void testGetVirtualMachines() throws Exception {

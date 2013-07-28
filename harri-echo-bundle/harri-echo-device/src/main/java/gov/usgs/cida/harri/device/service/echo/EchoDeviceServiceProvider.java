@@ -23,7 +23,7 @@ import org.teleal.cling.binding.annotations.*;
  *
  */
 public class EchoDeviceServiceProvider implements IHarriDeviceServiceProvider{
-	Logger LOG = LoggerFactory.getLogger(EchoDeviceServiceProvider.class);
+	private static final Logger LOG = LoggerFactory.getLogger(EchoDeviceServiceProvider.class);
 	
     @UpnpStateVariable(defaultValue = "no_id_provided")
     private String harriManagerId = "no_id_provided";

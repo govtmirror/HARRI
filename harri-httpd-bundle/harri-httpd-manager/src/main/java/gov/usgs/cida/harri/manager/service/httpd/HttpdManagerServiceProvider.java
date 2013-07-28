@@ -1,7 +1,6 @@
 package gov.usgs.cida.harri.manager.service.httpd;
 
 import gov.usgs.cida.harri.commons.datamodel.ApacheConfiguration;
-import gov.usgs.cida.harri.commons.datamodel.ProxyMapping;
 import gov.usgs.cida.harri.commons.interfaces.dao.IHarriDAO;
 import gov.usgs.cida.harri.commons.interfaces.manager.IHarriManagerServiceProvider;
 import gov.usgs.cida.harri.service.HarriServiceExecutor;

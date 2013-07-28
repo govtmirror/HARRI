@@ -7,7 +7,6 @@ import gov.usgs.cida.harri.httpd.ParseHTTPdConf;
 import gov.usgs.cida.harri.util.HarriUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -28,17 +27,11 @@ import com.google.gson.Gson;
  *
  */
 public class HttpdDeviceServiceProvider implements IHarriDeviceServiceProvider {
-	Logger LOG = LoggerFactory.getLogger(HttpdDeviceServiceProvider.class);
-    
-//    @UpnpStateVariable(defaultValue = "no_id_provided")
-//    private String harriManagerId = "no_id_provided";
-    
     @UpnpStateVariable(defaultValue = "default response value")
     private String getProxyMappingResponse = null;
     
     @UpnpAction(out = @UpnpOutputArgument(name = "GetProxyMappingResponse")) //example of how to get a response, could do by convention
     public String getProxyMapping() {
-    	StringBuilder sb = new StringBuilder();
     	ApacheConfiguration ac = new ApacheConfiguration();
     	ac.setIdentifier(HarriUtils.getSystemHostName());
 

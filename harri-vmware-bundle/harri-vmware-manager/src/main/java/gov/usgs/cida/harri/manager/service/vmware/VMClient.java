@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 //TODO this whole thing uses static members to mimic simple client, clean up!
 //TODO uncomment LOG statements, this was done for demo readability
 public class VMClient {
-	static Logger LOG = LoggerFactory.getLogger(VMClient.class);
+	private static Logger LOG = LoggerFactory.getLogger(VMClient.class);
 
     private static String url;
     private static String userName;
@@ -68,8 +68,7 @@ public class VMClient {
 
     private static class TrustAllTrustManager implements javax.net.ssl.TrustManager,
                                                         javax.net.ssl.X509TrustManager {
-
-      static Logger LOG = LoggerFactory.getLogger(VMClient.class);
+	  @Override
       public java.security.cert.X509Certificate[] getAcceptedIssuers() {
          return null;
       }
@@ -82,16 +81,16 @@ public class VMClient {
          return true;
       }
 
+	  @Override
       public void checkServerTrusted(java.security.cert.X509Certificate[] certs,
                                      String authType)
          throws java.security.cert.CertificateException {
-         return;
       }
 
+	  @Override
       public void checkClientTrusted(java.security.cert.X509Certificate[] certs,
                                      String authType)
          throws java.security.cert.CertificateException {
-         return;
       }
     }
 
@@ -102,8 +101,6 @@ public class VMClient {
     private static VimPortType vimPort;
     private static ServiceContent serviceContent;
     private static final String SVC_INST_NAME = "ServiceInstance";
-
-    private static boolean help = false;
     private static boolean isConnected = false;
 
     private static void trustAllHttpsCertificates()
@@ -128,6 +125,7 @@ public class VMClient {
       throws Exception {
 
       HostnameVerifier hv = new HostnameVerifier() {
+		 @Override
          public boolean verify(String urlHostName, SSLSession session) {
             return true;
          }
@@ -298,9 +296,9 @@ public class VMClient {
 
         // If we get contents back. print them out.
         if (listobjcont != null) {
-         ObjectContent oc = null;
-         ManagedObjectReference mor = null;
-         DynamicProperty pc = null;
+         ObjectContent oc;
+         ManagedObjectReference mor;
+         DynamicProperty pc;
          for (int oci = 0; oci < listobjcont.size(); oci++) {
         	 VirtualMachine vm = new VirtualMachine();
             oc = listobjcont.get(oci);
@@ -317,33 +315,24 @@ public class VMClient {
             if (listdp != null) {
                for (int pci = 0; pci < listdp.size(); pci++) {
                   pc = listdp.get(pci);
-//                  LOG.info("   Property Name : " + pc.getName());
                   if ((pc != null)) {
                      if (!pc.getVal().getClass().isArray()) {
-//                       LOG.info("   Property Value : " + pc.getVal());
                        if(mor.getType().equals("VirtualMachine")) {
                     	   vm.setHostName(pc.getVal().toString());
                        }
                      } else {
                         List<Object> ipcary = new ArrayList<Object>();
                         ipcary.add(pc.getVal());
-//                        LOG.info("Val : " + pc.getVal());
                         for (int ii = 0; ii < ipcary.size(); ii++) {
                            Object oval = ipcary.get(ii);
                            if (oval.getClass().getName().indexOf(
                                  "ManagedObjectReference") >= 0) {
                               ManagedObjectReference imor = (ManagedObjectReference) oval;
 
-//                              LOG.info("Inner Object Type : "
-//                                    + imor.getType());
-//                              LOG.info("Inner Reference Value : "
-//                                    + imor.getValue());
-                              
                               if (imor.getType().equals("VirtualMachine")) {
                             	  vm.setHostName(imor.getValue());
                               }
                            } else {
-//                              LOG.info("Inner Property Value : " + oval);
                            }
                         }
                      }
@@ -354,7 +343,6 @@ public class VMClient {
             if(vm.getHostName() != null) result.add(vm);
          }
         } else {
-//         LOG.info("No Managed Entities retrieved!");
         }
 
         return result;

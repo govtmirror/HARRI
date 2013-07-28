@@ -17,7 +17,7 @@ import org.teleal.cling.model.meta.RemoteDevice;
 
 public class ProcessDiscoveryServiceCalls implements IHarriManagerServiceProvider {
 
-	static Logger LOG = LoggerFactory.getLogger(ProcessDiscoveryServiceCalls.class);
+	private final static Logger LOG = LoggerFactory.getLogger(ProcessDiscoveryServiceCalls.class);
 
 	@Override
 	public void doServiceCalls(final UpnpService upnpService, final RemoteDevice device, IHarriDAO dao) {
@@ -28,7 +28,7 @@ public class ProcessDiscoveryServiceCalls implements IHarriManagerServiceProvide
 
 		String actionName = "GetAllProcesses";
 		
-		upnpService.getControlPoint().execute(new ActionCallback(pds.prepareActionInvocation( "GetAllProcesses", params)) {
+		upnpService.getControlPoint().execute(new ActionCallback(pds.prepareActionInvocation(actionName, params)) {
 			@Override
 			public void success(ActionInvocation invocation) {
 				assert invocation.getOutput().length == 0;

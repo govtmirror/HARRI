@@ -49,7 +49,7 @@ public class HarriCouchDBDao implements IHarriDAO {
 	}
 	
 	@Override
-	public void initialize() {
+	public final void initialize() {
 		setAuthCookie();
 		for (int i = 0; i < BASE_DB_NAMES.length; i++) {
 			try {
@@ -83,7 +83,7 @@ public class HarriCouchDBDao implements IHarriDAO {
 
 	@Override
 	public void delete(HarriBean o) {
-		o.deserialize(CouchRequestUtil.doCouchDelete(this.url, constructCouchIdentifier(o), authSessionId));;
+		o.deserialize(CouchRequestUtil.doCouchDelete(this.url, constructCouchIdentifier(o), authSessionId));
 	}
 	
 	private String constructCouchIdentifier(HarriBean o) {

@@ -20,7 +20,7 @@ import org.teleal.cling.model.meta.*;
 import org.teleal.cling.model.types.*;
 
 public class HarriDeviceService implements Runnable {
-	static Logger LOG = LoggerFactory.getLogger(HarriDeviceService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(HarriDeviceService.class);
 
     private static List<IHarriDeviceServiceProvider> harriDeviceServiceProviders;
 	

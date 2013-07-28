@@ -1,6 +1,5 @@
 package gov.usgs.cida.harri.device.service.tomcat;
 
-import gov.usgs.cida.harri.commons.datamodel.ApplicationInfo;
 import gov.usgs.cida.harri.commons.datamodel.ProcessMD;
 import gov.usgs.cida.harri.commons.datamodel.ProcessType;
 import gov.usgs.cida.harri.commons.datamodel.Tomcat;

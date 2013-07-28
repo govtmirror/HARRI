@@ -8,7 +8,7 @@ import java.util.List;
  * @author isuftin
  */
 public class Vco extends HarriBean {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 34234L;
 
 	private List<VirtualMachine> vmHosts;
 	private String timestamp;

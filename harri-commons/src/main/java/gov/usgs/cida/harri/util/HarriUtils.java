@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.teleal.cling.model.meta.Device;
 
 public class HarriUtils {	
-	static Logger LOG = LoggerFactory.getLogger(HarriUtils.class);
+	private final static Logger LOG = LoggerFactory.getLogger(HarriUtils.class);
 	
 	public static final String DEVICE_TYPE = "HARRI_Device";
 

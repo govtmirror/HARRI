@@ -3,6 +3,7 @@ package gov.usgs.cida.harri.commons.datamodel;
 import java.util.List;
 
 public class ApacheConfiguration extends HarriBean {
+	private static final long serialVersionUID = 823648L;
 	List<ProxyMapping> proxyMappings;
 
 	public List<ProxyMapping> getProxyMappings() {
