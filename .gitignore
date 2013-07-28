@@ -15,3 +15,4 @@
 /harri-django-bundle/harri-django.device/target/
 /harri-django-bundle/harri-django-manager/target/
 /harri-django-bundle/harri-django-device/target/harri-httpd-bundle/apache-httpd-parser/src/test/resources/sample/cida-eros-apaprod1/balancers/
+harri-httpd-bundle/apache-httpd-parser/src/test/java/gov/usgs/cida/harri/httpd/ParseHTTPdConfTest.java
